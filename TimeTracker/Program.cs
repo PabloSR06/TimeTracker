@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using TimeTracker.Data;
+using TimeTracker.Service;
 
 namespace TimeTracker
 {
@@ -14,6 +15,8 @@ namespace TimeTracker
             builder.Services.AddRazorPages();
             builder.Services.AddServerSideBlazor();
             builder.Services.AddSingleton<WeatherForecastService>();
+
+            builder.Services.AddSingleton<MySqlService>();
 
             var app = builder.Build();
 
