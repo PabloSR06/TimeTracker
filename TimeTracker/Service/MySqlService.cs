@@ -1,4 +1,9 @@
 ﻿using MySql.Data.MySqlClient;
+using System.Data;
+using System.Data.Common;
+using System.Reflection.PortableExecutable;
+using TimeTracker.Data;
+using TimeTracker.Models;
 
 namespace TimeTracker.Service
 {
@@ -45,6 +50,121 @@ namespace TimeTracker.Service
                 return _mySqlConnection;
             }
             return null;
+        }
+
+        public CheckTime GetClockIn(int user_id, DateTime today)
+        {
+            try
+            {
+                CheckTime time_Clock = new CheckTime();
+                MySqlCommand cmd = GetConnection().CreateCommand();
+                cmd.CommandText = "SELECT id, user_id, start_time, finish_time, isFinish, date FROM time_clock WHERE user_id = @user_id AND date = @today";
+
+                cmd.Parameters.Add("@user_id", MySqlDbType.Int32).Value = user_id;
+                cmd.Parameters.Add("@today", MySqlDbType.Date).Value = today;
+
+                TryOpen();
+
+                MySqlDataReader reader = cmd.ExecuteReader();
+
+                
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        time_Clock.isOpen = true;
+                        TimeClock timeClock = new TimeClock();
+
+                        timeClock.Id = reader.GetInt32("id");
+                        timeClock.user_id = reader.GetInt32("user_id");
+                        if (!reader.IsDBNull("start_time"))
+                            timeClock.start_time = reader.GetTimeSpan("start_time");
+                        if(!reader.IsDBNull("finish_time"))
+                            timeClock.finish_time = reader.GetTimeSpan("finish_time");
+                        timeClock.isFinish = reader.GetBoolean("isFinish");
+                        if (!reader.IsDBNull("date"))
+                            timeClock.date = reader.GetDateTime("date");
+                        
+
+                        time_Clock.time_table = timeClock;
+
+                    }
+                }
+                CloseConnection();
+
+                return time_Clock;
+
+            }
+            catch (Exception ex)
+            {
+
+                throw new ArgumentException(ex.Message);
+            }
+        }
+
+        public async Task<CheckTime> ClockIn(ClockInModel clock_in)
+        {
+            try
+            {
+                CheckTime checkTime = GetClockIn(clock_in.user_id, DateTime.Today);
+                if (!checkTime.isOpen)
+                {
+                    MySqlCommand cmd = GetConnection().CreateCommand();
+                    cmd.CommandText = "INSERT INTO time_clock (user_id, start_time,old_start_time, isFinish) VALUES (@user_id, @start_time, @start_time, @isFinish)";
+
+                    cmd.Parameters.Add("@user_id", MySqlDbType.Int32).Value = clock_in.user_id;
+                    cmd.Parameters.Add("@start_time", MySqlDbType.Time).Value = clock_in.start_time;
+                    cmd.Parameters.Add("@isFinish", MySqlDbType.Bit).Value = 0;
+
+                    TryOpen();
+
+                    cmd.ExecuteNonQuery();
+
+                    CloseConnection();
+                }
+                checkTime = GetClockIn(clock_in.user_id, DateTime.Today);
+
+
+                return Task.FromResult(checkTime).Result;
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentException(ex.Message);
+            }
+        }
+
+        public async Task<CheckTime> ClockOut(ClockOutModel clockOut)
+        {
+            try
+            {
+                CheckTime checkTime = GetClockIn(clockOut.user_id, DateTime.Today);
+                if (checkTime.isOpen)
+                {
+                    if (!checkTime.time_table.isFinish)
+                    {
+                        MySqlCommand cmd = GetConnection().CreateCommand();
+                        cmd.CommandText = "UPDATE time_clock SET finish_time = @finish_time, old_finish_time = @finish_time, isFinish = @isFinish WHERE id = @id";
+
+                        cmd.Parameters.Add("@id", MySqlDbType.Int32).Value = checkTime.time_table.Id;
+                        cmd.Parameters.Add("@finish_time", MySqlDbType.Time).Value = clockOut.finish_time;
+                        cmd.Parameters.Add("@isFinish", MySqlDbType.Bit).Value = 1;
+
+                        TryOpen();
+
+                        cmd.ExecuteNonQuery();
+
+                        CloseConnection();
+                    }
+                }
+                checkTime = GetClockIn(clockOut.user_id, DateTime.Today);
+
+
+                return Task.FromResult(checkTime).Result;
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentException(ex.Message);
+            }
         }
     }
 }

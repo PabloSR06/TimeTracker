@@ -62,11 +62,12 @@ DROP TABLE IF EXISTS `TimeTracker`.`time_clock` ;
 CREATE TABLE IF NOT EXISTS `TimeTracker`.`time_clock` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `user_id` INT NOT NULL,
-  `start_time` DATETIME NOT NULL,
-  `finish_time` DATETIME NULL,
+  `start_time` TIME NOT NULL,
+  `finish_time` TIME NULL,
   `isFinish` BIT NOT NULL DEFAULT 0,
-  `old_start_time` DATETIME NOT NULL,
-  `old_finish_time` DATETIME NULL,
+  `old_start_time` TIME NOT NULL,
+  `old_finish_time` TIME NULL,
+  `date` DATE NOT NULL,
   PRIMARY KEY (`id`, `user_id`),
   CONSTRAINT `fk_time_clock_user` FOREIGN KEY (`user_id`) REFERENCES `TimeTracker`.`user` (`id`)
   );
