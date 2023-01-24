@@ -73,7 +73,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        
+        service.getAllGroupHasColection();
         checkInTime = service.GetClockIn(clock_in.user_id, DateTime.Today);
 
         var z = "";

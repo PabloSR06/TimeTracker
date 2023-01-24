@@ -2,6 +2,7 @@
 using System.Data;
 using System.Data.Common;
 using System.Reflection.PortableExecutable;
+using System.Text.RegularExpressions;
 using TimeTracker.Data;
 using TimeTracker.Models;
 
@@ -165,6 +166,86 @@ namespace TimeTracker.Service
             catch (Exception ex)
             {
                 throw new ArgumentException(ex.Message);
+            }
+        }
+
+
+        public async Task<List<CollectionMin>> getAllColections()
+        {
+            try
+            {
+                List<CollectionMin> list = new List<CollectionMin>();
+
+                MySqlCommand cmd = GetConnection().CreateCommand();
+                cmd.CommandText = "SELECT id, name FROM collection";
+
+                TryOpen();
+
+                MySqlDataReader reader = cmd.ExecuteReader();
+
+
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        CollectionMin collection = new CollectionMin();
+
+                        collection.Id = reader.GetInt32("id");
+
+                        if (!reader.IsDBNull("name"))
+                            collection.Name = reader.GetString("name");
+
+                        list.Add(collection);
+                    }
+                }
+                CloseConnection();
+
+                return Task.FromResult(list).Result; ;
+
+            }
+            catch (Exception ex)
+            {
+
+                throw new ArgumentException("Error in getAllCollections " + ex.Message);
+            }
+        }
+
+        public async Task<List<GroupHasCollectionMin>> getAllGroupHasColection()
+        {
+            try
+            {
+                List<GroupHasCollectionMin> list = new List<GroupHasCollectionMin>();
+
+                MySqlCommand cmd = GetConnection().CreateCommand();
+                cmd.CommandText = "SELECT group_id, collection_id FROM grouphascollection";
+
+                TryOpen();
+
+                MySqlDataReader reader = cmd.ExecuteReader();
+
+
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        GroupHasCollectionMin groupCollection = new GroupHasCollectionMin();
+
+                        groupCollection.group_id = reader.GetInt32("group_id");
+
+                        groupCollection.collection_id = reader.GetInt32("collection_id");
+
+                        list.Add(groupCollection);
+                    }
+                }
+                CloseConnection();
+
+                return Task.FromResult(list).Result; ;
+
+            }
+            catch (Exception ex)
+            {
+
+                throw new ArgumentException("Error in getAllGroupHasColection " + ex.Message);
             }
         }
     }
