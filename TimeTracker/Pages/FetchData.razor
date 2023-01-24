@@ -12,12 +12,22 @@
 
 <p>This component demonstrates fetching data from a service.</p>
 
-@if (checkTime.isOpen)
+@if (checkInTime.isOpen)
 {
-    if (!checkTime.time_table.isFinish)
+    if (checkInTime.time_table != null)
     {
-        <button class="btn btn-primary" @onclick="ClockOut">Finish</button>
-
+        <a>@checkInTime.time_table.start_time</a>
+        if (!checkInTime.time_table.isFinish)
+        {
+            <button class="btn btn-primary" @onclick="ClockOut">Finish</button>
+        }else{
+            <br />
+            <a>@checkInTime.time_table.finish_time</a>
+        }
+    }
+    else
+    {
+        <a>Algo no cuadra</a>
     }
 
 }
@@ -30,12 +40,13 @@ else
 @code {
     private WeatherForecast[]? forecasts;
 
-    private CheckTime checkTime = new CheckTime();
+    private CheckInTime checkInTime = new CheckInTime();
 
     ClockInModel clock_in = new ClockInModel()
         {
             user_id = 1,
             start_time = DateTime.Now.TimeOfDay,
+            date = DateTime.Today
 
         };
 
@@ -43,18 +54,19 @@ else
     {
         user_id = 1,
         finish_time = DateTime.Now.TimeOfDay,
+        date = DateTime.Today
 
     };
 
     private async Task ClockIn()
     {
-        checkTime = service.ClockIn(clock_in).Result;
+        checkInTime = service.ClockIn(clock_in).Result;
 
 
     }
     private async Task ClockOut()
     {
-        checkTime = service.ClockOut(clockOut).Result;
+        checkInTime = service.ClockOut(clockOut).Result;
 
 
     }
@@ -62,7 +74,7 @@ else
     protected override async Task OnInitializedAsync()
     {
         
-        checkTime = service.GetClockIn(clock_in.user_id, DateTime.Today);
+        checkInTime = service.GetClockIn(clock_in.user_id, DateTime.Today);
 
         var z = "";
 

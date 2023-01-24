@@ -52,11 +52,11 @@ namespace TimeTracker.Service
             return null;
         }
 
-        public CheckTime GetClockIn(int user_id, DateTime today)
+        public CheckInTime GetClockIn(int user_id, DateTime today)
         {
             try
             {
-                CheckTime time_Clock = new CheckTime();
+                CheckInTime time_Clock = new CheckInTime();
                 MySqlCommand cmd = GetConnection().CreateCommand();
                 cmd.CommandText = "SELECT id, user_id, start_time, finish_time, isFinish, date FROM time_clock WHERE user_id = @user_id AND date = @today";
 
@@ -102,19 +102,20 @@ namespace TimeTracker.Service
             }
         }
 
-        public async Task<CheckTime> ClockIn(ClockInModel clock_in)
+        public async Task<CheckInTime> ClockIn(ClockInModel clock_in)
         {
             try
             {
-                CheckTime checkTime = GetClockIn(clock_in.user_id, DateTime.Today);
+                CheckInTime checkTime = GetClockIn(clock_in.user_id, DateTime.Today);
                 if (!checkTime.isOpen)
                 {
                     MySqlCommand cmd = GetConnection().CreateCommand();
-                    cmd.CommandText = "INSERT INTO time_clock (user_id, start_time,old_start_time, isFinish) VALUES (@user_id, @start_time, @start_time, @isFinish)";
+                    cmd.CommandText = "INSERT INTO time_clock (user_id, start_time,old_start_time, isFinish, date) VALUES (@user_id, @start_time, @start_time, @isFinish, @date)";
 
                     cmd.Parameters.Add("@user_id", MySqlDbType.Int32).Value = clock_in.user_id;
                     cmd.Parameters.Add("@start_time", MySqlDbType.Time).Value = clock_in.start_time;
                     cmd.Parameters.Add("@isFinish", MySqlDbType.Bit).Value = 0;
+                    cmd.Parameters.Add("@date", MySqlDbType.Date).Value = clock_in.date;
 
                     TryOpen();
 
@@ -133,14 +134,14 @@ namespace TimeTracker.Service
             }
         }
 
-        public async Task<CheckTime> ClockOut(ClockOutModel clockOut)
+        public async Task<CheckInTime> ClockOut(ClockOutModel clockOut)
         {
             try
             {
-                CheckTime checkTime = GetClockIn(clockOut.user_id, DateTime.Today);
+                CheckInTime checkTime = GetClockIn(clockOut.user_id, DateTime.Today);
                 if (checkTime.isOpen)
                 {
-                    if (!checkTime.time_table.isFinish)
+                    if (checkTime.time_table != null && !checkTime.time_table.isFinish)
                     {
                         MySqlCommand cmd = GetConnection().CreateCommand();
                         cmd.CommandText = "UPDATE time_clock SET finish_time = @finish_time, old_finish_time = @finish_time, isFinish = @isFinish WHERE id = @id";
