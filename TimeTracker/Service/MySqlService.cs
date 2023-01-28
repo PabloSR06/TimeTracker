@@ -210,11 +210,11 @@ namespace TimeTracker.Service
             }
         }
 
-        public  List<UserHasCollectionMin> getUserHasColection(int user_id)
+        public  List<CollectionMin> getUserHasColection(int user_id)
         {
             try
             {
-                List<UserHasCollectionMin> list = new List<UserHasCollectionMin>();
+                List<CollectionMin> list = new List<CollectionMin>();
 
                 MySqlCommand cmd = GetConnection().CreateCommand();
                 cmd.CommandText = "SELECT collection.id, collection.name FROM userhascollection INNER JOIN collection on userhascollection.collection_id = collection.id WHERE user_id = @user_id";
@@ -230,13 +230,13 @@ namespace TimeTracker.Service
                 {
                     while (reader.Read())
                     {
-                        UserHasCollectionMin groupCollection = new UserHasCollectionMin();
+                        CollectionMin userCollection = new CollectionMin();
 
-                        groupCollection.id = reader.GetInt32("id");
+                        userCollection.Id = reader.GetInt32("id");
 
-                        groupCollection.name = reader.GetString("name");
+                        userCollection.Name = reader.GetString("name");
 
-                        list.Add(groupCollection);
+                        list.Add(userCollection);
                     }
                 }
                 CloseConnection();
@@ -247,7 +247,51 @@ namespace TimeTracker.Service
             catch (Exception ex)
             {
 
-                throw new ArgumentException("Error in getAllGroupHasColection " + ex.Message);
+                throw new ArgumentException("Error in getUserHasColection " + ex.Message);
+            }
+        }
+
+        public List<ProjectMin> getUserHasProject(int user_id)
+        {
+            try
+            {
+                List<ProjectMin> list = new List<ProjectMin>();
+
+                MySqlCommand cmd = GetConnection().CreateCommand();
+                cmd.CommandText = "SELECT project.id, project.name, project.collection_id FROM userhasproject INNER JOIN project on userhasproject.project_id = project.id WHERE user_id = 1;\r\n";
+
+                cmd.Parameters.Add("@user_id", MySqlDbType.Int32).Value = user_id;
+
+                TryOpen();
+
+                MySqlDataReader reader = cmd.ExecuteReader();
+
+
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        ProjectMin userProject = new ProjectMin();
+
+                        userProject.Id = reader.GetInt32("id");
+
+                        userProject.Name = reader.GetString("name");
+
+                        userProject.collection_id = reader.GetInt32("colection_id");
+
+
+                        list.Add(userProject);
+                    }
+                }
+                CloseConnection();
+
+                return list; ;
+
+            }
+            catch (Exception ex)
+            {
+
+                throw new ArgumentException("Error in getUserHasProject " + ex.Message);
             }
         }
     }

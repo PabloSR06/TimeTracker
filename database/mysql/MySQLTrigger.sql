@@ -26,24 +26,6 @@ END$$
 DELIMITER ;
 
 DELIMITER $$
-CREATE TRIGGER `user_has_projectUpdateTime`
-BEFORE UPDATE ON `TimeTracker`.`userHasProject`
-FOR EACH ROW
-BEGIN
-    SET NEW.update_time = NOW();
-END$$
-DELIMITER ;
-
-DELIMITER $$
-CREATE TRIGGER `userHasCollectionUpdateTime`
-BEFORE UPDATE ON `TimeTracker`.`userHasCollection`
-FOR EACH ROW
-BEGIN
-    SET NEW.update_time = NOW();
-END$$
-DELIMITER ;
-
-DELIMITER $$
 CREATE TRIGGER `clockHistoryUpdateTime`
 BEFORE UPDATE ON `TimeTracker`.`clockHistory`
 FOR EACH ROW

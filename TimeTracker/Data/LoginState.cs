@@ -8,7 +8,7 @@ namespace TimeTracker.Data
         public bool IsLoggedIn { get; set; }
         public string username { get; set; }
         public int userId { get; set; }
-        public List<UserHasCollectionMin> collections { get; set; }
+        public List<CollectionMin> collections { get; set; }
 
         public event Action OnChange;
 

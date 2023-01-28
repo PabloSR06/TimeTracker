@@ -25,7 +25,7 @@
     {
         <a>Algo no cuadra</a>
     }
-    <button @onclick="ShowPopup">Show Popup</button>
+    <button @onclick="AddProjectTime">Add Time</button>
 
 
 }
@@ -35,19 +35,18 @@ else
     
 }
 
+@if(PopupVisible){
+    <AddTime />
+}
 
 
-<AddTime/>
 
 @code {
-    
+
 
     private bool PopupVisible { get; set; }
 
-    private void ShowPopup()
-    {
-        PopupVisible = true;
-    }
+
 
     private CheckInTime checkInTime = new CheckInTime();
 
@@ -79,16 +78,17 @@ else
 
 
     }
-    
+
     protected override async Task OnInitializedAsync()
     {
-        //collections = service.getUserHasColection(clockOut.user_id);
+
         checkInTime = service.GetClockIn(clock_in.user_id, DateTime.Today);
-
-        var z = "";
-
     }
 
+    private async Task AddProjectTime()
+    {
+        PopupVisible = true;
+    }
 
 
 
