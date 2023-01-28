@@ -1,19 +1,54 @@
 ﻿@inherits LayoutComponentBase
+@using TimeTracker.Data
+@using TimeTracker.Service;
+@using TimeTracker.Models;
+@inject MySqlService service;
+@inject Data.LoginState loginState;
 
 <PageTitle>TimeTracker</PageTitle>
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
-
-    <main>
-        <div class="top-row px-4">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+@if (loginState.IsLoggedIn)
+{
+    <div class="page">
+        <div class="sidebar">
+            <NavMenu />
         </div>
 
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
-</div>
+        <main>
+            <div class="top-row px-4">
+                <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+            </div>
+            <article class="content px-4">
+                    @Body
+            </article>
+
+        </main>
+    </div>
+}
+else
+{
+    <TimeTracker.Pages.Login/>
+}
+
+@code {
+    ClockOutModel clockOut = new ClockOutModel()
+        {
+            user_id = 1,
+            finish_time = DateTime.Now.TimeOfDay,
+            date = DateTime.Today
+
+        };
+    protected override async Task OnInitializedAsync()
+    {
+        loginState.OnChange += StateHasChanged;
+
+
+    }
+
+    public void Dispose()
+    {
+        loginState.OnChange -= StateHasChanged;
+    }
+
+
+}

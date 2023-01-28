@@ -1,10 +1,18 @@
-﻿@page "/time/add/{id}"
+﻿@inject Data.LoginState loginState
+<div>
 
-<PageTitle>Mew Work</PageTitle>
 
-<p>hola</p>
+    <select>
+        @if (loginState.collections != null)
+        {
+            @foreach (var collection in loginState.collections)
+            {
+                <option value="@collection.id">@collection.name</option>
+            }
+        }
+    </select>
+</div>
 
 @code {
-    [Parameter]
-    private string myvalue{ get; set; }
+    
 }

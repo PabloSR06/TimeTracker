@@ -1,4 +1,6 @@
 ﻿@page "/"
+@inject TimeTracker.Data.LoginState loginState;
+
 
 <PageTitle>Index</PageTitle>
 
@@ -7,3 +9,5 @@
 Welcome to your new app.
 
 <SurveyPrompt Title="How is Blazor working for you?" />
+
+<p>@loginState.IsLoggedIn</p>

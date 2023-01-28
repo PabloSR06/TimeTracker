@@ -210,7 +210,7 @@ namespace TimeTracker.Service
             }
         }
 
-        public async Task<List<UserHasCollectionMin>> getUserHasColection(int user_id)
+        public  List<UserHasCollectionMin> getUserHasColection(int user_id)
         {
             try
             {
@@ -232,16 +232,16 @@ namespace TimeTracker.Service
                     {
                         UserHasCollectionMin groupCollection = new UserHasCollectionMin();
 
-                        groupCollection.group_id = reader.GetInt32("group_id");
+                        groupCollection.id = reader.GetInt32("id");
 
-                        groupCollection.collection_id = reader.GetInt32("collection_id");
+                        groupCollection.name = reader.GetString("name");
 
                         list.Add(groupCollection);
                     }
                 }
                 CloseConnection();
 
-                return Task.FromResult(list).Result; ;
+                return  list; ;
 
             }
             catch (Exception ex)
