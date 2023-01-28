@@ -30,20 +30,6 @@ INSERT INTO `user` (`id`,`name`) VALUES (1, 'SuperUser');
 
 
 -- -----------------------------------------------------
--- Table `TimeTracker`.`group`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `TimeTracker`.`group` ;
-
-CREATE TABLE IF NOT EXISTS `TimeTracker`.`group` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(45) NOT NULL,
-  `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-  );
-
-INSERT INTO `group` (`id`,`name`) VALUES (1, 'Admin');
--- -----------------------------------------------------
 -- Table `TimeTracker`.`collection`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `TimeTracker`.`collection` ;
@@ -94,41 +80,41 @@ CREATE TABLE IF NOT EXISTS `TimeTracker`.`time_clock` (
 
 
 -- -----------------------------------------------------
--- Table `TimeTracker`.`groupHasProject`
+-- Table `TimeTracker`.`userHasProject`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `TimeTracker`.`groupHasProject` ;
+DROP TABLE IF EXISTS `TimeTracker`.`userHasProject` ;
 
-CREATE TABLE IF NOT EXISTS `TimeTracker`.`groupHasProject` (
-  `group_id` INT NOT NULL,
+CREATE TABLE IF NOT EXISTS `TimeTracker`.`userHasProject` (
+  `user_id` INT NOT NULL,
   `project_id` INT NOT NULL,
   `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`group_id`, `project_id`),
-  CONSTRAINT `fk_groupHasProject_group` FOREIGN KEY (`group_id`) REFERENCES `TimeTracker`.`group` (`id`),
-  CONSTRAINT `fk_groupHasProject_project` FOREIGN KEY (`project_id`) REFERENCES `TimeTracker`.`project` (`id`)
+  PRIMARY KEY (`user_id`, `project_id`),
+  CONSTRAINT `fk_userHasProject_group` FOREIGN KEY (`user_id`) REFERENCES `TimeTracker`.`user` (`id`),
+  CONSTRAINT `fk_userHasProject_project` FOREIGN KEY (`project_id`) REFERENCES `TimeTracker`.`project` (`id`)
   );
 
 -- -----------------------------------------------------
--- Table `TimeTracker`.`groupHasCollection`
+-- Table `TimeTracker`.`userHasCollection`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `TimeTracker`.`groupHasCollection` ;
+DROP TABLE IF EXISTS `TimeTracker`.`userHasCollection` ;
 
-CREATE TABLE IF NOT EXISTS `TimeTracker`.`groupHasCollection` (
-  `group_id` INT NOT NULL,
+CREATE TABLE IF NOT EXISTS `TimeTracker`.`userHasCollection` (
+  `user_id` INT NOT NULL,
   `collection_id` INT NOT NULL,
   `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`group_id`, `collection_id`),
-  CONSTRAINT `fk_groupHasCollection_group` FOREIGN KEY (`group_id`) REFERENCES `TimeTracker`.`group` (`id`),
-  CONSTRAINT `fk_groupHasCollection_collection` FOREIGN KEY (`collection_id`) REFERENCES `TimeTracker`.`collection` (`id`)
+  PRIMARY KEY (`user_id`, `collection_id`),
+  CONSTRAINT `fk_userHasCollection_group` FOREIGN KEY (`user_id`) REFERENCES `TimeTracker`.`user` (`id`),
+  CONSTRAINT `fk_userHasCollection_collection` FOREIGN KEY (`collection_id`) REFERENCES `TimeTracker`.`collection` (`id`)
   );
 
 DELIMITER $$
-CREATE TRIGGER `addAdminGroup`
+CREATE TRIGGER `addAdminUser`
 AFTER INSERT ON `TimeTracker`.`collection`
 FOR EACH ROW
 BEGIN
-    INSERT INTO groupHasCollection (`group_id`, `collection_id`) VALUES (1, NEW.id);
+    INSERT INTO userHasCollection (`user_id`, `collection_id`) VALUES (1, NEW.id);
 END$$
 DELIMITER ;
 

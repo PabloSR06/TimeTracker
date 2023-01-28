@@ -210,14 +210,16 @@ namespace TimeTracker.Service
             }
         }
 
-        public async Task<List<GroupHasCollectionMin>> getAllGroupHasColection()
+        public async Task<List<UserHasCollectionMin>> getUserHasColection(int user_id)
         {
             try
             {
-                List<GroupHasCollectionMin> list = new List<GroupHasCollectionMin>();
+                List<UserHasCollectionMin> list = new List<UserHasCollectionMin>();
 
                 MySqlCommand cmd = GetConnection().CreateCommand();
-                cmd.CommandText = "SELECT group_id, collection_id FROM grouphascollection";
+                cmd.CommandText = "SELECT collection.id, collection.name FROM userhascollection INNER JOIN collection on userhascollection.collection_id = collection.id WHERE user_id = @user_id";
+
+                cmd.Parameters.Add("@user_id", MySqlDbType.Int32).Value = user_id;
 
                 TryOpen();
 
@@ -228,7 +230,7 @@ namespace TimeTracker.Service
                 {
                     while (reader.Read())
                     {
-                        GroupHasCollectionMin groupCollection = new GroupHasCollectionMin();
+                        UserHasCollectionMin groupCollection = new UserHasCollectionMin();
 
                         groupCollection.group_id = reader.GetInt32("group_id");
 

@@ -29,6 +29,11 @@
     {
         <a>Algo no cuadra</a>
     }
+    <button @onclick="ShowPopup">Show Popup</button>
+    <div class="popup" @bind-style.display="PopupVisible ? 'block' : 'none'">
+        <button @onclick="PopupVisible = false">Close</button>
+        <p>Popup content goes here</p>
+    </div>
 
 }
 else
@@ -38,6 +43,15 @@ else
 }
 
 @code {
+
+    private bool PopupVisible { get; set; }
+
+    private void ShowPopup()
+    {
+        PopupVisible = true;
+    }
+
+
     private WeatherForecast[]? forecasts;
 
     private CheckInTime checkInTime = new CheckInTime();
@@ -70,10 +84,14 @@ else
 
 
     }
+    private async Task addTime()
+    {
+        
+    }
 
     protected override async Task OnInitializedAsync()
     {
-        service.getAllGroupHasColection();
+        service.getUserHasColection(clockOut.user_id);
         checkInTime = service.GetClockIn(clock_in.user_id, DateTime.Today);
 
         var z = "";

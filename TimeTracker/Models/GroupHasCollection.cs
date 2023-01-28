@@ -9,7 +9,7 @@
 
     }
 
-    public class GroupHasCollectionMin
+    public class UserHasCollectionMin
     {
         public int group_id { get; set; }
         public int collection_id { get; set; }
