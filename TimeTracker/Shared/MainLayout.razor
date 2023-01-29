@@ -31,18 +31,10 @@ else
 }
 
 @code {
-    ClockOutModel clockOut = new ClockOutModel()
-        {
-            user_id = 1,
-            finish_time = DateTime.Now.TimeOfDay,
-            date = DateTime.Today
 
-        };
     protected override async Task OnInitializedAsync()
     {
         loginState.OnChange += StateHasChanged;
-
-
     }
 
     public void Dispose()

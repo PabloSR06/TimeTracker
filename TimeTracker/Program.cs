@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using TimeTracker.Data;
+using TimeTracker.Models;
 using TimeTracker.Service;
 
 namespace TimeTracker
@@ -15,6 +16,7 @@ namespace TimeTracker
             builder.Services.AddRazorPages();
             builder.Services.AddServerSideBlazor();
             builder.Services.AddScoped<LoginState>();
+            builder.Services.AddScoped<ClockHistory>();
 
             builder.Services.AddSingleton<MySqlService>();
 

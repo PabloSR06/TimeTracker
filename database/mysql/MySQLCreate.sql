@@ -133,6 +133,7 @@ CREATE TABLE IF NOT EXISTS `TimeTracker`.`clockHistory` (
   `project_id` INT NOT NULL,
   `timeClock_id` INT NOT NULL,
   `minutes` INT NOT NULL,
+  `description` VARCHAR(255),
   `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
@@ -141,3 +142,5 @@ CREATE TABLE IF NOT EXISTS `TimeTracker`.`clockHistory` (
 
   );
 
+INSERT INTO `clockHistory` (`project_id`, `timeClock_id`, `minutes`, `description`) 
+VALUES (@project_id, @timeClock_id, @minutes, @description);

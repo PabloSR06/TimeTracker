@@ -40,6 +40,7 @@ else
             loginState.SetLogin(true, username);
             var userId = 1;
             loginState.collections = service.getUserHasColection(userId);
+            loginState.projects = service.getUserHasProject(userId);
 
         }
     }

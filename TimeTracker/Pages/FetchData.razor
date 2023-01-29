@@ -6,7 +6,9 @@
 @using TimeTracker.Service;
 @using TimeTracker.Models;
 @inject MySqlService service
-@inject LoginState loginState;
+@inject LoginState _loginState;
+@inject TimeTracker.Models.ClockHistory _clockHistory;
+
 
 @if (checkInTime.isOpen)
 {
@@ -69,24 +71,22 @@ else
     private async Task ClockIn()
     {
         checkInTime = service.ClockIn(clock_in).Result;
-
-
     }
     private async Task ClockOut()
     {
         checkInTime = service.ClockOut(clockOut).Result;
-
-
     }
 
     protected override async Task OnInitializedAsync()
     {
-
         checkInTime = service.GetClockIn(clock_in.user_id, DateTime.Today);
     }
 
     private async Task AddProjectTime()
     {
+        if(checkInTime.time_table != null)
+            _clockHistory.TimeClock_id = checkInTime.time_table.Id;
+
         PopupVisible = true;
     }
 

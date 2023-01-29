@@ -1,18 +1,45 @@
-﻿@inject Data.LoginState loginState
+﻿@using TimeTracker.Models;
+@using TimeTracker.Service;
+@inject MySqlService service;
+@inject Data.LoginState _loginState;
+@inject TimeTracker.Models.ClockHistory _clockHistory;
+
+
 <div>
 
 
-    <select>
-        @if (loginState.collections != null)
+    <select @bind="collection_id">
+        @if (_loginState.collections != null)
         {
-            @foreach (var collection in loginState.collections)
+            @foreach (var collection in _loginState.collections)
             {
                 <option value="@collection.Id">@collection.Name</option>
             }
         }
     </select>
+    <select @bind="_clockHistory.Project_id">
+        if (id != 0)
+        {
+        @foreach (var project in _loginState.projects)
+            {
+                if (project.collection_id == collection_id)
+                {
+                    <option value="@project.Id">@project.Name</option>
+                }
+            }     
+        }
+    </select>
+    <input type="number" @bind="_clockHistory.Minutes"/>
+    <input type="text" @bind="_clockHistory.Description"/>
+    <button type ="submit" @onclick=@SaveTime>Guardar</button>
 </div>
 
 @code {
-    
+
+    private int collection_id { get; set; }
+
+    private async Task SaveTime()
+    {
+        service.InsertTime(_clockHistory);
+    }
 }

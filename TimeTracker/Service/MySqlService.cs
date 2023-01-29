@@ -1,6 +1,7 @@
 ﻿using MySql.Data.MySqlClient;
 using System.Data;
 using System.Data.Common;
+using System.Net;
 using System.Reflection.PortableExecutable;
 using System.Text.RegularExpressions;
 using TimeTracker.Data;
@@ -258,7 +259,7 @@ namespace TimeTracker.Service
                 List<ProjectMin> list = new List<ProjectMin>();
 
                 MySqlCommand cmd = GetConnection().CreateCommand();
-                cmd.CommandText = "SELECT project.id, project.name, project.collection_id FROM userhasproject INNER JOIN project on userhasproject.project_id = project.id WHERE user_id = 1;\r\n";
+                cmd.CommandText = "SELECT project.id, project.name, project.collection_id FROM userhasproject INNER JOIN project on userhasproject.project_id = project.id WHERE user_id = @user_id;";
 
                 cmd.Parameters.Add("@user_id", MySqlDbType.Int32).Value = user_id;
 
@@ -277,7 +278,7 @@ namespace TimeTracker.Service
 
                         userProject.Name = reader.GetString("name");
 
-                        userProject.collection_id = reader.GetInt32("colection_id");
+                        userProject.collection_id = reader.GetInt32("collection_id");
 
 
                         list.Add(userProject);
@@ -292,6 +293,33 @@ namespace TimeTracker.Service
             {
 
                 throw new ArgumentException("Error in getUserHasProject " + ex.Message);
+            }
+        }
+
+        public HttpStatusCode InsertTime(ClockHistory clockHistory)
+        {
+            try
+            {
+                
+                MySqlCommand cmd = GetConnection().CreateCommand();
+                cmd.CommandText = "INSERT INTO clockHistory (project_id, timeClock_id, minutes, description) VALUES (@project_id, @timeClock_id, @minutes, @description);";
+
+                cmd.Parameters.Add("@project_id", MySqlDbType.Int32).Value = clockHistory.Project_id;
+                cmd.Parameters.Add("@timeClock_id", MySqlDbType.Int32).Value = clockHistory.TimeClock_id;
+                cmd.Parameters.Add("@minutes", MySqlDbType.Int32).Value = clockHistory.Minutes;
+                cmd.Parameters.Add("@description", MySqlDbType.String).Value = clockHistory.Description;
+
+                TryOpen();
+
+                cmd.ExecuteNonQuery();
+
+                CloseConnection();
+
+                return HttpStatusCode.OK;
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentException(ex.Message);
             }
         }
     }

@@ -10,6 +10,8 @@ namespace TimeTracker.Data
         public int userId { get; set; }
         public List<CollectionMin> collections { get; set; }
 
+        public List<ProjectMin> projects { get; set; }
+
         public event Action OnChange;
 
 
