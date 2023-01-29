@@ -296,7 +296,7 @@ namespace TimeTracker.Service
             }
         }
 
-        public HttpStatusCode InsertTime(ClockHistory clockHistory)
+        public HttpStatusCode InsertTime(ClockHistoryMin clockHistory)
         {
             try
             {

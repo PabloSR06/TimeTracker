@@ -142,5 +142,3 @@ CREATE TABLE IF NOT EXISTS `TimeTracker`.`clockHistory` (
 
   );
 
-INSERT INTO `clockHistory` (`project_id`, `timeClock_id`, `minutes`, `description`) 
-VALUES (@project_id, @timeClock_id, @minutes, @description);
