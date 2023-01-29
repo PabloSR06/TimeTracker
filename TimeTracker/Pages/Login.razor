@@ -1,4 +1,5 @@
 ﻿@using TimeTracker.Service;
+@using TimeTracker.Models;
 @inject Data.LoginState loginState;
 @inject MySqlService service;
 
@@ -6,19 +7,23 @@
 {
         <h1>Login</h1>
 
-        <div>
-            <label>Username </label>
-            <input id="UserName: " name="UserName" type="text" @bind-value="username" />
+
+    <EditForm Model=@userInput OnValidSubmit="HandleValidSubmit">
+        <DataAnnotationsValidator />
+
+        <div class="form-group">
+            <label for="Email">Email</label>
+            <ValidationMessage For="() => userInput.Email" />
+            <InputText @bind-Value=userInput.Email class="form-control" id="Email" />
         </div>
-        <div>
-            <label>Password </label>
-            <input id="Password" name="Password" type="password" @bind-value="password" />
+        <div class="form-group">
+            <label for="Password">Password</label>
+            <ValidationMessage For="() => userInput.Password" />
+            <InputText type="password" @bind-Value=userInput.Password class="form-control" id="Password" />
         </div>
-        <div>
-            <button type="submit" @onclick=@HandleLogin>
-                Submit
-            </button>
-        </div>
+
+        <input type="submit" class="btn btn-primary" value="Login" />
+    </EditForm>
 
 }
 else
@@ -27,23 +32,23 @@ else
 }
 
 @code {
-
-    string username = "";
-    string password = "";
+    UserModelInput userInput = new UserModelInput();
     string correctPassword = "admin";
 
-    void HandleLogin()
+    private void HandleValidSubmit()
     {
-        if (password.Equals(correctPassword))
+        if (userInput.Password.Equals(correctPassword))
         {
 
-            loginState.SetLogin(true, username);
+            loginState.SetLogin(true, userInput.Email);
             var userId = 1;
             loginState.collections = service.getUserHasColection(userId);
             loginState.projects = service.getUserHasProject(userId);
 
         }
     }
+
+
     void HandleLogout()
     {
         username = "";
