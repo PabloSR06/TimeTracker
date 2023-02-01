@@ -13,7 +13,7 @@
         <div class="form-group">
             <label for="Collections">Collections</label>
             <ValidationMessage For="() => _clockHistory.collection_id" />
-            <InputSelect class="m-0 form-control edit-active" @bind-Value="_clockHistory.collection_id" id="Collections">
+            <InputSelect class="m-0  edit-active form-select" @bind-Value="_clockHistory.collection_id" id="Collections">
                 @if (_loginState.collections != null)
                 {
                     @foreach (var collection in _loginState.collections)
@@ -26,7 +26,7 @@
         <div class="form-group">
             <label for="ProjectId">ProjectId</label>
             <ValidationMessage For="() => _clockHistory.Project_id"/>
-            <InputSelect class="m-0 form-control edit-active" @bind-Value="_clockHistory.Project_id" id="ProjectId" disabled="@(_clockHistory.collection_id == 0)">
+            <InputSelect class="m-0 form-select edit-active" @bind-Value="_clockHistory.Project_id" id="ProjectId" disabled="@(_clockHistory.collection_id == 0)">
                 if (id != 0)
                 {
                     @foreach (var project in _loginState.projects)

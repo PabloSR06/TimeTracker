@@ -11,13 +11,13 @@
     <EditForm Model=@userInput OnValidSubmit="HandleValidSubmit">
         <DataAnnotationsValidator />
 
-        <div class="form-group">
-            <label for="Email">Email</label>
+        <div class="mb-3">
+            <label class="form-label" for="Email">Email</label>
             <ValidationMessage For="() => userInput.Email" />
             <InputText @bind-Value=userInput.Email class="form-control" id="Email" />
         </div>
-        <div class="form-group">
-            <label for="Password">Password</label>
+        <div class="mb-3">
+            <label class="form-label" for="Password">Password</label>
             <ValidationMessage For="() => userInput.Password" />
             <InputText type="password" @bind-Value=userInput.Password class="form-control" id="Password" />
         </div>
@@ -51,8 +51,7 @@ else
 
     void HandleLogout()
     {
-        username = "";
-        password = "";
+        
         loginState.SetLogin(false, "");
     }
 }
