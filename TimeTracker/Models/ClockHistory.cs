@@ -16,11 +16,10 @@ namespace TimeTracker.Models
     public class ClockHistoryMin
     {
         public int Id { get; set; }
-        public string? Project_name { get; set; }
-        public string? Collection_name { get; set; }
+        public int Project_id { get; set; }
+        public int TimeClock_id { get; set; }
         public int Minutes { get; set; }
         public string? Description { get; set; }
-
     }
 
     public class ClockHistoryInput

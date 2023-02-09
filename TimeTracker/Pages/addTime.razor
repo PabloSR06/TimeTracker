@@ -3,74 +3,80 @@
 @using TimeTracker.Service;
 @inject MySqlService service;
 @inject Data.LoginState _loginState;
-@inject TimeTracker.Models.ClockHistoryInput _clockHistory;
 
 
 <div>
-
-   
-
-    <EditForm Model=@_clockHistory OnValidSubmit="HandleValidSubmit">
-        <DataAnnotationsValidator />     
-        <div class="form-group">
-            <label for="Collections">Collections</label>
-            @*<ValidationMessage For="() => _clockHistory.collection_id" />*@
-
-            <InputSelect class="m-0  edit-active form-select" @bind-Value="_clockHistory.collection_id" id="Collections">
-                @if (_loginState.collections != null)
-                {
-                    <option value="0">Choose Collection</option>
-
-                    @foreach (var collection in _loginState.collections)
+    <button @onclick="ClosePage">X</button>
+    <div>
+        <EditForm Model="@_clockHistory" OnValidSubmit="HandleValidSubmit">
+            <DataAnnotationsValidator />
+            <div class="form-group">
+                <label for="Collections">Collections</label>
+                <ValidationMessage For="() => _clockHistory.collection_id" />
+                <InputSelect class="m-0  edit-active form-select" @bind-Value="_clockHistory.collection_id" id="Collections">
+                    @if (_loginState.userCollections != null)
                     {
-                        
-                        <option value="@collection.Key">@collection.Value.Name</option>
+                        <option value="0">Choose Collection</option>
+
+                        @foreach (var collection in _loginState.userCollections)
+                        {
+
+                            <option value="@collection.Key">@collection.Value.Name</option>
+                        }
                     }
-                }
-            </InputSelect>
-
-            
-        </div>
-        <div class="form-group">
-            <label for="ProjectId">ProjectId</label>
-            <ValidationMessage For="() => _clockHistory.Project_id"/>
-            <InputSelect class="m-0 form-select edit-active" @bind-Value="_clockHistory.Project_id" id="ProjectId" disabled="@(_clockHistory.collection_id == 0)">
-                @if (_loginState.collections.TryGetValue(_clockHistory.collection_id, out CollectionDictionary collectionProject) && collectionProject.Projects != null)
-                {
-                    <option value="0">Choose Project</option>
-
-                    @foreach (var project in collectionProject.Projects)
+                </InputSelect>
+            </div>
+            <div class="form-group">
+                <label for="ProjectId">ProjectId</label>
+                <ValidationMessage For="() => _clockHistory.Project_id" />
+                <InputSelect class="m-0 form-select edit-active" @bind-Value="_clockHistory.Project_id" id="ProjectId" disabled="@(_clockHistory.collection_id == 0)">
+                    @if (_loginState.userCollections.TryGetValue(_clockHistory.collection_id, out CollectionDictionary collectionProject) && collectionProject.Projects != null)
                     {
-                        <option value="@project.Id">@project.Name</option>
-                    }     
-                }
-            </InputSelect>
-        </div>
-        <div class="form-group">
-            <label for="Minutes">Minutes</label>
-            <ValidationMessage For="() => _clockHistory.Minutes" />
-            <InputNumber @bind-Value=_clockHistory.Minutes class="form-control" id="Minutes" />
-        </div>
-        <div class="form-group">
-            <label for="Description">Description</label>
-            <ValidationMessage For="() => _clockHistory.Description"/>
-            <InputText @bind-Value=_clockHistory.Description class="form-control" id="Description" />
-        </div>
-        
-        <input type="submit" class="btn btn-primary"  value="Save" />
-    </EditForm>
+                        <option value="0">Choose Project</option>
+
+                        @foreach (var project in collectionProject.Projects)
+                        {
+                            <option value="@project.Id">@project.Name</option>
+                        }
+                    }
+                </InputSelect>
+            </div>
+            <div class="form-group">
+                <label for="Minutes">Minutes</label>
+                <ValidationMessage For="() => _clockHistory.Minutes" />
+                <InputNumber @bind-Value=_clockHistory.Minutes class="form-control" id="Minutes" />
+            </div>
+            <div class="form-group">
+                <label for="Description">Description</label>
+                <ValidationMessage For="() => _clockHistory.Description" />
+                <InputText @bind-Value=_clockHistory.Description class="form-control" id="Description" />
+            </div>
+            <input type="submit" class="btn btn-primary" value="Save" />
+        </EditForm>
+
+    </div>
 </div>
 
 @code {
-    public int xx;
 
-    protected override async Task OnInitializedAsync()
+    [Parameter] 
+    public EventCallback<bool> Status { get; set; } 
+
+    [Parameter]
+    public int Id { get; set; }
+
+    public ClockHistoryInput _clockHistory = new ClockHistoryInput();
+
+    private void ClosePage()
     {
+        _clockHistory = new ClockHistoryInput();
+        Status.InvokeAsync(false);
     }
-
-
     private void HandleValidSubmit()
     {
+        _clockHistory.TimeClock_id = Id;
         service.InsertTime(_clockHistory); 
+        Status.InvokeAsync(false);
+
     }
 }

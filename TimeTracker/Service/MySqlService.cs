@@ -232,11 +232,11 @@ namespace TimeTracker.Service
             }
         }
 
-        public List<ClockHistory> getHistory(int timeClock_id)
+        public List<ClockHistoryMin> getHistory(int timeClock_id)
         {
             try
             {
-                List<ClockHistory> list = new List<ClockHistory>();
+                List<ClockHistoryMin> list = new List<ClockHistoryMin>();
 
                 MySqlCommand cmd = GetConnection().CreateCommand();
                 cmd.CommandText = "SELECT * FROM clockhistory WHERE timeClock_id = @timeClock_id";
@@ -252,28 +252,23 @@ namespace TimeTracker.Service
                 {
                     while (reader.Read())
                     {
-                        ClockHistory clockHistory = new ClockHistory();
                         ClockHistoryMin clockHistoryMin = new ClockHistoryMin();
 
-                        //clockHistoryMin.Id = reader.GetInt32("id");
-                        //clockHistoryMin.Project_name = _loginState.projects.
+                        clockHistoryMin.Id = reader.GetInt32("id");
 
-                        //clockHistory.Id = reader.GetInt32("id");
-
-                        //_loginState.projects.g
-                        //clockHistory.Project_id = reader.GetInt32("project_id");
-                        //clockHistory.TimeClock_id = reader.GetInt32("timeClock_id");
-                        //clockHistory.Minutes = reader.GetInt32("minutes");
+                        clockHistoryMin.Project_id = reader.GetInt32("project_id");
+                        clockHistoryMin.TimeClock_id = reader.GetInt32("timeClock_id");
+                        clockHistoryMin.Minutes = reader.GetInt32("minutes");
 
                         if (!reader.IsDBNull("description"))
-                            clockHistory.Description= reader.GetString("description");
+                            clockHistoryMin.Description= reader.GetString("description");
 
-                        list.Add(clockHistory);
+                        list.Add(clockHistoryMin);
                     }
                 }
                 CloseConnection();
 
-                return list; ;
+                return list;
 
             }
             catch (Exception ex)
@@ -353,6 +348,78 @@ namespace TimeTracker.Service
             catch (Exception ex)
             {
                 throw new ArgumentException(ex.Message);
+            }
+        }
+
+        public Dictionary<int, string> getAllProjects()
+        {
+            try
+            {
+                Dictionary<int, string> projects = new Dictionary<int, string>();
+
+                MySqlCommand cmd = GetConnection().CreateCommand();
+                cmd.CommandText = "SELECT id, name FROM project;";
+
+                TryOpen();
+
+                MySqlDataReader reader = cmd.ExecuteReader();
+
+
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        var id = reader.GetInt32("id");
+                        var name = reader.GetString("name");
+
+                        projects.Add(id, name);
+                    }
+                }
+
+                CloseConnection();
+
+                return projects;
+
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentException("Error in getAllProjects " + ex.Message);
+            }
+        }
+
+        public Dictionary<int, string> getAllCollections()
+        {
+            try
+            {
+                Dictionary<int, string> collections = new Dictionary<int, string>();
+
+                MySqlCommand cmd = GetConnection().CreateCommand();
+                cmd.CommandText = "SELECT id, name FROM collection;";
+
+                TryOpen();
+
+                MySqlDataReader reader = cmd.ExecuteReader();
+
+
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        var id = reader.GetInt32("id");
+                        var name = reader.GetString("name");
+
+                        collections.Add(id, name);
+                    }
+                }
+
+                CloseConnection();
+
+                return collections;
+
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentException("Error in getAllCollections " + ex.Message);
             }
         }
     }

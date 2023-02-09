@@ -14,9 +14,7 @@ namespace TimeTracker.Models
     public class CollectionMin
     {
         public string Name { get; set; }
-
         public List<Project> Projects { get; set; }
-
     }
 
 

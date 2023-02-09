@@ -32,7 +32,7 @@ namespace TimeTracker.Models
     {
         public TimeClock? time_table { get; set; }
 
-        public List<ClockHistory> clockHistories { get; set; }
+        public List<ClockHistoryMin> clockHistories { get; set; }
         public Boolean isOpen { get; set; }
     }
 }

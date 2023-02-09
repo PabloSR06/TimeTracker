@@ -42,7 +42,10 @@ else
 
             loginState.SetLogin(true, userInput.Email);
             var userId = 1;
-            loginState.collections = service.getUserHasColection(userId);
+            loginState.userCollections = service.getUserHasColection(userId);
+
+            loginState.projects = service.getAllProjects();
+            loginState.collections = service.getAllCollections();
         }
     }
 
