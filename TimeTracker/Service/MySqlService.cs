@@ -1,4 +1,5 @@
 ﻿using MySql.Data.MySqlClient;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Net;
@@ -12,6 +13,7 @@ namespace TimeTracker.Service
     public class MySqlService
     {
         private static MySqlConnection? _mySqlConnection;
+        private static LoginState? _loginState;
         public MySqlService(IConfiguration configuration)
         {
             var sqlIsConfigured = !string.IsNullOrEmpty(configuration["sqlkeys:server"])
@@ -69,7 +71,6 @@ namespace TimeTracker.Service
 
                 MySqlDataReader reader = cmd.ExecuteReader();
 
-                
                 if (reader.HasRows)
                 {
                     while (reader.Read())
@@ -91,8 +92,13 @@ namespace TimeTracker.Service
                         time_Clock.time_table = timeClock;
 
                     }
+                    CloseConnection();
+                    time_Clock.clockHistories = getHistory(time_Clock.time_table.Id);
                 }
-                CloseConnection();
+                else
+                {
+                    CloseConnection();
+                }
 
                 return time_Clock;
 
@@ -170,52 +176,13 @@ namespace TimeTracker.Service
             }
         }
 
-
-        public async Task<List<CollectionMin>> getAllColections()
+        public Dictionary<int, CollectionDictionary> getUserHasColection(int user_id)
         {
             try
             {
-                List<CollectionMin> list = new List<CollectionMin>();
+                List<ProjectMin> projects = getUserHasProject(user_id);
 
-                MySqlCommand cmd = GetConnection().CreateCommand();
-                cmd.CommandText = "SELECT id, name FROM collection";
-
-                TryOpen();
-
-                MySqlDataReader reader = cmd.ExecuteReader();
-
-
-                if (reader.HasRows)
-                {
-                    while (reader.Read())
-                    {
-                        CollectionMin collection = new CollectionMin();
-
-                        collection.Id = reader.GetInt32("id");
-
-                        if (!reader.IsDBNull("name"))
-                            collection.Name = reader.GetString("name");
-
-                        list.Add(collection);
-                    }
-                }
-                CloseConnection();
-
-                return Task.FromResult(list).Result; ;
-
-            }
-            catch (Exception ex)
-            {
-
-                throw new ArgumentException("Error in getAllCollections " + ex.Message);
-            }
-        }
-
-        public  List<CollectionMin> getUserHasColection(int user_id)
-        {
-            try
-            {
-                List<CollectionMin> list = new List<CollectionMin>();
+                Dictionary<int, CollectionDictionary> dictionary = new Dictionary<int, CollectionDictionary>();
 
                 MySqlCommand cmd = GetConnection().CreateCommand();
                 cmd.CommandText = "SELECT collection.id, collection.name FROM userhascollection INNER JOIN collection on userhascollection.collection_id = collection.id WHERE user_id = @user_id";
@@ -226,23 +193,87 @@ namespace TimeTracker.Service
 
                 MySqlDataReader reader = cmd.ExecuteReader();
 
+                
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        var projectsEdit = projects.ToArray();
+
+                        var id = reader.GetInt32("id");
+
+                        List<Project> listProject = new List<Project>();
+
+                        foreach (var x in projectsEdit)
+                        {
+                            if (x.Id == id)
+                            {
+                                listProject.Add(x.Project);
+                                projects.Remove(x);
+                            }
+                        }
+
+                        CollectionDictionary collectionDictionary = new CollectionDictionary();
+                        collectionDictionary.Name = reader.GetString("name");
+                        collectionDictionary.Projects = listProject;
+
+                        dictionary.Add(id, collectionDictionary);
+                    }
+                }
+                CloseConnection();
+
+                return dictionary;
+
+            }
+            catch (Exception ex)
+            {
+
+                throw new ArgumentException("Error in getUserHasColection " + ex.Message);
+            }
+        }
+
+        public List<ClockHistory> getHistory(int timeClock_id)
+        {
+            try
+            {
+                List<ClockHistory> list = new List<ClockHistory>();
+
+                MySqlCommand cmd = GetConnection().CreateCommand();
+                cmd.CommandText = "SELECT * FROM clockhistory WHERE timeClock_id = @timeClock_id";
+
+                cmd.Parameters.Add("@timeClock_id", MySqlDbType.Int32).Value = timeClock_id;
+
+                TryOpen();
+
+                MySqlDataReader reader = cmd.ExecuteReader();
+
 
                 if (reader.HasRows)
                 {
                     while (reader.Read())
                     {
-                        CollectionMin userCollection = new CollectionMin();
+                        ClockHistory clockHistory = new ClockHistory();
+                        ClockHistoryMin clockHistoryMin = new ClockHistoryMin();
 
-                        userCollection.Id = reader.GetInt32("id");
+                        //clockHistoryMin.Id = reader.GetInt32("id");
+                        //clockHistoryMin.Project_name = _loginState.projects.
 
-                        userCollection.Name = reader.GetString("name");
+                        //clockHistory.Id = reader.GetInt32("id");
 
-                        list.Add(userCollection);
+                        //_loginState.projects.g
+                        //clockHistory.Project_id = reader.GetInt32("project_id");
+                        //clockHistory.TimeClock_id = reader.GetInt32("timeClock_id");
+                        //clockHistory.Minutes = reader.GetInt32("minutes");
+
+                        if (!reader.IsDBNull("description"))
+                            clockHistory.Description= reader.GetString("description");
+
+                        list.Add(clockHistory);
                     }
                 }
                 CloseConnection();
 
-                return  list; ;
+                return list; ;
 
             }
             catch (Exception ex)
@@ -274,16 +305,18 @@ namespace TimeTracker.Service
                     {
                         ProjectMin userProject = new ProjectMin();
 
-                        userProject.Id = reader.GetInt32("id");
+                        Project project = new Project();
+                        project.Id = reader.GetInt32("id");
+                        project.Name = reader.GetString("name");
 
-                        userProject.Name = reader.GetString("name");
+                        userProject.Id = reader.GetInt32("collection_id");
 
-                        userProject.collection_id = reader.GetInt32("collection_id");
-
+                        userProject.Project = project;
 
                         list.Add(userProject);
                     }
                 }
+
                 CloseConnection();
 
                 return list; ;
@@ -296,7 +329,7 @@ namespace TimeTracker.Service
             }
         }
 
-        public HttpStatusCode InsertTime(ClockHistoryMin clockHistory)
+        public HttpStatusCode InsertTime(ClockHistoryInput clockHistory)
         {
             try
             {

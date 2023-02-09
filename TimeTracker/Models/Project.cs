@@ -3,8 +3,12 @@
     public class ProjectMin
     {
         public int Id { get; set; }
+        public Project Project { get; set; }
+    }
+    public class Project
+    {
+        public int Id { get; set; }
         public string Name { get; set; }
-        public int collection_id { get; set; }
     }
 
     public class UserHasProject

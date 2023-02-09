@@ -8,9 +8,8 @@ namespace TimeTracker.Data
         public bool IsLoggedIn { get; set; }
         public string username { get; set; }
         public int userId { get; set; }
-        public List<CollectionMin> collections { get; set; }
+        public Dictionary<int, CollectionDictionary> collections { get; set; }
 
-        public List<ProjectMin> projects { get; set; }
 
         public event Action OnChange;
 

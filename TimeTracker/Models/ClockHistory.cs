@@ -15,6 +15,17 @@ namespace TimeTracker.Models
 
     public class ClockHistoryMin
     {
+        public int Id { get; set; }
+        public string? Project_name { get; set; }
+        public string? Collection_name { get; set; }
+        public int Minutes { get; set; }
+        public string? Description { get; set; }
+
+    }
+
+    public class ClockHistoryInput
+    {
+
         [Required]
         [Range(1, int.MaxValue, ErrorMessage = "You need to choose a collection")]
         public int collection_id { get; set; }

@@ -3,38 +3,45 @@
 @using TimeTracker.Service;
 @inject MySqlService service;
 @inject Data.LoginState _loginState;
-@inject TimeTracker.Models.ClockHistoryMin _clockHistory;
+@inject TimeTracker.Models.ClockHistoryInput _clockHistory;
 
 
 <div>
+
+   
 
     <EditForm Model=@_clockHistory OnValidSubmit="HandleValidSubmit">
         <DataAnnotationsValidator />     
         <div class="form-group">
             <label for="Collections">Collections</label>
-            <ValidationMessage For="() => _clockHistory.collection_id" />
+            @*<ValidationMessage For="() => _clockHistory.collection_id" />*@
+
             <InputSelect class="m-0  edit-active form-select" @bind-Value="_clockHistory.collection_id" id="Collections">
                 @if (_loginState.collections != null)
                 {
+                    <option value="0">Choose Collection</option>
+
                     @foreach (var collection in _loginState.collections)
                     {
-                            <option value="@collection.Id">@collection.Name</option>
+                        
+                        <option value="@collection.Key">@collection.Value.Name</option>
                     }
                 }
-        </InputSelect>
+            </InputSelect>
+
+            
         </div>
         <div class="form-group">
             <label for="ProjectId">ProjectId</label>
             <ValidationMessage For="() => _clockHistory.Project_id"/>
             <InputSelect class="m-0 form-select edit-active" @bind-Value="_clockHistory.Project_id" id="ProjectId" disabled="@(_clockHistory.collection_id == 0)">
-                if (id != 0)
+                @if (_loginState.collections.TryGetValue(_clockHistory.collection_id, out CollectionDictionary collectionProject) && collectionProject.Projects != null)
                 {
-                    @foreach (var project in _loginState.projects)
+                    <option value="0">Choose Project</option>
+
+                    @foreach (var project in collectionProject.Projects)
                     {
-                    if (project.collection_id == _clockHistory.collection_id)
-                        {
-                            <option value="@project.Id">@project.Name</option>
-                        }
+                        <option value="@project.Id">@project.Name</option>
                     }     
                 }
             </InputSelect>
@@ -55,6 +62,12 @@
 </div>
 
 @code {
+    public int xx;
+
+    protected override async Task OnInitializedAsync()
+    {
+    }
+
 
     private void HandleValidSubmit()
     {

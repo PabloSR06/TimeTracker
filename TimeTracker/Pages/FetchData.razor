@@ -7,7 +7,7 @@
 @using TimeTracker.Models;
 @inject MySqlService service
 @inject LoginState _loginState;
-@inject TimeTracker.Models.ClockHistoryMin _clockHistory;
+@inject TimeTracker.Models.ClockHistoryInput _clockHistory;
 
 
 @if (checkInTime.isOpen)
@@ -15,6 +15,17 @@
     if (checkInTime.time_table != null)
     {
         <a>@checkInTime.time_table.start_time</a>
+        if (checkInTime.clockHistories != null)
+        {
+            foreach (var time in checkInTime.clockHistories)
+            {
+                <br />
+                <div>
+                    <a>@time.Minutes</a>
+                    <a>@time.Project_id</a>
+                </div>
+            } 
+        }
         if (!checkInTime.time_table.isFinish)
         {
             <button class="btn btn-primary" @onclick="ClockOut">Finish</button>
