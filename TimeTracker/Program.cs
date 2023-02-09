@@ -16,7 +16,6 @@ namespace TimeTracker
             builder.Services.AddRazorPages();
             builder.Services.AddServerSideBlazor();
             builder.Services.AddScoped<LoginState>();
-
             builder.Services.AddSingleton<MySqlService>();
 
             var app = builder.Build();

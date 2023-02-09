@@ -41,6 +41,7 @@ else
         {
 
             loginState.SetLogin(true, userInput.Email);
+            loginState.userId = 1;
             var userId = 1;
             loginState.userCollections = service.getUserHasColection(userId);
 

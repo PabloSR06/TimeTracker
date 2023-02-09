@@ -1,0 +1,125 @@
+﻿@using TimeTracker.Data
+@using TimeTracker.Service;
+@using TimeTracker.Models;
+@inject MySqlService service
+@inject LoginState _loginState;
+
+
+@if (!PopupVisible)
+{
+    @if (checkInTime.isOpen)
+    {
+        <button @onclick="AddProjectTime">Add Time</button>
+        if (checkInTime.time_table != null)
+        {
+            <div>
+                <div>
+                    <a>Start: </a>
+                    <a>@checkInTime.time_table.start_time</a>
+                </div>
+                @if (checkInTime.clockHistories != null)
+                {
+                    @foreach (var time in checkInTime.clockHistories)
+                    {
+                        <br />
+                        <div>
+                            <div>
+                                <a>Minutes: </a>
+                                <a>@time.Minutes</a>
+                            </div>
+
+                            @if (_loginState.projects.TryGetValue(@time.Project_id, out string? projectName))
+                            {
+                                <div>
+                                    <a>Project: </a>
+                                    <a>@projectName</a>
+                                </div>
+
+                            }
+
+                        </div>
+                    }
+                }
+                <div>
+                    @if (!checkInTime.time_table.isFinish)
+                    {
+                        <button class="btn btn-primary" @onclick="ClockOut">Finish</button>
+                    }
+                    else
+                    {
+                        <a>End: </a>
+                        <a>@checkInTime.time_table.finish_time</a>
+                    }
+                </div>
+            </div>
+        }
+        else
+        {
+            <a>Algo no cuadra</a>
+        }
+    }
+    else
+    {
+        <button class="btn btn-primary" @onclick="ClockIn">Start</button>
+    }
+}
+else
+{
+    <div>
+        <AddTime Id="TimeClock_id" Status="OnPopUpChange" />
+    </div>
+}
+
+
+
+@code {
+
+    private bool PopupVisible { get; set; }
+
+    private int TimeClock_id { get; set; }
+
+    private CheckInTime checkInTime = new CheckInTime();
+
+    private void ClockIn()
+    {
+        ClockInModel clock_in = new ClockInModel()
+            {
+                user_id = _loginState.userId,
+                start_time = DateTime.Now.TimeOfDay,
+                date = DateTime.Today
+
+            };
+
+        checkInTime = service.ClockIn(clock_in).Result;
+    }
+    private void ClockOut()
+    {
+        ClockOutModel clockOut = new ClockOutModel()
+            {
+                user_id = _loginState.userId,
+                finish_time = DateTime.Now.TimeOfDay,
+                date = DateTime.Today
+
+            };
+        checkInTime = service.ClockOut(clockOut).Result;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        checkInTime = service.GetClockIn(_loginState.userId, DateTime.Today);
+    }
+
+    private void AddProjectTime()
+    {
+        if (checkInTime.time_table != null)
+            TimeClock_id = checkInTime.time_table.Id;
+
+        PopupVisible = true;
+    }
+
+    private void OnPopUpChange(bool inserted)
+    {
+        PopupVisible = inserted;
+    }
+
+}
