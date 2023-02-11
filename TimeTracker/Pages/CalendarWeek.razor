@@ -1,0 +1,108 @@
+﻿
+<button @onclick="downWeek">down</button>
+<button @onclick="upWeek">up</button>
+
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Mon</th>
+            <th>Tue</th>
+            <th>Wed</th>
+            <th>Thu</th>
+            <th>Fri</th>
+            <th>Sat</th>
+            <th>Sun</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            @for (int i = 0; i < 7; i++)
+            {
+                int currentDay = (WeekNumber - 1) * 7 + i + 1 - firstDayOfMonth;
+
+                if (currentDay < 1 || currentDay > daysInMonth)
+                {
+                    <td></td>
+                }
+                else
+                {
+                    <td><a @onclick="@(() => SelectDay(currentDay))">@currentDay</a></td>
+                }
+                
+            }
+        </tr>
+    </tbody>
+</table>
+
+@code {
+    [Parameter]
+    public int Year { get; set; }
+
+    [Parameter]
+    public int Month { get; set; }
+
+    [Parameter]
+    public int WeekNumber { get; set; }
+
+    [Parameter]
+    public EventCallback<DateOnly> SelectedDay { get; set; }
+
+    private int daysInMonth;
+    private int firstDayOfMonth;
+    private int numberOfWeeks;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        loadWeek();
+    }
+    private void loadWeek()
+    {
+
+        daysInMonth = DateTime.DaysInMonth(Year, Month);
+        firstDayOfMonth = ((int)new DateTime(Year, Month, 1).DayOfWeek + 6) % 7;
+        numberOfWeeks = (int)Math.Ceiling((firstDayOfMonth + daysInMonth) / 7.0);
+    }
+
+
+    private void upWeek()
+    {
+        if (WeekNumber == numberOfWeeks)
+        {
+            Month++;
+            WeekNumber = 1;
+            loadWeek();
+        }
+        else
+        {
+            WeekNumber++;
+        }
+        
+    }
+    private void downWeek()
+    {
+
+
+
+        if (WeekNumber == 1)
+        {
+            Month--;
+
+            WeekNumber = numberOfWeeks;
+            loadWeek();
+        }
+        else
+        {
+            WeekNumber--;
+        }
+       
+
+    }
+
+    private void SelectDay(int day){
+        
+        DateOnly date = new DateOnly(Year, Month, day);
+    }
+}

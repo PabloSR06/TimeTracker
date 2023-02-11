@@ -1,4 +1,5 @@
-﻿@using TimeTracker.Service;
+﻿@using System.Globalization;
+@using TimeTracker.Service;
 @using TimeTracker.Models;
 @inject Data.LoginState loginState;
 @inject MySqlService service;
@@ -25,6 +26,10 @@
         <input type="submit" class="btn btn-primary" value="Login" />
     </EditForm>
 
+    <Calendar Year="2023" Month="3" SelectedDay="OnSelectedDay"></Calendar>
+    <CalendarWeek Year="2023" Month="3" WeekNumber="1" SelectedDay="OnSelectedDay"></CalendarWeek>
+
+
 }
 else
 {
@@ -34,6 +39,7 @@ else
 @code {
     UserModelInput userInput = new UserModelInput();
     string correctPassword = "admin";
+
 
     private void HandleValidSubmit()
     {
@@ -55,5 +61,10 @@ else
     {
         
         loginState.SetLogin(false, "");
+    }
+
+    private void OnSelectedDay(DateOnly date)
+    {
+        
     }
 }

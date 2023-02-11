@@ -1,0 +1,99 @@
+﻿<button @onclick="downMonth">down</button>
+<button @onclick="upMonth">up</button>
+
+
+
+<p>@Year</p>
+<p>@Month</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Mon</th>
+            <th>Tue</th>
+            <th>Wed</th>
+            <th>Thu</th>
+            <th>Fri</th>
+            <th>Sat</th>
+            <th>Sun</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i = 0; i < numberOfWeeks; i++)
+        {
+            <tr>
+                @for (int j = 0; j < 7; j++)
+                {
+                    int currentDay = (i * 7) + j + 1 - firstDayOfMonth;
+                    if (currentDay < 1 || currentDay > daysInMonth)
+                    {
+                        <td></td>
+                    }
+                    else
+                    {
+                        <td><a @onclick="@(() => SelectDay(currentDay))">@currentDay</a></td>
+                    }
+                }
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    [Parameter]
+    public int Year { get; set; }
+
+    [Parameter]
+    public int Month { get; set; }
+
+    [Parameter]
+    public EventCallback<DateOnly> SelectedDay { get; set; }
+
+    private int daysInMonth;
+    private int firstDayOfMonth;
+    private int numberOfWeeks;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        loadCalendar();
+    }
+    private void loadCalendar(){
+
+        daysInMonth = DateTime.DaysInMonth(Year, Month);
+        firstDayOfMonth = ((int)new DateTime(Year, Month, 1).DayOfWeek + 6) % 7;
+        numberOfWeeks = (int)Math.Ceiling((firstDayOfMonth + daysInMonth) / 7.0);
+    }
+
+    private void upMonth()
+    {     
+        if (Month != 12)
+        {
+            Month++;
+        }
+        else
+        {
+            Month = 1;
+            Year++;
+        }
+        loadCalendar();
+    }
+    private void downMonth()
+    {
+        if (Month != 1)
+        {
+            Month--;
+        }
+        else
+        {
+            Month = 12;
+            Year--;
+        }
+        loadCalendar();
+    }
+
+    private void SelectDay(int day)
+    {
+        DateOnly date = new DateOnly(Year, Month, day);
+        SelectedDay.InvokeAsync(date);
+    }
+}
