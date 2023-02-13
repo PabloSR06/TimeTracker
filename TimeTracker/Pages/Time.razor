@@ -7,6 +7,8 @@
 
 @if (!PopupVisible)
 {
+    <CalendarWeek InputDate="calendar" SelectedDay="OnSelectedDay"></CalendarWeek>
+
     @if (checkInTime.isOpen)
     {
         <button @onclick="AddProjectTime">Add Time</button>
@@ -80,13 +82,15 @@ else
 
     private CheckInTime checkInTime = new CheckInTime();
 
+    private CalendarInput calendar = new CalendarInput();
+
     private void ClockIn()
     {
         ClockInModel clock_in = new ClockInModel()
             {
                 user_id = _loginState.userId,
                 start_time = DateTime.Now.TimeOfDay,
-                date = DateTime.Today
+                date = calendar.ToDate()
 
             };
 
@@ -98,7 +102,7 @@ else
             {
                 user_id = _loginState.userId,
                 finish_time = DateTime.Now.TimeOfDay,
-                date = DateTime.Today
+                date = calendar.ToDate(),
 
             };
         checkInTime = service.ClockOut(clockOut).Result;
@@ -106,7 +110,16 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        checkInTime = service.GetClockIn(_loginState.userId, DateTime.Today);
+        var date = DateTime.Today;
+        calendar = new CalendarInput
+        {
+            Year = date.Year,
+            Month = date.Month,
+            WeekNumber = (int)new DateTime(date.Year, date.Month, 1).DayOfWeek,
+        };
+
+
+        checkInTime = service.GetClockIn(_loginState.userId, calendar.ToDate());
     }
 
     private void AddProjectTime()
@@ -120,6 +133,12 @@ else
     private void OnPopUpChange(bool inserted)
     {
         PopupVisible = inserted;
+    }
+
+    private void OnSelectedDay(Boolean date)
+    {
+        checkInTime = service.GetClockIn(_loginState.userId, calendar.ToDate());
+
     }
 
 }

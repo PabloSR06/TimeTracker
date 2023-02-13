@@ -16,7 +16,7 @@ namespace TimeTracker.Models
     {
         public int user_id { get; set; }
         public TimeSpan start_time { get; set; }
-        public DateTime date { get; set; }
+        public DateOnly date { get; set; }
 
     }
 
@@ -24,7 +24,7 @@ namespace TimeTracker.Models
     {
         public int user_id { get; set; }
         public TimeSpan finish_time { get; set; }
-        public DateTime date { get; set; }
+        public DateOnly date { get; set; }
 
     }
 

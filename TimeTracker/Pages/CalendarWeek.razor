@@ -1,4 +1,5 @@
-﻿
+﻿@using TimeTracker.Models;
+
 <button @onclick="downWeek">down</button>
 <button @onclick="upWeek">up</button>
 
@@ -20,7 +21,7 @@
         <tr>
             @for (int i = 0; i < 7; i++)
             {
-                int currentDay = (WeekNumber - 1) * 7 + i + 1 - firstDayOfMonth;
+                int currentDay = (InputDate.WeekNumber - 1) * 7 + i + 1 - firstDayOfMonth;
 
                 if (currentDay < 1 || currentDay > daysInMonth)
                 {
@@ -38,16 +39,10 @@
 
 @code {
     [Parameter]
-    public int Year { get; set; }
+    public CalendarInput InputDate { get; set; }
 
     [Parameter]
-    public int Month { get; set; }
-
-    [Parameter]
-    public int WeekNumber { get; set; }
-
-    [Parameter]
-    public EventCallback<DateOnly> SelectedDay { get; set; }
+    public EventCallback<Boolean> SelectedDay { get; set; }
 
     private int daysInMonth;
     private int firstDayOfMonth;
@@ -61,23 +56,23 @@
     private void loadWeek()
     {
 
-        daysInMonth = DateTime.DaysInMonth(Year, Month);
-        firstDayOfMonth = ((int)new DateTime(Year, Month, 1).DayOfWeek + 6) % 7;
+        daysInMonth = DateTime.DaysInMonth(InputDate.Year, InputDate.Month);
+        firstDayOfMonth = ((int)new DateTime(InputDate.Year, InputDate.Month, 1).DayOfWeek + 6) % 7;
         numberOfWeeks = (int)Math.Ceiling((firstDayOfMonth + daysInMonth) / 7.0);
     }
 
 
     private void upWeek()
     {
-        if (WeekNumber == numberOfWeeks)
+        if (InputDate.WeekNumber == numberOfWeeks)
         {
-            Month++;
-            WeekNumber = 1;
+            InputDate.Month++;
+            InputDate.WeekNumber = 1;
             loadWeek();
         }
         else
         {
-            WeekNumber++;
+            InputDate.WeekNumber++;
         }
         
     }
@@ -86,23 +81,25 @@
 
 
 
-        if (WeekNumber == 1)
+        if (InputDate.WeekNumber == 1)
         {
-            Month--;
+            InputDate.Month--;
 
-            WeekNumber = numberOfWeeks;
+            InputDate.WeekNumber = numberOfWeeks;
             loadWeek();
         }
         else
         {
-            WeekNumber--;
+            InputDate.WeekNumber--;
         }
        
 
     }
 
-    private void SelectDay(int day){
-        
-        DateOnly date = new DateOnly(Year, Month, day);
+    private void SelectDay(int day)
+    {
+
+        InputDate.Day = day;
+        SelectedDay.InvokeAsync(true);
     }
 }

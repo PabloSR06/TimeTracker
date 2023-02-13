@@ -56,7 +56,7 @@ namespace TimeTracker.Service
             return null;
         }
 
-        public CheckInTime GetClockIn(int user_id, DateTime today)
+        public CheckInTime GetClockIn(int user_id, DateOnly today)
         {
             try
             {
@@ -114,7 +114,7 @@ namespace TimeTracker.Service
         {
             try
             {
-                CheckInTime checkTime = GetClockIn(clock_in.user_id, DateTime.Today);
+                CheckInTime checkTime = GetClockIn(clock_in.user_id, clock_in.date);
                 if (!checkTime.isOpen)
                 {
                     MySqlCommand cmd = GetConnection().CreateCommand();
@@ -131,7 +131,7 @@ namespace TimeTracker.Service
 
                     CloseConnection();
                 }
-                checkTime = GetClockIn(clock_in.user_id, DateTime.Today);
+                checkTime = GetClockIn(clock_in.user_id, clock_in.date);
 
 
                 return Task.FromResult(checkTime).Result;
@@ -146,7 +146,7 @@ namespace TimeTracker.Service
         {
             try
             {
-                CheckInTime checkTime = GetClockIn(clockOut.user_id, DateTime.Today);
+                CheckInTime checkTime = GetClockIn(clockOut.user_id, clockOut.date);
                 if (checkTime.isOpen)
                 {
                     if (checkTime.time_table != null && !checkTime.time_table.isFinish)
@@ -165,7 +165,7 @@ namespace TimeTracker.Service
                         CloseConnection();
                     }
                 }
-                checkTime = GetClockIn(clockOut.user_id, DateTime.Today);
+                checkTime = GetClockIn(clockOut.user_id, clockOut.date);
 
 
                 return Task.FromResult(checkTime).Result;
