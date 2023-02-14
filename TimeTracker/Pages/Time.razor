@@ -87,37 +87,28 @@ else
     private void ClockIn()
     {
         ClockInModel clock_in = new ClockInModel()
-            {
-                user_id = _loginState.userId,
-                start_time = DateTime.Now.TimeOfDay,
-                date = calendar.ToDate()
-
-            };
+        {
+            user_id = _loginState.userId,
+            start_time = DateTime.Now.TimeOfDay,
+            date = calendar.ToDate()
+        };
 
         checkInTime = service.ClockIn(clock_in).Result;
     }
     private void ClockOut()
     {
         ClockOutModel clockOut = new ClockOutModel()
-            {
-                user_id = _loginState.userId,
-                finish_time = DateTime.Now.TimeOfDay,
-                date = calendar.ToDate(),
-
-            };
+        {
+            user_id = _loginState.userId,
+            finish_time = DateTime.Now.TimeOfDay,
+            date = calendar.ToDate(),
+        };
         checkInTime = service.ClockOut(clockOut).Result;
     }
 
     protected override async Task OnInitializedAsync()
     {
-        var date = DateTime.Today;
-        calendar = new CalendarInput
-        {
-            Year = date.Year,
-            Month = date.Month,
-            WeekNumber = (int)new DateTime(date.Year, date.Month, 1).DayOfWeek,
-        };
-
+        calendar = new CalendarInput();
 
         checkInTime = service.GetClockIn(_loginState.userId, calendar.ToDate());
     }

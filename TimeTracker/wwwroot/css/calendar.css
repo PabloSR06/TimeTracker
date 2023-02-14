@@ -1,0 +1,43 @@
+﻿.days {
+    display: grid;
+    gap: 3px;
+    grid-template-columns: repeat(7, 1fr);
+    justify-items: center;
+    padding-left: 0px;
+}
+.days_name {
+
+    text-transform: uppercase;
+    text-align: center;
+    color: #7D8994;
+}
+.days li {
+    width: 3.5rem;
+    display: grid;
+    place-items: center;
+    position: relative;
+    list-style: none;
+}
+.days_number {
+    cursor: pointer;
+}
+.days_selected {
+    font-weight: bold;
+}
+.calendar {
+    display:flex;
+    justify-content:center;
+}
+
+/*Buttons*/
+.btn-calendar{
+    background-color: #F2F2F2;
+    border: 1px solid #F2F2F2;
+    border-radius: 5px;
+    color: #7D8994;
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding: 0.5rem 1rem;
+    margin: 0.5rem;
+    cursor: pointer;
+}

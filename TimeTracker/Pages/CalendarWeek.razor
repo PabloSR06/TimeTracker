@@ -1,41 +1,49 @@
 ﻿@using TimeTracker.Models;
 
-<button @onclick="downWeek">down</button>
-<button @onclick="upWeek">up</button>
+<link href="./css/calendar.css" rel="stylesheet" />
 
 
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Mon</th>
-            <th>Tue</th>
-            <th>Wed</th>
-            <th>Thu</th>
-            <th>Fri</th>
-            <th>Sat</th>
-            <th>Sun</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
+
+
+<div class="calendar">
+    <a class="btn-calendar" @onclick="downWeek">&lt;</a>
+    <div>
+        <ul class="days days_name">
+            <li>Mon</li>
+            <li>Tue</li>
+            <li>Wed</li>
+            <li>Thu</li>
+            <li>Fri</li>
+            <li>Sat</li>
+            <li>Sun</li>
+        </ul>
+        <ul class="days days_number">
             @for (int i = 0; i < 7; i++)
             {
                 int currentDay = (InputDate.WeekNumber - 1) * 7 + i + 1 - firstDayOfMonth;
 
                 if (currentDay < 1 || currentDay > daysInMonth)
                 {
-                    <td></td>
+                    <li>x</li>
                 }
                 else
                 {
-                    <td><a @onclick="@(() => SelectDay(currentDay))">@currentDay</a></td>
+                    if (InputDate.Day == currentDay)
+                    {
+                        <li class="days_selected"><a>@currentDay</a></li>
+                    }
+                    else
+                    {
+                        <li><a @onclick="@(() => SelectDay(currentDay))">@currentDay</a></li>
+                    }
                 }
-                
+
             }
-        </tr>
-    </tbody>
-</table>
+        </ul>
+    </div>
+    <a class="btn-calendar" @onclick="upWeek">&gt;</a>
+</div>
 
 @code {
     [Parameter]
@@ -74,13 +82,10 @@
         {
             InputDate.WeekNumber++;
         }
-        
+
     }
     private void downWeek()
     {
-
-
-
         if (InputDate.WeekNumber == 1)
         {
             InputDate.Month--;
@@ -92,14 +97,15 @@
         {
             InputDate.WeekNumber--;
         }
-       
+
 
     }
 
     private void SelectDay(int day)
     {
-
         InputDate.Day = day;
         SelectedDay.InvokeAsync(true);
     }
+
+
 }
