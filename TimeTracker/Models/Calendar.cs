@@ -11,6 +11,8 @@ namespace TimeTracker.Models
 
         public int Day;
 
+        public DateOnly Today;
+
         public CalendarInput()
         {
             var date = DateTime.Today;
@@ -18,6 +20,7 @@ namespace TimeTracker.Models
             Month = date.Month;
             Day = date.Day;
             WeekNumber = (int)new DateTime(Year, Month, 1).DayOfWeek;
+            Today = new DateOnly(Year, Month, Day);
         }
 
         public CalendarInput(int year, int month, int day)
@@ -26,6 +29,7 @@ namespace TimeTracker.Models
             Month = month;
             Day = day;
             WeekNumber = (int)new DateTime(Year, Month, 1).DayOfWeek;
+            Today = new DateOnly(Year, Month, Day);
         }
 
         public DateOnly ToDate()
@@ -36,6 +40,17 @@ namespace TimeTracker.Models
             }
             return new DateOnly(Year, Month, Day);
 
+        }
+        public DateOnly ToDate(int day)
+        {
+            
+            return new DateOnly(Year, Month, day);
+
+        }
+
+        public bool IsToday(int day)
+        {
+            return Today.Equals(ToDate(day));          
         }
 
     }

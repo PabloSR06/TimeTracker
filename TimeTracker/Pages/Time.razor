@@ -7,7 +7,9 @@
 
 @if (!PopupVisible)
 {
+    <CompleteCalendar InputDate="calendar" SelectedDay="OnSelectedDay"></CompleteCalendar>
     <CalendarWeek InputDate="calendar" SelectedDay="OnSelectedDay"></CalendarWeek>
+
 
     @if (checkInTime.isOpen)
     {
