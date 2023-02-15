@@ -1,4 +1,6 @@
 ﻿@using TimeTracker.Data
+@using TimeTracker.Pages.Time;
+@using TimeTracker.Pages.Calendar;
 @using TimeTracker.Service;
 @using TimeTracker.Models;
 @inject MySqlService service
@@ -7,23 +9,22 @@
 
 @if (!PopupVisible)
 {
-    <CompleteCalendar InputDate="calendar" SelectedDay="OnSelectedDay"></CompleteCalendar>
-    <CalendarWeek InputDate="calendar" SelectedDay="OnSelectedDay"></CalendarWeek>
+    <JointCalendar InputDate="Calendar"></JointCalendar>
 
 
-    @if (checkInTime.isOpen)
+    @if (CheckInTime.isOpen)
     {
         <button @onclick="AddProjectTime">Add Time</button>
-        if (checkInTime.time_table != null)
+        if (CheckInTime.time_table != null)
         {
             <div>
                 <div>
                     <a>Start: </a>
-                    <a>@checkInTime.time_table.start_time</a>
+                    <a>@CheckInTime.time_table.start_time</a>
                 </div>
-                @if (checkInTime.clockHistories != null)
+                @if (CheckInTime.clockHistories != null)
                 {
-                    @foreach (var time in checkInTime.clockHistories)
+                    @foreach (var time in CheckInTime.clockHistories)
                     {
                         <br />
                         <div>
@@ -38,21 +39,19 @@
                                     <a>Project: </a>
                                     <a>@projectName</a>
                                 </div>
-
                             }
-
                         </div>
                     }
                 }
                 <div>
-                    @if (!checkInTime.time_table.isFinish)
+                    @if (!CheckInTime.time_table.isFinish)
                     {
                         <button class="btn btn-primary" @onclick="ClockOut">Finish</button>
                     }
                     else
                     {
                         <a>End: </a>
-                        <a>@checkInTime.time_table.finish_time</a>
+                        <a>@CheckInTime.time_table.finish_time</a>
                     }
                 </div>
             </div>
@@ -82,9 +81,9 @@ else
 
     private int TimeClock_id { get; set; }
 
-    private CheckInTime checkInTime = new CheckInTime();
+    private CheckInTime CheckInTime = new CheckInTime();
 
-    private CalendarInput calendar = new CalendarInput();
+    private CalendarInput Calendar = new CalendarInput();
 
     private void ClockIn()
     {
@@ -92,10 +91,10 @@ else
         {
             user_id = _loginState.userId,
             start_time = DateTime.Now.TimeOfDay,
-            date = calendar.ToDate()
+            date = Calendar.ToDate()
         };
 
-        checkInTime = service.ClockIn(clock_in).Result;
+        CheckInTime = service.ClockIn(clock_in).Result;
     }
     private void ClockOut()
     {
@@ -103,22 +102,22 @@ else
         {
             user_id = _loginState.userId,
             finish_time = DateTime.Now.TimeOfDay,
-            date = calendar.ToDate(),
+            date = Calendar.ToDate(),
         };
-        checkInTime = service.ClockOut(clockOut).Result;
+        CheckInTime = service.ClockOut(clockOut).Result;
     }
 
     protected override async Task OnInitializedAsync()
     {
-        calendar = new CalendarInput();
+        Calendar = new CalendarInput();
 
-        checkInTime = service.GetClockIn(_loginState.userId, calendar.ToDate());
+        CheckInTime = service.GetClockIn(_loginState.userId, Calendar.ToDate());
     }
 
     private void AddProjectTime()
     {
-        if (checkInTime.time_table != null)
-            TimeClock_id = checkInTime.time_table.Id;
+        if (CheckInTime.time_table != null)
+            TimeClock_id = CheckInTime.time_table.Id;
 
         PopupVisible = true;
     }
@@ -130,7 +129,7 @@ else
 
     private void OnSelectedDay(Boolean date)
     {
-        checkInTime = service.GetClockIn(_loginState.userId, calendar.ToDate());
+        CheckInTime = service.GetClockIn(_loginState.userId, Calendar.ToDate());
 
     }
 

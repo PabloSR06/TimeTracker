@@ -43,7 +43,6 @@
                 </ul>
             }
         </div>
-        @*<p class="btn-toggleCalendar" @onclick="ToggleCalendar">BIG</p>*@
     </div>
     <div class="cnt-calendar"><p @onclick="UpMonth" class="btn-calendar">&gt;</p></div>
 </div>
@@ -101,7 +100,6 @@
 
     private void SelectDay(int day)
     {
-        DateOnly date = new DateOnly(InputDate.Year, InputDate.Month, day);
         SelectedDay.InvokeAsync(true);
     }
 }

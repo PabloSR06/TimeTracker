@@ -3,9 +3,6 @@
 <link href="./css/calendar.css" rel="stylesheet" />
 
 
-
-
-
 <div class="calendar">
     
     <div class="cnt-calendar" @onclick="DownWeek"><p class="btn-calendarMin">&lt;</p></div>
@@ -45,7 +42,6 @@
                 }
             </ul>
         </div>
-        @*<p class="btn-toggleCalendar" @onclick="ToggleCalendar">BIG</p>*@
     </div>
     <div class="cnt-calendar" @onclick="UpWeek"><p class="btn-calendarMin">&gt;</p></div>
 
@@ -113,10 +109,6 @@
         SelectedDay.InvokeAsync(true);
     }
 
-    private void ToggleCalendar()
-    {
-        
-    }
 
 
 }
