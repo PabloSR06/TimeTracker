@@ -89,7 +89,7 @@ else
     {
         ClockInModel clock_in = new ClockInModel()
         {
-            user_id = _loginState.userId,
+            user_id = _loginState.User.Id,
             start_time = DateTime.Now.TimeOfDay,
             date = Calendar.ToDate()
         };
@@ -100,7 +100,7 @@ else
     {
         ClockOutModel clockOut = new ClockOutModel()
         {
-            user_id = _loginState.userId,
+                user_id = _loginState.User.Id,
             finish_time = DateTime.Now.TimeOfDay,
             date = Calendar.ToDate(),
         };
@@ -111,7 +111,7 @@ else
     {
         Calendar = new CalendarInput();
 
-        CheckInTime = service.GetClockIn(_loginState.userId, Calendar.ToDate());
+        CheckInTime = service.GetClockIn(_loginState.User.Id, Calendar.ToDate());
     }
 
     private void AddProjectTime()
@@ -129,7 +129,7 @@ else
 
     private void OnSelectedDay(Boolean date)
     {
-        CheckInTime = service.GetClockIn(_loginState.userId, Calendar.ToDate());
+        CheckInTime = service.GetClockIn(_loginState.User.Id, Calendar.ToDate());
 
     }
 

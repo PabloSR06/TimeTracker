@@ -15,8 +15,10 @@ namespace TimeTracker
             // Add services to the container.
             builder.Services.AddRazorPages();
             builder.Services.AddServerSideBlazor();
-            builder.Services.AddScoped<LoginState>();
+            builder.Services.AddSingleton<LoginState>();
             builder.Services.AddSingleton<MySqlService>();
+
+            builder.Services.AddSingleton<UserService>();
 
             var app = builder.Build();
 

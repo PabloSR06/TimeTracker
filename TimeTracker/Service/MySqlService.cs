@@ -13,7 +13,6 @@ namespace TimeTracker.Service
     public class MySqlService
     {
         private static MySqlConnection? _mySqlConnection;
-        private static LoginState? _loginState;
         public MySqlService(IConfiguration configuration)
         {
             var sqlIsConfigured = !string.IsNullOrEmpty(configuration["sqlkeys:server"])

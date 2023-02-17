@@ -1,10 +1,10 @@
 ﻿@using System.Globalization;
 @using TimeTracker.Service;
 @using TimeTracker.Models;
-@inject Data.LoginState loginState;
+@inject Data.LoginState _loginState;
 @inject MySqlService service;
 
-@if (loginState.IsLoggedIn.Equals(false))
+@if (_loginState.IsLoggedIn.Equals(false))
 {
         <h1>Login</h1>
 
@@ -35,29 +35,26 @@ else
 
 @code {
     UserModelInput userInput = new UserModelInput();
-    string correctPassword = "admin";
+
 
 
     private void HandleValidSubmit()
     {
-        if (userInput.Password.Equals(correctPassword))
+        _loginState.Login(userInput);
+
+        if (_loginState.IsLoggedIn)
         {
-
-            loginState.SetLogin(true, userInput.Email);
-            loginState.userId = 1;
-            var userId = 1;
-            loginState.userCollections = service.getUserHasColection(userId);
-
-            loginState.projects = service.getAllProjects();
-            loginState.collections = service.getAllCollections();
+            _loginState.userCollections = service.getUserHasColection(_loginState.User.Id);
+            _loginState.projects = service.getAllProjects();
+            _loginState.collections = service.getAllCollections();
         }
+
     }
 
 
     void HandleLogout()
     {
-        
-        loginState.SetLogin(false, "");
+        _loginState.LogOut();
     }
 
     
