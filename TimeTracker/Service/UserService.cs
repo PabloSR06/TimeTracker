@@ -68,18 +68,22 @@ namespace TimeTracker.Service
 
         private static string HashPassword(string password)
         {
-            using (SHA256 sha256 = new SHA256Managed())
-            {
-                byte[] bytes = Encoding.UTF8.GetBytes(password);
-                byte[] hash = sha256.ComputeHash(bytes);
+            string hash = String.Empty;
 
-                StringBuilder result = new StringBuilder();
-                for (int i = 0; i < hash.Length; i++)
+            // Initialize a SHA256 hash object
+            using (SHA256 sha256 = SHA256.Create())
+            {
+                // Compute the hash of the given string
+                byte[] hashValue = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+
+                // Convert the byte array to string format
+                foreach (byte b in hashValue)
                 {
-                    result.Append(hash[i].ToString("x2"));
+                    hash += $"{b:x2}";
                 }
-                return result.ToString();
             }
+
+            return hash;
         }
     }
 }
