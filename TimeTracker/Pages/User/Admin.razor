@@ -1,0 +1,99 @@
+﻿@using TimeTracker.Service;
+@using TimeTracker.Models;
+@inject MySqlService service;
+@inject UserService _userService;
+@inject Data.LoginState _loginState;
+
+
+<div>
+    @foreach (var collection in CollectionDictionary)
+    {
+        <div>
+            <a @onclick="() => LoadColection(collection.Key)">@collection.Value.Name</a>
+        </div>
+
+        <br />
+        <div>
+            <ul>
+                @foreach (var project in collection.Value.Projects)
+                {
+                    <li @onclick="() => LoadProject(project.Id)"> @project.Name</li>
+                }
+            </ul>
+        </div>
+
+    }
+    @if (projectUser != null)
+    {
+        @foreach (var x in projectUser)
+        {
+
+            <div>
+                @if (@Users.TryGetValue(x.User_id, out UserMin user) && user != null)
+                {
+                    <a>@user.Name</a>
+                    <a>@user.Email</a>
+                }
+            </div>
+        }
+    }
+
+    @if (collectionUser != null)
+    {
+        @foreach (var x in collectionUser)
+        {
+
+            <div>
+                @if (@Users.TryGetValue(x.User_id, out UserMin user) && user != null)
+                {
+                    <a>@user.Name</a>
+                    <a>@user.Email</a>
+                }
+            </div>
+        }
+    }
+
+    <div>
+        <input @bind-value="SearchText" @bind-value:event="oninput" placeholder="Search by title" />
+    </div>
+
+    @foreach (var x in FilteredUsers)
+    {
+        <a>@x.Name</a> 
+        <br />
+    }
+</div>
+
+
+@code {
+    private Dictionary<int, CollectionDictionary> CollectionDictionary = new Dictionary<int, CollectionDictionary>();
+
+    private Dictionary<int, UserMin> Users = new Dictionary<int, UserMin>();
+    private List<UserMin> UsersList = new List<UserMin>();
+    public string SearchText = "";
+    List<UserMin> FilteredUsers => UsersList.Where(img => img.Email.ToLower().Contains(SearchText.ToLower())).ToList();
+
+    private List<UserHasProject> projectUser = new List<UserHasProject>();
+    private List<UserHasCollection> collectionUser = new List<UserHasCollection>();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        CollectionDictionary = service.GetColectionDictionary();
+        Users = _userService.GetAllUsers();
+
+        UsersList = _userService.GetAllUsersList();
+    }
+    
+
+    private void LoadProject(int id)
+    {
+        projectUser = service.GetProjectUser(id);
+    }
+
+    private void LoadColection(int id)
+    {
+        collectionUser = service.GetCollectionUser(id);
+    }
+}
+

@@ -112,6 +112,7 @@ else
         Calendar = new CalendarInput();
 
         CheckInTime = service.GetClockIn(_loginState.User.Id, Calendar.ToDate());
+        StateHasChanged();
     }
 
     private void AddProjectTime()

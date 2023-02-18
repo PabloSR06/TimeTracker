@@ -85,5 +85,79 @@ namespace TimeTracker.Service
 
             return hash;
         }
+
+        public Dictionary<int, UserMin> GetAllUsers()
+        {
+
+            try
+            {
+                Dictionary<int, UserMin> users = new Dictionary<int, UserMin>();
+                MySqlCommand cmd = _sqlService.GetConnection().CreateCommand();
+                cmd.CommandText = "SELECT id, name, email FROM user;";
+
+                _sqlService.TryOpen();
+
+                MySqlDataReader reader = cmd.ExecuteReader();
+
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        var id = reader.GetInt32("id"); 
+                        UserMin user = new UserMin();
+                        user.Id = id; 
+                        user.Name = reader.GetString("name");
+                        user.Email = reader.GetString("email");
+                        users.Add(id, user);
+                    }
+                }
+
+                _sqlService.CloseConnection();
+
+                return users;
+
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentException("Error in UserService GetAllUsers " + ex.Message);
+            }
+
+        }
+        public List<UserMin> GetAllUsersList()
+        {
+
+            try
+            {
+                List<UserMin> users = new List<UserMin>();
+                MySqlCommand cmd = _sqlService.GetConnection().CreateCommand();
+                cmd.CommandText = "SELECT id, name, email FROM user;";
+
+                _sqlService.TryOpen();
+
+                MySqlDataReader reader = cmd.ExecuteReader();
+
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        UserMin user = new UserMin();
+                        user.Id = reader.GetInt32("id");
+                        user.Name = reader.GetString("name");
+                        user.Email = reader.GetString("email");
+                        users.Add(user);
+                    }
+                }
+
+                _sqlService.CloseConnection();
+
+                return users;
+
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentException("Error in UserService GetAllUsersList " + ex.Message);
+            }
+
+        }
     }
 }

@@ -17,6 +17,9 @@
             <article class="content px-4">
                     <TimeTracker.Pages.Time.Time></TimeTracker.Pages.Time.Time>
             </article>
+            <article class="content px-4">
+                <TimeTracker.Pages.User.Admin></TimeTracker.Pages.User.Admin>
+            </article>
 
         </main>
     </div>
@@ -36,6 +39,7 @@ else
         //loginState.SetLogin(true, "admin");
         //loginState.collections = service.getUserHasColection(1);
         //loginState.projects = service.getUserHasProject(1);
+        StateHasChanged();
     }
 
     public void Dispose()

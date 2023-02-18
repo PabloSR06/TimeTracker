@@ -81,12 +81,12 @@ namespace TimeTracker.Service
                         timeClock.user_id = reader.GetInt32("user_id");
                         if (!reader.IsDBNull("start_time"))
                             timeClock.start_time = reader.GetTimeSpan("start_time");
-                        if(!reader.IsDBNull("finish_time"))
+                        if (!reader.IsDBNull("finish_time"))
                             timeClock.finish_time = reader.GetTimeSpan("finish_time");
                         timeClock.isFinish = reader.GetBoolean("isFinish");
                         if (!reader.IsDBNull("date"))
                             timeClock.date = reader.GetDateTime("date");
-                        
+
 
                         time_Clock.time_table = timeClock;
 
@@ -192,7 +192,7 @@ namespace TimeTracker.Service
 
                 MySqlDataReader reader = cmd.ExecuteReader();
 
-                
+
                 if (reader.HasRows)
                 {
                     while (reader.Read())
@@ -231,6 +231,52 @@ namespace TimeTracker.Service
             }
         }
 
+        public Dictionary<int, CollectionDictionary> GetColectionDictionary()
+        {
+            try
+            {
+                List<ProjectCollection> projects = GetAllProjectsCollection();
+                var collections = GetAllCollections();
+
+                Dictionary<int, CollectionDictionary> dictionary = new Dictionary<int, CollectionDictionary>();
+
+                foreach (var x in collections)
+                {
+                    CollectionDictionary collectionDictionary = new CollectionDictionary
+                    {
+                        Name = x.Value,
+                        Projects = GetProjectByIdCollection(projects, x.Key)
+                    };
+                    dictionary.Add(x.Key, collectionDictionary);
+                }
+
+
+                return dictionary;
+
+            }
+            catch (Exception ex)
+            {
+
+                throw new ArgumentException("Error in getUserHasColection " + ex.Message);
+            }
+        }
+        private List<Project> GetProjectByIdCollection(List<ProjectCollection> projects, int collection_id)
+        {
+            List<Project> list = new List<Project>();
+            foreach (var project in projects)
+            {
+                if (project.Collection_Id == collection_id)
+                {
+                    list.Add(new Project
+                    {
+                        Id = project.Id,
+                        Name = project.Name
+                    });
+                }
+            }
+            return list;
+        }
+
         public List<ClockHistoryMin> getHistory(int timeClock_id)
         {
             try
@@ -260,7 +306,7 @@ namespace TimeTracker.Service
                         clockHistoryMin.Minutes = reader.GetInt32("minutes");
 
                         if (!reader.IsDBNull("description"))
-                            clockHistoryMin.Description= reader.GetString("description");
+                            clockHistoryMin.Description = reader.GetString("description");
 
                         list.Add(clockHistoryMin);
                     }
@@ -327,7 +373,7 @@ namespace TimeTracker.Service
         {
             try
             {
-                
+
                 MySqlCommand cmd = GetConnection().CreateCommand();
                 cmd.CommandText = "INSERT INTO clockHistory (project_id, timeClock_id, minutes, description) VALUES (@project_id, @timeClock_id, @minutes, @description);";
 
@@ -350,7 +396,7 @@ namespace TimeTracker.Service
             }
         }
 
-        public Dictionary<int, string> getAllProjects()
+        public Dictionary<int, string> GetAllProjects()
         {
             try
             {
@@ -382,11 +428,49 @@ namespace TimeTracker.Service
             }
             catch (Exception ex)
             {
-                throw new ArgumentException("Error in getAllProjects " + ex.Message);
+                throw new ArgumentException("Error in GetAllProjects " + ex.Message);
             }
         }
 
-        public Dictionary<int, string> getAllCollections()
+        public List<ProjectCollection> GetAllProjectsCollection()
+        {
+            try
+            {
+                List<ProjectCollection> projects = new List<ProjectCollection>();
+
+                MySqlCommand cmd = GetConnection().CreateCommand();
+                cmd.CommandText = "SELECT id, name, collection_id FROM project;";
+
+                TryOpen();
+
+                MySqlDataReader reader = cmd.ExecuteReader();
+
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        ProjectCollection project = new ProjectCollection
+                        {
+                            Id = reader.GetInt32("id"),
+                            Name = reader.GetString("name"),
+                            Collection_Id = reader.GetInt32("collection_id")
+                        };
+                        projects.Add(project);
+                    }
+                }
+
+                CloseConnection();
+
+                return projects;
+
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentException("Error in GetAllProjectsCollection " + ex.Message);
+            }
+        }
+
+        public Dictionary<int, string> GetAllCollections()
         {
             try
             {
@@ -418,7 +502,87 @@ namespace TimeTracker.Service
             }
             catch (Exception ex)
             {
-                throw new ArgumentException("Error in getAllCollections " + ex.Message);
+                throw new ArgumentException("Error in GetAllCollections " + ex.Message);
+            }
+        }
+
+        public List<UserHasProject> GetProjectUser(int project_id)
+        {
+            try
+            {
+                List<UserHasProject> list = new List<UserHasProject>();
+
+                MySqlCommand cmd = GetConnection().CreateCommand();
+                cmd.CommandText = "SELECT * from userhasproject where project_id = @project_id;";
+
+                cmd.Parameters.Add("@project_id", MySqlDbType.Int32).Value = project_id;
+
+                TryOpen();
+
+                MySqlDataReader reader = cmd.ExecuteReader();
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+
+                        UserHasProject user = new UserHasProject();
+
+                        user.User_id = reader.GetInt32("user_id");
+                        user.Project_id = reader.GetInt32("project_id");
+
+                        list.Add(user);
+
+                    }
+                }
+                CloseConnection();
+
+                return list;
+
+            }
+            catch (Exception ex)
+            {
+
+                throw new ArgumentException("Error in GetProjectUser " + ex.Message);
+            }
+        }
+
+        public List<UserHasCollection> GetCollectionUser(int collection_id)
+        {
+            try
+            {
+                List<UserHasCollection> list = new List<UserHasCollection>();
+
+                MySqlCommand cmd = GetConnection().CreateCommand();
+                cmd.CommandText = "SELECT * from userhascollection where collection_id = @collection_id;";
+
+                cmd.Parameters.Add("@collection_id", MySqlDbType.Int32).Value = collection_id;
+
+                TryOpen();
+
+                MySqlDataReader reader = cmd.ExecuteReader();
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+
+                        UserHasCollection user = new UserHasCollection();
+
+                        user.User_id = reader.GetInt32("user_id");
+                        user.Project_id = reader.GetInt32("collection_id");
+
+                        list.Add(user);
+
+                    }
+                }
+                CloseConnection();
+
+                return list;
+
+            }
+            catch (Exception ex)
+            {
+
+                throw new ArgumentException("Error in GetCollectionUser " + ex.Message);
             }
         }
     }
