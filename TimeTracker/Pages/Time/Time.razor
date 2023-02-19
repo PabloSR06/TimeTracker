@@ -9,62 +9,67 @@
 
 @if (!PopupVisible)
 {
-    <JointCalendar InputDate="Calendar"></JointCalendar>
+    <JointCalendar InputDate="Calendar" IsDaySelected="OnSelectedDay"></JointCalendar>
 
-
-    @if (CheckInTime.isOpen)
-    {
-        <button @onclick="AddProjectTime">Add Time</button>
-        if (CheckInTime.time_table != null)
+    <div class="history-cnt">
+        @if (CheckInTime.isOpen)
         {
-            <div>
+            if (CheckInTime.time_table != null)
+            {
                 <div>
-                    <a>Start: </a>
-                    <a>@CheckInTime.time_table.start_time</a>
-                </div>
-                @if (CheckInTime.clockHistories != null)
-                {
-                    @foreach (var time in CheckInTime.clockHistories)
+                    <div class="start-cnt border-cnt" style="cursor:auto">
+                        <a>@CheckInTime.time_table.start_time</a>
+                    </div>
+                    @if (CheckInTime.clockHistories != null)
                     {
-                        <br />
-                        <div>
-                            <div>
-                                <a>Minutes: </a>
-                                <a>@time.Minutes</a>
-                            </div>
-
-                            @if (_loginState.projects.TryGetValue(@time.Project_id, out string? projectName))
-                            {
-                                <div>
-                                    <a>Project: </a>
-                                    <a>@projectName</a>
+                        @foreach (var time in CheckInTime.clockHistories)
+                        {
+                            <div class="entry-ctn border-cnt">
+                                <div >
+                                    <a>@TimeSpan.FromMinutes(@time.Minutes).TotalHours</a>
                                 </div>
-                            }
-                        </div>
+
+                                @if (_loginState.projects.TryGetValue(@time.Project_id, out string? projectName))
+                                {
+                                    <div>
+                                        <a>Project: </a>
+                                        <a>@projectName</a>
+                                    </div>
+                                }
+
+                            </div>
+                        }
+                        <div class="newActivity-cnt border-cnt" @onclick="AddProjectTime">Add Time</div>
                     }
-                }
-                <div>
-                    @if (!CheckInTime.time_table.isFinish)
-                    {
-                        <button class="btn btn-primary" @onclick="ClockOut">Finish</button>
-                    }
-                    else
-                    {
-                        <a>End: </a>
-                        <a>@CheckInTime.time_table.finish_time</a>
-                    }
+                    <div>
+
+                        @if (!CheckInTime.time_table.isFinish)
+                        {
+                            <div class="end-cnt border-cnt" @onclick="ClockOut">Finish</div>
+
+                        }
+                        else
+                        {
+                            <div class="end-cnt border-cnt" style="cursor:auto">
+                                <a>@CheckInTime.time_table.finish_time</a>
+                            </div>
+                        }
+                    </div>
                 </div>
-            </div>
+            }
+            else
+            {
+                <a>Algo no cuadra</a>
+            }
         }
         else
         {
-            <a>Algo no cuadra</a>
+            <div>
+                <div class="start-cnt border-cnt" @onclick="ClockIn">Start</div>
+            </div>
+
         }
-    }
-    else
-    {
-        <button class="btn btn-primary" @onclick="ClockIn">Start</button>
-    }
+    </div>
 }
 else
 {
@@ -88,22 +93,22 @@ else
     private void ClockIn()
     {
         ClockInModel clock_in = new ClockInModel()
-        {
-            user_id = _loginState.User.Id,
-            start_time = DateTime.Now.TimeOfDay,
-            date = Calendar.ToDate()
-        };
+            {
+                user_id = _loginState.User.Id,
+                start_time = DateTime.Now.TimeOfDay,
+                date = Calendar.ToDate()
+            };
 
         CheckInTime = service.ClockIn(clock_in).Result;
     }
     private void ClockOut()
     {
         ClockOutModel clockOut = new ClockOutModel()
-        {
+            {
                 user_id = _loginState.User.Id,
-            finish_time = DateTime.Now.TimeOfDay,
-            date = Calendar.ToDate(),
-        };
+                finish_time = DateTime.Now.TimeOfDay,
+                date = Calendar.ToDate(),
+            };
         CheckInTime = service.ClockOut(clockOut).Result;
     }
 
@@ -126,12 +131,12 @@ else
     private void OnPopUpChange(bool inserted)
     {
         PopupVisible = inserted;
+        CheckInTime = service.GetClockIn(_loginState.User.Id, Calendar.ToDate());
     }
 
     private void OnSelectedDay(Boolean date)
     {
         CheckInTime = service.GetClockIn(_loginState.User.Id, Calendar.ToDate());
-
     }
 
 }

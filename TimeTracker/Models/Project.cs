@@ -26,5 +26,10 @@
 
     }
 
+    public class UserHasValue
+    {
+        public int User_id { get; set; }
+        public int Id { get; set; }
 
+    }
 }

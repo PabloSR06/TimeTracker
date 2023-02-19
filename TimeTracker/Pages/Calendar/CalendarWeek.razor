@@ -31,7 +31,7 @@
                     {
                         if (InputDate.IsToday(currentDay))
                         {
-                            <li class="days_selected"><a>@currentDay</a></li>
+                            <li class="days_selected" @onclick="@(() => SelectDay(currentDay))"><a>@currentDay</a></li>
                         }
                         else
                         {

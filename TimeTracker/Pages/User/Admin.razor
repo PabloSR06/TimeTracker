@@ -23,46 +23,55 @@
         </div>
 
     }
-    @if (projectUser != null)
+
+
+    @if (_isLoaded)
     {
-        @foreach (var x in projectUser)
-        {
+        <div>
+            <div>
+                <div class="search-input">
+                    <input @bind-value="SearchText" @bind-value:event="oninput" placeholder="Search by title" />
+                </div>
+                <div class="search-result">
+                    @foreach (var user in FilteredUsers)
+                    {
+                        <div>
+                            <a>@user.Name</a>
+                            <a>@user.Email</a>
+                        </div>
+                    }
+
+                </div>
+            </div>
+            <style>
+                .search-result {
+                    max-height: 200px;
+                    overflow-y: auto;
+                    background-color: dimgrey;
+                    position: absolute;
+                    vertical-align: top;
+                }
+            </style>
 
             <div>
-                @if (@Users.TryGetValue(x.User_id, out UserMin user) && user != null)
+                @foreach (var x in userValue)
                 {
-                    <a>@user.Name</a>
-                    <a>@user.Email</a>
+
+                    <div>
+                        @if (@Users.TryGetValue(x.User_id, out UserMin user) && user != null)
+                        {
+                            <a>@user.Name</a>
+                            <a>@user.Email</a>
+                        }
+                    </div>
                 }
             </div>
-        }
-    }
+        </div>
 
-    @if (collectionUser != null)
-    {
-        @foreach (var x in collectionUser)
-        {
-
-            <div>
-                @if (@Users.TryGetValue(x.User_id, out UserMin user) && user != null)
-                {
-                    <a>@user.Name</a>
-                    <a>@user.Email</a>
-                }
-            </div>
-        }
-    }
-
-    <div>
-        <input @bind-value="SearchText" @bind-value:event="oninput" placeholder="Search by title" />
-    </div>
-
-    @foreach (var x in FilteredUsers)
-    {
-        <a>@x.Name</a> 
-        <br />
     }
 </div>
+
+
 
 
 @code {
@@ -71,10 +80,10 @@
     private Dictionary<int, UserMin> Users = new Dictionary<int, UserMin>();
     private List<UserMin> UsersList = new List<UserMin>();
     public string SearchText = "";
-    List<UserMin> FilteredUsers => UsersList.Where(img => img.Email.ToLower().Contains(SearchText.ToLower())).ToList();
+    List<UserMin> FilteredUsers => UsersList.Where(img => img.Email.ToLower().Contains(SearchText.ToLower()) || img.Name.ToLower().Contains(SearchText.ToLower())).ToList();
 
-    private List<UserHasProject> projectUser = new List<UserHasProject>();
-    private List<UserHasCollection> collectionUser = new List<UserHasCollection>();
+    private List<UserHasValue> userValue = new List<UserHasValue>();
+    private bool _isLoaded = false;
 
 
     protected override async Task OnInitializedAsync()
@@ -84,16 +93,18 @@
 
         UsersList = _userService.GetAllUsersList();
     }
-    
+
 
     private void LoadProject(int id)
     {
-        projectUser = service.GetProjectUser(id);
+        _isLoaded = true;
+        userValue = service.GetProjectUser(id);
     }
 
     private void LoadColection(int id)
     {
-        collectionUser = service.GetCollectionUser(id);
+        _isLoaded = true;
+        userValue = service.GetCollectionUser(id);
     }
 }
 

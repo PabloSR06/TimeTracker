@@ -51,7 +51,9 @@
                 <ValidationMessage For="() => _clockHistory.Description" />
                 <InputText @bind-Value=_clockHistory.Description class="form-control" id="Description" />
             </div>
-            <input type="submit" class="btn btn-primary" value="Save" />
+            <div class="form-group">
+                <input type="submit" class="btn btn-primary" value="Save" />
+            </div>
         </EditForm>
 
     </div>
@@ -59,8 +61,8 @@
 
 @code {
 
-    [Parameter] 
-    public EventCallback<bool> Status { get; set; } 
+    [Parameter]
+    public EventCallback<bool> Status { get; set; }
 
     [Parameter]
     public int Id { get; set; }
@@ -75,7 +77,7 @@
     private void HandleValidSubmit()
     {
         _clockHistory.TimeClock_id = Id;
-        service.InsertTime(_clockHistory); 
+        service.InsertTime(_clockHistory);
         Status.InvokeAsync(false);
 
     }

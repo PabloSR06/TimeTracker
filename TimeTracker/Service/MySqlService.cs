@@ -506,11 +506,11 @@ namespace TimeTracker.Service
             }
         }
 
-        public List<UserHasProject> GetProjectUser(int project_id)
+        public List<UserHasValue> GetProjectUser(int project_id)
         {
             try
             {
-                List<UserHasProject> list = new List<UserHasProject>();
+                List<UserHasValue> list = new List<UserHasValue>();
 
                 MySqlCommand cmd = GetConnection().CreateCommand();
                 cmd.CommandText = "SELECT * from userhasproject where project_id = @project_id;";
@@ -525,10 +525,10 @@ namespace TimeTracker.Service
                     while (reader.Read())
                     {
 
-                        UserHasProject user = new UserHasProject();
+                        UserHasValue user = new UserHasValue();
 
                         user.User_id = reader.GetInt32("user_id");
-                        user.Project_id = reader.GetInt32("project_id");
+                        user.Id = reader.GetInt32("project_id");
 
                         list.Add(user);
 
@@ -546,11 +546,11 @@ namespace TimeTracker.Service
             }
         }
 
-        public List<UserHasCollection> GetCollectionUser(int collection_id)
+        public List<UserHasValue> GetCollectionUser(int collection_id)
         {
             try
             {
-                List<UserHasCollection> list = new List<UserHasCollection>();
+                List<UserHasValue> list = new List<UserHasValue>();
 
                 MySqlCommand cmd = GetConnection().CreateCommand();
                 cmd.CommandText = "SELECT * from userhascollection where collection_id = @collection_id;";
@@ -565,10 +565,10 @@ namespace TimeTracker.Service
                     while (reader.Read())
                     {
 
-                        UserHasCollection user = new UserHasCollection();
+                        UserHasValue user = new UserHasValue();
 
                         user.User_id = reader.GetInt32("user_id");
-                        user.Project_id = reader.GetInt32("collection_id");
+                        user.Id = reader.GetInt32("collection_id");
 
                         list.Add(user);
 

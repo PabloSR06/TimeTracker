@@ -1,0 +1,26 @@
+﻿.history-cnt{
+    
+}
+.entry-ctn{
+
+}
+.start-cnt {
+    cursor: pointer;
+}
+.end-cnt {
+    cursor: pointer;
+}
+.newActivity-cnt {
+    cursor: pointer;
+}
+.border-cnt {
+    border-radius: 10px;
+    margin: 5px;
+    border: 1px solid #ccc;
+    width: 100%;
+    block-size: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
