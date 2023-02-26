@@ -18,6 +18,8 @@ namespace TimeTracker
             builder.Services.AddSingleton<LoginState>();
             builder.Services.AddSingleton<MySqlService>();
 
+            builder.Services.AddSingleton<CalendarInput>();
+
             builder.Services.AddSingleton<UserService>();
 
             var app = builder.Build();

@@ -19,7 +19,7 @@ namespace TimeTracker.Models
             Year = date.Year;
             Month = date.Month;
             Day = date.Day;
-            WeekNumber = (int)new DateTime(Year, Month, 1).DayOfWeek;
+            WeekNumber = (int)new DateTime(Year, Month, 1).DayOfWeek +1;
             Today = new DateOnly(Year, Month, Day);
         }
 
@@ -28,7 +28,7 @@ namespace TimeTracker.Models
             Year = year;
             Month = month;
             Day = day;
-            WeekNumber = (int)new DateTime(Year, Month, 1).DayOfWeek;
+            WeekNumber = (int)new DateTime(Year, Month, 1).DayOfWeek +1;
             Today = new DateOnly(Year, Month, Day);
         }
 
@@ -36,22 +36,21 @@ namespace TimeTracker.Models
         {
             if (Day == 0)
             {
-                Day= DateTime.Today.Day;
+                Day = DateTime.Today.Day;
             }
             return new DateOnly(Year, Month, Day);
 
         }
         public DateOnly ToDate(int day)
         {
-            
+
             return new DateOnly(Year, Month, day);
 
         }
 
         public bool IsToday(int day)
         {
-            return Today.Equals(ToDate(day));          
+            return Today.Equals(ToDate(day));
         }
-
     }
 }

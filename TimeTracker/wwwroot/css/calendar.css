@@ -1,8 +1,8 @@
 ﻿.days {
-    display: grid;
+    display: flex;
     gap: 3px;
-    grid-template-columns: repeat(7, 1fr);
     justify-items: center;
+    justify-content: center;
     padding-left: 0px;
 }
 .days_name {
@@ -25,10 +25,17 @@
     font-weight: bold;
 }
 .calendar {
-    display:flex;
-    justify-content:center;
+/*    display:flex;
+    justify-content:center;*/
 }
-
+.cln-btn-cnt {
+    display: flex;
+    justify-content: center;
+}
+.direction-cnt {
+    width: 85px;
+    text-align: center;
+}
 /*Buttons*/
 .btn-calendar {
     color: #7D8994;

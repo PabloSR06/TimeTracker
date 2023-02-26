@@ -5,11 +5,12 @@
 @using TimeTracker.Models;
 @inject MySqlService service
 @inject LoginState _loginState;
+@inject CalendarInput Calendar;
 
 
 @if (!PopupVisible)
 {
-    <JointCalendar InputDate="Calendar" IsDaySelected="OnSelectedDay"></JointCalendar>
+    <JointCalendar IsDaySelected="OnSelectedDay"></JointCalendar>
 
     <div class="history-cnt">
         @if (CheckInTime.isOpen)
@@ -88,7 +89,6 @@ else
 
     private CheckInTime CheckInTime = new CheckInTime();
 
-    private CalendarInput Calendar = new CalendarInput();
 
     private void ClockIn()
     {

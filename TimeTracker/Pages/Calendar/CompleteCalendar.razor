@@ -1,11 +1,17 @@
 ﻿@using TimeTracker.Models;
+@inject CalendarInput Calendar;
+
 
 <link href="./css/calendar.css" rel="stylesheet" />
 
 
 <div class="calendar">
 
-    <div class="cnt-calendar"><p @onclick="DownMonth" class="btn-calendar">&lt;</p></div>
+    <div class="cln-btn-cnt">
+        <div class="direction-cnt" @onclick="DownMonth"><p class="btn-calendarMin">&lt;</p></div>
+        <div @onclick="ResetCalendar"><p class="btn-calendarMin"><ion-icon name="today-outline"></ion-icon></p></div>
+        <div class="direction-cnt" @onclick="UpMonth"><p class="btn-calendarMin">&gt;</p></div>
+    </div>
     <div>
         <div>
             <ul class="days days_name">
@@ -30,7 +36,7 @@
                         }
                         else
                         {
-                            if (InputDate.IsToday(currentDay))
+                            if (Calendar.IsToday(currentDay))
                             {
                                 <li class="days_selected"><a>@currentDay</a></li>
                             }
@@ -44,13 +50,9 @@
             }
         </div>
     </div>
-    <div class="cnt-calendar"><p @onclick="UpMonth" class="btn-calendar">&gt;</p></div>
 </div>
 
 @code {
-    [Parameter]
-    public CalendarInput InputDate { get; set; }
-
     [Parameter]
     public EventCallback<Boolean> SelectedDay { get; set; }
 
@@ -66,34 +68,34 @@
     private void loadCalendar()
     {
 
-        daysInMonth = DateTime.DaysInMonth(InputDate.Year, InputDate.Month);
-        firstDayOfMonth = ((int)new DateTime(InputDate.Year, InputDate.Month, 1).DayOfWeek + 6) % 7;
+        daysInMonth = DateTime.DaysInMonth(Calendar.Year, Calendar.Month);
+        firstDayOfMonth = ((int)new DateTime(Calendar.Year, Calendar.Month, 1).DayOfWeek + 6) % 7;
         numberOfWeeks = (int)Math.Ceiling((firstDayOfMonth + daysInMonth) / 7.0);
     }
 
     private void UpMonth()
     {
-        if (InputDate.Month != 12)
+        if (Calendar.Month != 12)
         {
-            InputDate.Month++;
+            Calendar.Month++;
         }
         else
         {
-            InputDate.Month = 1;
-            InputDate.Year++;
+            Calendar.Month = 1;
+            Calendar.Year++;
         }
         loadCalendar();
     }
     private void DownMonth()
     {
-        if (InputDate.Month != 1)
+        if (Calendar.Month != 1)
         {
-            InputDate.Month--;
+            Calendar.Month--;
         }
         else
         {
-            InputDate.Month = 12;
-            InputDate.Year--;
+            Calendar.Month = 12;
+            Calendar.Year--;
         }
         loadCalendar();
     }
@@ -101,5 +103,13 @@
     private void SelectDay(int day)
     {
         SelectedDay.InvokeAsync(true);
+    }
+
+    private void ResetCalendar()
+    {
+        Calendar = new CalendarInput();
+        StateHasChanged();
+        SelectedDay.InvokeAsync(true);
+
     }
 }

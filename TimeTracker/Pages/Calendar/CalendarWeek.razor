@@ -1,11 +1,15 @@
 ﻿@using TimeTracker.Models;
+@inject CalendarInput Calendar;
 
 <link href="./css/calendar.css" rel="stylesheet" />
 
 
 <div class="calendar">
-    
-    <div class="cnt-calendar" @onclick="DownWeek"><p class="btn-calendarMin">&lt;</p></div>
+    <div class="cln-btn-cnt">
+        <div class="direction-cnt" @onclick="DownWeek"><p class="btn-calendarMin">&lt;</p></div>
+        <div @onclick="ResetCalendar"><p class="btn-calendarMin"><ion-icon name="today-outline"></ion-icon></p></div>
+        <div class="direction-cnt" @onclick="UpWeek"><p class="btn-calendarMin">&gt;</p></div>
+    </div>
 
     <div>
         <div>
@@ -21,7 +25,7 @@
             <ul class="days days_number">
                 @for (int i = 0; i < 7; i++)
                 {
-                    int currentDay = (InputDate.WeekNumber - 1) * 7 + i + 1 - firstDayOfMonth;
+                    int currentDay = (Calendar.WeekNumber - 1) * 7 + i + 1 - firstDayOfMonth;
 
                     if (currentDay < 1 || currentDay > daysInMonth)
                     {
@@ -29,7 +33,7 @@
                     }
                     else
                     {
-                        if (InputDate.IsToday(currentDay))
+                        if (Calendar.IsToday(currentDay))
                         {
                             <li class="days_selected" @onclick="@(() => SelectDay(currentDay))"><a>@currentDay</a></li>
                         }
@@ -43,13 +47,10 @@
             </ul>
         </div>
     </div>
-    <div class="cnt-calendar" @onclick="UpWeek"><p class="btn-calendarMin">&gt;</p></div>
 
 </div>
 
 @code {
-    [Parameter]
-    public CalendarInput InputDate { get; set; }
 
     [Parameter]
     public EventCallback<Boolean> SelectedDay { get; set; }
@@ -66,46 +67,55 @@
     private void LoadWeek()
     {
 
-        daysInMonth = DateTime.DaysInMonth(InputDate.Year, InputDate.Month);
-        firstDayOfMonth = ((int)new DateTime(InputDate.Year, InputDate.Month, 1).DayOfWeek + 6) % 7;
+        daysInMonth = DateTime.DaysInMonth(Calendar.Year, Calendar.Month);
+        firstDayOfMonth = ((int)new DateTime(Calendar.Year, Calendar.Month, 1).DayOfWeek + 6) % 7;
         numberOfWeeks = (int)Math.Ceiling((firstDayOfMonth + daysInMonth) / 7.0);
     }
 
 
     private void UpWeek()
     {
-        if (InputDate.WeekNumber == numberOfWeeks)
+        if (Calendar.WeekNumber == numberOfWeeks)
         {
-            InputDate.Month++;
-            InputDate.WeekNumber = 1;
+            Calendar.Month++;
+            Calendar.WeekNumber = 1;
             LoadWeek();
         }
         else
         {
-            InputDate.WeekNumber++;
+            Calendar.WeekNumber++;
         }
 
     }
     private void DownWeek()
     {
-        if (InputDate.WeekNumber == 1)
+        if (Calendar.WeekNumber == 1)
         {
-            InputDate.Month--;
+            Calendar.Month--;
 
-            InputDate.WeekNumber = numberOfWeeks;
+            Calendar.WeekNumber = numberOfWeeks;
             LoadWeek();
         }
         else
         {
-            InputDate.WeekNumber--;
+            Calendar.WeekNumber--;
         }
+
+
+    }
+    private void ResetCalendar()
+    {
+        Calendar = new CalendarInput();
+        LoadWeek();
+        StateHasChanged();
+        SelectedDay.InvokeAsync(true);
 
 
     }
 
     private void SelectDay(int day)
     {
-        InputDate.Day = day;
+        Calendar.Day = day;
         SelectedDay.InvokeAsync(true);
     }
 
