@@ -38,7 +38,12 @@
                         {
                             if (Calendar.IsToday(currentDay))
                             {
-                                <li class="days_selected"><a>@currentDay</a></li>
+                                <li class="day-today" @onclick="@(() => SelectDay(currentDay))"><a>@currentDay</a></li>
+                            }
+                            else if (Calendar.Day == currentDay && Calendar.IsSameMonth() && Calendar.IsSameYear())
+                            {
+                                <li class="day-selected" @onclick="@(() => SelectDay(currentDay))"><a>@currentDay</a></li>
+
                             }
                             else
                             {
@@ -54,7 +59,7 @@
 
 @code {
     [Parameter]
-    public EventCallback<Boolean> SelectedDay { get; set; }
+    public EventCallback<int> SelectedDay { get; set; }
 
     private int daysInMonth;
     private int firstDayOfMonth;
@@ -102,14 +107,15 @@
 
     private void SelectDay(int day)
     {
-        SelectedDay.InvokeAsync(true);
+        Calendar.Day = day;
+        SelectedDay.InvokeAsync(day);
     }
 
     private void ResetCalendar()
     {
         Calendar = new CalendarInput();
         StateHasChanged();
-        SelectedDay.InvokeAsync(true);
+        SelectedDay.InvokeAsync(Calendar.Day);
 
     }
 }

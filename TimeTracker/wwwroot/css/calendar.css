@@ -21,8 +21,11 @@
 .days_number {
     cursor: pointer;
 }
-.days_selected {
+.day-today {
     font-weight: bold;
+}
+.day-selected {
+    text-decoration: underline;
 }
 .calendar {
 /*    display:flex;
@@ -76,5 +79,12 @@
     padding: 0.5rem 0.6rem;
     margin: 0.5rem;
     cursor: pointer;
+}
+.no-days-cnt {
+    border-radius: 100%;
+    border-style: dotted;
+    border-width: 1.5px;
+    width: 15px;
+    height: 15px;
 }
 

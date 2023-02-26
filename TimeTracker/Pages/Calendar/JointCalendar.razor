@@ -18,16 +18,16 @@
 
 
     [Parameter]
-    public EventCallback<Boolean> IsDaySelected { get; set; }
+    public EventCallback<int> IsDaySelected { get; set; }
 
     private void ToggleCalendar()
     {
         IsFullCalendar = !IsFullCalendar;
     }
 
-    private void OnDaySelected()
+    private void OnDaySelected(int day)
     {
-        IsDaySelected.InvokeAsync(true);
+        IsDaySelected.InvokeAsync(day);
     }
 
 }

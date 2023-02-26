@@ -20,14 +20,15 @@
                 <div>
                     <div class="start-cnt border-cnt" style="cursor:auto">
                         <a>@CheckInTime.time_table.start_time</a>
+                        <ion-icon name="alarm-outline"></ion-icon>
                     </div>
                     @if (CheckInTime.clockHistories != null)
                     {
                         @foreach (var time in CheckInTime.clockHistories)
                         {
                             <div class="entry-ctn border-cnt">
-                                <div >
-                                    <a>@TimeSpan.FromMinutes(@time.Minutes).TotalHours</a>
+                                <div>
+                                    <a>@TimeSpan.FromMinutes(@time.Minutes).TotalHours.ToString("0.00") h</a>
                                 </div>
 
                                 @if (_loginState.projects.TryGetValue(@time.Project_id, out string? projectName))
@@ -46,13 +47,14 @@
 
                         @if (!CheckInTime.time_table.isFinish)
                         {
-                            <div class="end-cnt border-cnt" @onclick="ClockOut">Finish</div>
+                            <div class="end-btn-cnt border-cnt" @onclick="ClockOut">Finish</div>
 
                         }
                         else
                         {
                             <div class="end-cnt border-cnt" style="cursor:auto">
                                 <a>@CheckInTime.time_table.finish_time</a>
+                                <ion-icon name="alarm-outline"></ion-icon>
                             </div>
                         }
                     </div>
@@ -66,7 +68,7 @@
         else
         {
             <div>
-                <div class="start-cnt border-cnt" @onclick="ClockIn">Start</div>
+                <div class="start-btn-cnt border-cnt" @onclick="ClockIn">Start</div>
             </div>
 
         }
@@ -134,9 +136,9 @@ else
         CheckInTime = service.GetClockIn(_loginState.User.Id, Calendar.ToDate());
     }
 
-    private void OnSelectedDay(Boolean date)
+    private void OnSelectedDay(int day)
     {
-        CheckInTime = service.GetClockIn(_loginState.User.Id, Calendar.ToDate());
+        CheckInTime = service.GetClockIn(_loginState.User.Id, Calendar.ToDate(day));
     }
 
 }

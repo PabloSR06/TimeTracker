@@ -39,7 +39,6 @@ namespace TimeTracker.Data
         {
             IsLoggedIn= false;
             User = new UserModel();
-            NotifyStateChanged();
         }
 
 

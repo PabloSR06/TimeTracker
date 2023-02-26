@@ -3,6 +3,12 @@
 
 <link href="./css/calendar.css" rel="stylesheet" />
 
+<style>
+    .test {
+        border-radius: 100%;
+        border-style: dashed;
+    }
+</style>
 
 <div class="calendar">
     <div class="cln-btn-cnt">
@@ -29,13 +35,19 @@
 
                     if (currentDay < 1 || currentDay > daysInMonth)
                     {
-                        <li>x</li>
+                        <li><div class ="no-days-cnt"></div></li>
+
                     }
                     else
                     {
                         if (Calendar.IsToday(currentDay))
                         {
-                            <li class="days_selected" @onclick="@(() => SelectDay(currentDay))"><a>@currentDay</a></li>
+                            <li class="day-today" @onclick="@(() => SelectDay(currentDay))"><a>@currentDay</a></li>
+                        }
+                        else if (Calendar.Day == currentDay && Calendar.IsSameMonth() && Calendar.IsSameYear())
+                        {
+                            <li class="day-selected" @onclick="@(() => SelectDay(currentDay))"><a>@currentDay</a></li>
+
                         }
                         else
                         {
@@ -53,7 +65,7 @@
 @code {
 
     [Parameter]
-    public EventCallback<Boolean> SelectedDay { get; set; }
+    public EventCallback<int> SelectedDay { get; set; }
 
     private int daysInMonth;
     private int firstDayOfMonth;
@@ -108,7 +120,7 @@
         Calendar = new CalendarInput();
         LoadWeek();
         StateHasChanged();
-        SelectedDay.InvokeAsync(true);
+        SelectedDay.InvokeAsync(Calendar.Day);
 
 
     }
@@ -116,7 +128,7 @@
     private void SelectDay(int day)
     {
         Calendar.Day = day;
-        SelectedDay.InvokeAsync(true);
+        SelectedDay.InvokeAsync(day);
     }
 
 

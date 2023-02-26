@@ -1,14 +1,21 @@
 ﻿.history-cnt{
     
 }
-.entry-ctn{
-
+.entry-ctn {
 }
 .start-cnt {
     cursor: pointer;
 }
+.start-btn-cnt {
+    cursor: pointer;
+    background-color: #3cc8f8;
+}
 .end-cnt {
     cursor: pointer;
+}
+.end-btn-cnt {
+    cursor: pointer;
+    background-color: #ff9393;
 }
 .newActivity-cnt {
     cursor: pointer;

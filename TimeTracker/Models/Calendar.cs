@@ -52,5 +52,15 @@ namespace TimeTracker.Models
         {
             return Today.Equals(ToDate(day));
         }
+        
+        public bool IsSameMonth()
+        {           
+            return Today.Month == Month;
+        }
+
+        public bool IsSameYear()
+        {
+            return Today.Year == Year;
+        }
     }
 }
