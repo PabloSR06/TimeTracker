@@ -1,7 +1,7 @@
 DROP TRIGGER IF EXISTS `userUpdateTime`;
 DELIMITER $$
 CREATE TRIGGER `userUpdateTime`
-BEFORE UPDATE ON `TimeTracker`.`user`
+BEFORE UPDATE ON `db_timetracker`.`user`
 FOR EACH ROW
 BEGIN
     SET NEW.update_time = NOW();
@@ -11,7 +11,7 @@ DELIMITER ;
 DROP TRIGGER IF EXISTS `colectionUpdateTime` ;
 DELIMITER $$
 CREATE TRIGGER `colectionUpdateTime`
-BEFORE UPDATE ON `TimeTracker`.`collection`
+BEFORE UPDATE ON `db_timetracker`.`collection`
 FOR EACH ROW
 BEGIN
     SET NEW.update_time = NOW();
@@ -21,7 +21,7 @@ DELIMITER ;
 DROP TRIGGER IF EXISTS `projectUpdateTime` ;
 DELIMITER $$
 CREATE TRIGGER `projectUpdateTime`
-BEFORE UPDATE ON `TimeTracker`.`project`
+BEFORE UPDATE ON `db_timetracker`.`project`
 FOR EACH ROW
 BEGIN
     SET NEW.update_time = NOW();
@@ -31,7 +31,7 @@ DELIMITER ;
 DROP TRIGGER IF EXISTS `clockHistoryUpdateTime` ;
 DELIMITER $$
 CREATE TRIGGER `clockHistoryUpdateTime`
-BEFORE UPDATE ON `TimeTracker`.`clockHistory`
+BEFORE UPDATE ON `db_timetracker`.`clockHistory`
 FOR EACH ROW
 BEGIN
     SET NEW.update_time = NOW();
