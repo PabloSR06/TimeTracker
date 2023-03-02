@@ -1,0 +1,33 @@
+﻿@using TimeTracker.Models;
+@inject CalendarInput Calendar;
+
+<div>
+    @if (@IsFullCalendar)
+    {
+        <CompleteCalendar SelectedDay="OnDaySelected"></CompleteCalendar>
+    }
+    else
+    {
+        <CalendarWeek SelectedDay="OnDaySelected"></CalendarWeek>
+    }
+    <p class="btn-toggleCalendar" @onclick="ToggleCalendar">Toogle</p>
+</div>
+
+@code {
+    private bool IsFullCalendar { get; set; }
+
+
+    [Parameter]
+    public EventCallback<int> IsDaySelected { get; set; }
+
+    private void ToggleCalendar()
+    {
+        IsFullCalendar = !IsFullCalendar;
+    }
+
+    private void OnDaySelected(int day)
+    {
+        IsDaySelected.InvokeAsync(day);
+    }
+
+}

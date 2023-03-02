@@ -1,0 +1,66 @@
+﻿@inherits LayoutComponentBase
+@using TimeTracker.Data
+@using TimeTracker.Service;
+@using TimeTracker.Models;
+@inject MySqlService service;
+@inject Data.LoginState loginState;
+@inject IConfiguration configuration;
+
+<PageTitle>TimeTracker</PageTitle>
+
+@if (loginState.IsLoggedIn)
+{
+    <div class="page">
+        <main>
+            <div class="options-cnt">
+
+                <div class="options-center-cnt">
+                    <ion-icon name="exit-outline" @onclick="LogOut"></ion-icon>
+                </div>
+                <div class="options-right-cnt">
+                    <a href="https://github.com/PabloSR06/TimeTracker">V.@configuration["AppVersion"]</a>
+                </div>
+            </div>
+            <article class="content px-4">
+                <TimeTracker.Pages.Time.Time></TimeTracker.Pages.Time.Time>
+            </article>
+            @* <article class="content px-4">
+        <TimeTracker.Pages.User.Admin></TimeTracker.Pages.User.Admin>
+        </article>*@
+
+        </main>
+    </div>
+
+
+}
+else
+{
+    <TimeTracker.Pages.User.Login />
+}
+
+@code {
+
+    protected override async Task OnInitializedAsync()
+    {
+        loginState.OnChange += StateHasChanged;
+
+        ////test
+        //loginState.SetLogin(true, "admin");
+        //loginState.collections = service.getUserHasColection(1);
+        //loginState.projects = service.getUserHasProject(1);
+        StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        loginState.OnChange -= StateHasChanged;
+    }
+
+    private void LogOut()
+    {
+        loginState.LogOut();
+        StateHasChanged();
+    }
+
+
+}

@@ -1,0 +1,63 @@
+﻿@using System.Globalization;
+@using TimeTracker.Service;
+@using TimeTracker.Models;
+@inject Data.LoginState _loginState;
+@inject MySqlService service;
+
+@if (_loginState.IsLoggedIn.Equals(false))
+{
+    <div class="login-div">
+
+    
+        <h1>Login</h1>
+
+
+    <EditForm Model=@userInput OnValidSubmit="HandleValidSubmit" >
+        <DataAnnotationsValidator />
+        <div class="mb-3">
+            <label class="form-label" for="Email">Email</label>
+            <ValidationMessage For="() => userInput.Email" />
+            <InputText @bind-Value=userInput.Email class="form-control" id="Email" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="Password">Password</label>
+            <ValidationMessage For="() => userInput.Password" />
+            <InputText type="password" @bind-Value=userInput.Password class="form-control" id="Password" />
+        </div>
+
+        <input type="submit" class="btn btn-primary" value="Login" />
+    </EditForm>
+    </div>
+
+}
+else
+{
+
+}
+
+@code {
+    UserModelInput userInput = new UserModelInput();
+
+
+
+    private void HandleValidSubmit()
+    {
+        _loginState.Login(userInput);
+
+        if (_loginState.IsLoggedIn)
+        {
+            _loginState.userCollections = service.getUserHasColection(_loginState.User.Id);
+            _loginState.projects = service.GetAllProjects();
+            _loginState.collections = service.GetAllCollections();
+        }
+        StateHasChanged();
+    }
+
+
+    void HandleLogout()
+    {
+        _loginState.LogOut();
+    }
+
+    
+}

@@ -1,0 +1,136 @@
+﻿@using TimeTracker.Models;
+@inject CalendarInput Calendar;
+
+<link href="./css/calendar.css" rel="stylesheet" />
+
+<style>
+    .test {
+        border-radius: 100%;
+        border-style: dashed;
+    }
+</style>
+
+<div class="calendar">
+    <div class="cln-btn-cnt">
+        <div class="direction-cnt" @onclick="DownWeek"><p class="btn-calendarMin">&lt;</p></div>
+        <div @onclick="ResetCalendar"><p class="btn-calendarMin"><ion-icon name="today-outline"></ion-icon></p></div>
+        <div class="direction-cnt" @onclick="UpWeek"><p class="btn-calendarMin">&gt;</p></div>
+    </div>
+
+    <div>
+        <div>
+            <ul class="days days_name">
+                <li>Mon</li>
+                <li>Tue</li>
+                <li>Wed</li>
+                <li>Thu</li>
+                <li>Fri</li>
+                <li>Sat</li>
+                <li>Sun</li>
+            </ul>
+            <ul class="days days_number">
+                @for (int i = 0; i < 7; i++)
+                {
+                    int currentDay = (Calendar.WeekNumber - 1) * 7 + i + 1 - firstDayOfMonth;
+
+                    if (currentDay < 1 || currentDay > daysInMonth)
+                    {
+                        <li><div class ="no-days-cnt"></div></li>
+
+                    }
+                    else
+                    {
+                        if (Calendar.IsToday(currentDay))
+                        {
+                            <li class="day-today" @onclick="@(() => SelectDay(currentDay))"><a>@currentDay</a></li>
+                        }
+                        else if (Calendar.Day == currentDay && Calendar.IsSameMonth() && Calendar.IsSameYear())
+                        {
+                            <li class="day-selected" @onclick="@(() => SelectDay(currentDay))"><a>@currentDay</a></li>
+
+                        }
+                        else
+                        {
+                            <li><a @onclick="@(() => SelectDay(currentDay))">@currentDay</a></li>
+                        }
+                    }
+
+                }
+            </ul>
+        </div>
+    </div>
+
+</div>
+
+@code {
+
+    [Parameter]
+    public EventCallback<int> SelectedDay { get; set; }
+
+    private int daysInMonth;
+    private int firstDayOfMonth;
+    private int numberOfWeeks;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        LoadWeek();
+    }
+    private void LoadWeek()
+    {
+
+        daysInMonth = DateTime.DaysInMonth(Calendar.Year, Calendar.Month);
+        firstDayOfMonth = ((int)new DateTime(Calendar.Year, Calendar.Month, 1).DayOfWeek + 6) % 7;
+        numberOfWeeks = (int)Math.Ceiling((firstDayOfMonth + daysInMonth) / 7.0);
+    }
+
+
+    private void UpWeek()
+    {
+        if (Calendar.WeekNumber == numberOfWeeks)
+        {
+            Calendar.Month++;
+            Calendar.WeekNumber = 1;
+            LoadWeek();
+        }
+        else
+        {
+            Calendar.WeekNumber++;
+        }
+
+    }
+    private void DownWeek()
+    {
+        if (Calendar.WeekNumber == 1)
+        {
+            Calendar.Month--;
+
+            Calendar.WeekNumber = numberOfWeeks;
+            LoadWeek();
+        }
+        else
+        {
+            Calendar.WeekNumber--;
+        }
+
+
+    }
+    private void ResetCalendar()
+    {
+        Calendar = new CalendarInput();
+        LoadWeek();
+        StateHasChanged();
+        SelectedDay.InvokeAsync(Calendar.Day);
+
+
+    }
+
+    private void SelectDay(int day)
+    {
+        Calendar.Day = day;
+        SelectedDay.InvokeAsync(day);
+    }
+
+
+
+}
