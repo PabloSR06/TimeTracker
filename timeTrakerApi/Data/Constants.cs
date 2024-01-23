@@ -7,6 +7,8 @@
             public const string Users = "Users";
             public const string Clients = "Clients";
             public const string Projects = "Projects";
+            public const string ProjectsHours = "ProjectsHours";
+            public const string DayHours = "DayHours";
         }
     }
 }

@@ -28,5 +28,10 @@ namespace timeTrakerApi.Controllers
         {
             return _userRepository.GetById(id);
         }
+        [HttpPost("InsertProject")]
+        public bool InsertProject(UserModel user)
+        {
+            return _userRepository.Insert(user);
+        }
     }
 }

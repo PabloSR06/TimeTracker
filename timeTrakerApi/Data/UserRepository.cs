@@ -7,7 +7,6 @@ namespace timeTrakerApi.Data
     public class UserRepository : IUserRepository
     {
         private readonly MySqlDataSource _database;
-        private readonly string table = "users";
 
 
         public UserRepository(MySqlDataSource database)
@@ -17,7 +16,7 @@ namespace timeTrakerApi.Data
 
         public List<UserModel> Get()
         {
-            
+
             List<UserModel> users = new List<UserModel>();
             using (MySqlConnection connection = _database.CreateConnection())
             {
@@ -31,7 +30,7 @@ namespace timeTrakerApi.Data
                         while (reader.Read())
                         {
                             users.Add(ReadUserFromReader(reader));
-                           
+
                         }
                         reader.Close();
                     }
@@ -44,7 +43,7 @@ namespace timeTrakerApi.Data
         public UserModel GetById(string id)
         {
             UserModel user = new UserModel();
-            
+
             using (MySqlConnection connection = _database.CreateConnection())
             {
                 connection.Open();
@@ -110,20 +109,20 @@ namespace timeTrakerApi.Data
 
             UserModel user = new UserModel();
 
-                if (!reader.IsDBNull(reader.GetOrdinal(nameof(UserModel.Id))))
-                    user.Id = reader.GetInt32(reader.GetOrdinal("id"));
-                if (!reader.IsDBNull(reader.GetOrdinal(nameof(UserModel.Name))))
-                    user.Name = reader.GetString(reader.GetOrdinal("name"));
-                if (!reader.IsDBNull(reader.GetOrdinal(nameof(UserModel.Email))))
-                    user.Email = reader.GetString(reader.GetOrdinal("email"));
-                if (!reader.IsDBNull(reader.GetOrdinal(nameof(UserModel.CreateOnDate))))
-                    user.CreateOnDate = reader.GetDateTime(reader.GetOrdinal("createondate"));
-                if (!reader.IsDBNull(reader.GetOrdinal(nameof(UserModel.LastModifiedOnDate))))
-                    user.LastModifiedOnDate = reader.GetDateTime(reader.GetOrdinal("lastmodifiedondate"));
+            if (!reader.IsDBNull(reader.GetOrdinal(nameof(UserModel.Id))))
+                user.Id = reader.GetInt32(reader.GetOrdinal("id"));
+            if (!reader.IsDBNull(reader.GetOrdinal(nameof(UserModel.Name))))
+                user.Name = reader.GetString(reader.GetOrdinal("name"));
+            if (!reader.IsDBNull(reader.GetOrdinal(nameof(UserModel.Email))))
+                user.Email = reader.GetString(reader.GetOrdinal("email"));
+            if (!reader.IsDBNull(reader.GetOrdinal(nameof(UserModel.CreateOnDate))))
+                user.CreateOnDate = reader.GetDateTime(reader.GetOrdinal("createondate"));
+            if (!reader.IsDBNull(reader.GetOrdinal(nameof(UserModel.LastModifiedOnDate))))
+                user.LastModifiedOnDate = reader.GetDateTime(reader.GetOrdinal("lastmodifiedondate"));
 
 
-                return user;
-            
+            return user;
+
         }
     }
 }
