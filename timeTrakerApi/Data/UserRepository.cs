@@ -30,7 +30,7 @@ namespace timeTrakerApi.Data
                     {
                         while (reader.Read())
                         {
-                            users.Add(ReadProjectFromReader(reader));
+                            users.Add(ReadUserFromReader(reader));
                            
                         }
                         reader.Close();

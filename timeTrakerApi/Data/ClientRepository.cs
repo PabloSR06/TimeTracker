@@ -28,7 +28,7 @@ namespace timeTrakerApi.Data
                     {
                         while (reader.Read())
                         {
-                            clients.Add(ReadProjectFromReader(reader));
+                            clients.Add(ReadClientFromReader(reader));
                            
                         }
                         reader.Close();

@@ -16,7 +16,7 @@ namespace timeTrakerApi.Controllers
             _projectRepository = projectRepository;
         }
 
-        [HttpGet(Name = "GetWeatherForecast")]
+        [HttpGet]
         public void Get()
         {
             _projectRepository.Get();
