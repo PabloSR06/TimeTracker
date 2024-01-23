@@ -7,7 +7,6 @@ namespace timeTrakerApi.Data
     public class ProjectRepository : IProjectRepository
     {
         private readonly MySqlDataSource _database;
-        private readonly string table = "projects";
 
 
         public ProjectRepository(MySqlDataSource database)
@@ -30,7 +29,7 @@ namespace timeTrakerApi.Data
                         while (reader.Read())
                         {
                             projects.Add(ReadProjectFromReader(reader));
-                           
+
                         }
                         reader.Close();
                     }
@@ -64,25 +63,59 @@ namespace timeTrakerApi.Data
             }
             return project;
         }
+        public bool Insert(ProjectModel project)
+        {
+            using (MySqlConnection connection = _database.CreateConnection())
+            {
+                connection.Open();
+
+                string query = "INSERT INTO " + Constants.Tables.Projects + " (Name, Description) VALUES (@Name, @Description)";
+
+                using (MySqlCommand command = new MySqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Name", project.Name);
+                    command.Parameters.AddWithValue("@Description", project.Description);
+
+                    int rowsAffected = command.ExecuteNonQuery();
+
+                    return rowsAffected > 0;
+                }
+            }
+        }
+        public bool Delete(string id)
+        {
+            using (MySqlConnection connection = _database.CreateConnection())
+            {
+                connection.Open();
+
+                string query = "DELETE FROM " + Constants.Tables.Projects + " WHERE Id = @Id";
+
+                using (MySqlCommand command = new MySqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Id", id);
+
+                    int rowsAffected = command.ExecuteNonQuery();
+
+                    return rowsAffected > 0;
+                }
+            }
+        }
         private ProjectModel ReadProjectFromReader(MySqlDataReader reader)
         {
-            
-                ProjectModel project = new ProjectModel();
+            ProjectModel project = new ProjectModel();
 
-                if (!reader.IsDBNull(reader.GetOrdinal(nameof(ProjectModel.Id))))
-                    project.Id = reader.GetInt32(reader.GetOrdinal("id"));
-                if (!reader.IsDBNull(reader.GetOrdinal(nameof(ProjectModel.Name))))
-                    project.Name = reader.GetString(reader.GetOrdinal("name"));
-                if (!reader.IsDBNull(reader.GetOrdinal(nameof(ProjectModel.Description))))
-                    project.Description = reader.GetString(reader.GetOrdinal("description"));
-                if (!reader.IsDBNull(reader.GetOrdinal(nameof(ProjectModel.CreateOnDate))))
-                    project.CreateOnDate = reader.GetDateTime(reader.GetOrdinal("createondate"));
-                if (!reader.IsDBNull(reader.GetOrdinal(nameof(ProjectModel.LastModifiedOnDate))))
-                    project.LastModifiedOnDate = reader.GetDateTime(reader.GetOrdinal("lastmodifiedondate"));
+            if (!reader.IsDBNull(reader.GetOrdinal(nameof(ProjectModel.Id))))
+                project.Id = reader.GetInt32(reader.GetOrdinal("id"));
+            if (!reader.IsDBNull(reader.GetOrdinal(nameof(ProjectModel.Name))))
+                project.Name = reader.GetString(reader.GetOrdinal("name"));
+            if (!reader.IsDBNull(reader.GetOrdinal(nameof(ProjectModel.Description))))
+                project.Description = reader.GetString(reader.GetOrdinal("description"));
+            if (!reader.IsDBNull(reader.GetOrdinal(nameof(ProjectModel.CreateOnDate))))
+                project.CreateOnDate = reader.GetDateTime(reader.GetOrdinal("createondate"));
+            if (!reader.IsDBNull(reader.GetOrdinal(nameof(ProjectModel.LastModifiedOnDate))))
+                project.LastModifiedOnDate = reader.GetDateTime(reader.GetOrdinal("lastmodifiedondate"));
 
-
-                return project;
-            
+            return project;
         }
     }
 }

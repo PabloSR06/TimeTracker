@@ -57,7 +57,7 @@ namespace timeTrakerApi.Data
                     {
                         if (reader.Read())
                         {
-                            user = ReadProjectFromReader(reader);
+                            user = ReadUserFromReader(reader);
                         }
                         reader.Close();
                     }
@@ -66,7 +66,46 @@ namespace timeTrakerApi.Data
             }
             return user;
         }
-        private UserModel ReadProjectFromReader(MySqlDataReader reader)
+
+        public bool Insert(UserModel user)
+        {
+            using (MySqlConnection connection = _database.CreateConnection())
+            {
+                connection.Open();
+
+                string query = "INSERT INTO " + Constants.Tables.Users + " (Name, Email, Password) VALUES (@Name, @Email, @Password)";
+
+                using (MySqlCommand command = new MySqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Name", user.Name);
+                    command.Parameters.AddWithValue("@Email", user.Email);
+                    command.Parameters.AddWithValue("@Password", user.Password);
+
+                    int rowsAffected = command.ExecuteNonQuery();
+
+                    return rowsAffected > 0;
+                }
+            }
+        }
+        public bool Delete(string id)
+        {
+            using (MySqlConnection connection = _database.CreateConnection())
+            {
+                connection.Open();
+
+                string query = "DELETE FROM " + Constants.Tables.Users + " WHERE Id = @Id";
+
+                using (MySqlCommand command = new MySqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Id", id);
+
+                    int rowsAffected = command.ExecuteNonQuery();
+
+                    return rowsAffected > 0;
+                }
+            }
+        }
+        private UserModel ReadUserFromReader(MySqlDataReader reader)
         {
 
             UserModel user = new UserModel();

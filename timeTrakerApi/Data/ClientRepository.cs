@@ -54,7 +54,7 @@ namespace timeTrakerApi.Data
                     {
                         if (reader.Read())
                         {
-                            client = ReadProjectFromReader(reader);
+                            client = ReadClientFromReader(reader);
                         }
                         reader.Close();
                     }
@@ -63,9 +63,45 @@ namespace timeTrakerApi.Data
             }
             return client;
         }
-        private ClientModel ReadProjectFromReader(MySqlDataReader reader)
+        public bool Insert(ClientModel client)
         {
+            using (MySqlConnection connection = _database.CreateConnection())
+            {
+                connection.Open();
 
+                string query = "INSERT INTO " + Constants.Tables.Clients + " (Name, Description) VALUES (@Name, @Description)";
+
+                using (MySqlCommand command = new MySqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Name", client.Name);
+                    command.Parameters.AddWithValue("@Email", client.Description);
+
+                    int rowsAffected = command.ExecuteNonQuery();
+
+                    return rowsAffected > 0;
+                }
+            }
+        }
+        public bool Delete(string id)
+        {
+            using (MySqlConnection connection = _database.CreateConnection())
+            {
+                connection.Open();
+
+                string query = "DELETE FROM " + Constants.Tables.Users + " WHERE Id = @Id";
+
+                using (MySqlCommand command = new MySqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Id", id);
+
+                    int rowsAffected = command.ExecuteNonQuery();
+
+                    return rowsAffected > 0;
+                }
+            }
+        }
+        private ClientModel ReadClientFromReader(MySqlDataReader reader)
+        {
             ClientModel client = new ClientModel();
 
                 if (!reader.IsDBNull(reader.GetOrdinal(nameof(ClientModel.Id))))

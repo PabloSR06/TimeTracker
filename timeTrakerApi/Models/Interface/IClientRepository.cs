@@ -8,5 +8,7 @@ namespace timeTrakerApi.Data.Interface
     {
         List<ClientModel> Get();
         ClientModel GetById(string id);
+        bool Insert(ClientModel project);
+        bool Delete(string id);
     }
 }
