@@ -22,7 +22,7 @@ namespace timeTrakerApi.Data
             {
                 connection.Open();
 
-                string query = "SELECT * FROM " + table;
+                string query = "SELECT * FROM " + Constants.Tables.Projects;
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
                     using (MySqlDataReader reader = command.ExecuteReader())
@@ -46,7 +46,7 @@ namespace timeTrakerApi.Data
             using (MySqlConnection connection = _database.CreateConnection())
             {
                 connection.Open();
-                string query = "SELECT * FROM " + table + " WHERE Id = @Id";
+                string query = "SELECT * FROM " + Constants.Tables.Projects + " WHERE Id = @Id";
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@Id", id);
