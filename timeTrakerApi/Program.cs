@@ -1,6 +1,7 @@
 using MySqlConnector;
 using timeTrakerApi.Data;
 using timeTrakerApi.Data.Interface;
+using timeTrakerApi.Models.Project;
 
 namespace timeTrakerApi
 {
@@ -18,9 +19,23 @@ namespace timeTrakerApi
             builder.Services.AddSwaggerGen();
             builder.Services.AddMySqlDataSource(builder.Configuration.GetConnectionString("Default")!);
             builder.Services.AddTransient<IProjectRepository, ProjectRepository>();
+            builder.Services.AddTransient<IDayHoursRepository, DayHoursRepository>();
+            builder.Services.AddTransient<IClientRepository, ClientRepository>();
+            builder.Services.AddTransient<IProjectHoursRepository, ProjectHoursRepository>();
+            builder.Services.AddTransient<IUserRepository, UserRepository>();
 
+            builder.Services.AddCors(options =>
+                        {
+                            options.AddPolicy("AllowOrigin", builder =>
+                                builder.WithOrigins("http://localhost:3000")
+                                       .AllowAnyMethod()
+                                       .AllowAnyHeader());
+                        });
 
             var app = builder.Build();
+
+
+
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -32,6 +47,9 @@ namespace timeTrakerApi
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
+
+            app.UseCors("AllowOrigin");
+            app.UseRouting();
 
 
             app.MapControllers();

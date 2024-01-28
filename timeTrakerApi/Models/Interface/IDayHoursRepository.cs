@@ -4,7 +4,7 @@ namespace timeTrakerApi.Data.Interface
 {
     public interface IDayHoursRepository
     {
-        List<DayHoursModel> GetDayHours();
         List<DayHoursModel> GetDayHoursByUserId(string userId);
+        List<DayHoursModel> GetDayHours(HourInputModel input);
     }
 }

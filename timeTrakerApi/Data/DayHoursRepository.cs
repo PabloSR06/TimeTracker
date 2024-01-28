@@ -1,6 +1,7 @@
 ﻿using timeTrakerApi.Data.Interface;
 using MySqlConnector;
 using timeTrakerApi.Models.Project;
+using System.Data;
 
 namespace timeTrakerApi.Data
 {
@@ -13,30 +14,7 @@ namespace timeTrakerApi.Data
             _database = database;
         }
 
-        public List<DayHoursModel> GetDayHours()
-        {
-            List<DayHoursModel> dayHours = new List<DayHoursModel>();
-            using (MySqlConnection connection = _database.CreateConnection())
-            {
-                connection.Open();
-
-                string query = "SELECT * FROM " + Constants.Tables.DayHours;
-                using (MySqlCommand command = new MySqlCommand(query, connection))
-                {
-                    using (MySqlDataReader reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            dayHours.Add(ReadDayHoursFromReader(reader));
-
-                        }
-                        reader.Close();
-                    }
-                    connection.Dispose();
-                }
-            }
-            return dayHours;
-        }
+        
         public List<DayHoursModel> GetDayHoursByUserId(string userId)
         {
             List<DayHoursModel> dayHours = new List<DayHoursModel>();
@@ -59,6 +37,33 @@ namespace timeTrakerApi.Data
                     }
                     connection.Dispose();
                 }
+            }
+            return dayHours;
+        }
+
+        public List<DayHoursModel> GetDayHours(HourInputModel input)
+        {
+            List<DayHoursModel>? dayHours = new List<DayHoursModel>();
+
+            using (MySqlConnection connection = _database.CreateConnection())
+            {
+                connection.Open();
+                using (MySqlCommand command = new MySqlCommand("GetDayHours", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@userId", input.UserId);
+                    command.Parameters.AddWithValue("@from", input.From);
+                    command.Parameters.AddWithValue("@to", input.To);
+
+                    using (MySqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            dayHours.Add(ReadDayHoursFromReader(reader));
+                        }
+                    }
+                }
+                connection.Dispose();
             }
             return dayHours;
         }

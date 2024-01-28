@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using timeTrakerApi.Data.Interface;
+using timeTrakerApi.Models.Project;
 
 namespace timeTrakerApi.Controllers
 {
@@ -8,18 +9,19 @@ namespace timeTrakerApi.Controllers
     public class TimeController : ControllerBase
     {
         private readonly ILogger<TimeController> _logger;
-        private readonly IProjectRepository _projectRepository;
+        private readonly IDayHoursRepository _dayHoursRepository;
 
-        public TimeController(ILogger<TimeController> logger, IProjectRepository projectRepository)
+        public TimeController(ILogger<TimeController> logger, IDayHoursRepository dayHoursRepository)
         {
             _logger = logger;
-            _projectRepository = projectRepository;
+            _dayHoursRepository = dayHoursRepository;
         }
 
-        [HttpGet]
-        public void Get()
+        [HttpPost("GetDayHours")]
+        public List<DayHoursModel> GetDayHours(HourInputModel input)
         {
-            _projectRepository.Get();
+            _logger.LogInformation("GetDayHours");
+            return _dayHoursRepository.GetDayHours(input);
         }
     }
 }

@@ -50,43 +50,44 @@ CREATE TABLE ProjectHours (
     FOREIGN KEY (ProjectID) REFERENCES Projects(Id)
 );
 
--- Triggers
-CREATE TRIGGER tr_insertProject
-BEFORE INSERT ON Projects FOR EACH ROW
-SET NEW.CreateOnDate = NOW(), NEW.LastModifiedOnDate = NOW();
-CREATE TRIGGER tr_insertClient
-BEFORE INSERT ON Projects FOR EACH ROW
-SET NEW.CreateOnDate = NOW(), NEW.LastModifiedOnDate = NOW();
-CREATE TRIGGER tr_insertUser
-BEFORE INSERT ON Projects FOR EACH ROW
-SET NEW.CreateOnDate = NOW(), NEW.LastModifiedOnDate = NOW();
-CREATE TRIGGER tr_insertProjectHours
-BEFORE INSERT ON Projects FOR EACH ROW
-SET NEW.CreateOnDate = NOW(), NEW.LastModifiedOnDate = NOW();
-CREATE TRIGGER tr_insertDayHours
-BEFORE INSERT ON Projects FOR EACH ROW
-SET NEW.CreateOnDate = NOW(), NEW.LastModifiedOnDate = NOW();
-
-
-CREATE TRIGGER tr_updateProject
-BEFORE UPDATE ON Projects FOR EACH ROW
-SET NEW.LastModifiedOnDate = NOW();
-CREATE TRIGGER tr_updateClient
-BEFORE UPDATE ON Clients FOR EACH ROW
-SET NEW.LastModifiedOnDate = NOW();
-CREATE TRIGGER tr_updateUser
-BEFORE UPDATE ON Users FOR EACH ROW
-SET NEW.LastModifiedOnDate = NOW();
-CREATE TRIGGER tr_updateProjectHours
-BEFORE UPDATE ON ProjectHours FOR EACH ROW
-SET NEW.LastModifiedOnDate = NOW();
-CREATE TRIGGER tr_updateDayHours
-BEFORE UPDATE ON DayHours FOR EACH ROW
-SET NEW.LastModifiedOnDate = NOW();
-
 -- Inserts
 INSERT INTO Projects (Name, Description)
 VALUES 
     ('Project 1', 'Description for Project 1'),
     ('Project 2', 'Description for Project 2'),
     ('Project 3', 'Description for Project 3');
+    
+INSERT INTO Users (Name, Email, Password) 
+VALUES ('John Doe', 'john@example.com', 'password123'),
+       ('Jane Smith', 'jane@example.com', 'securepwd');
+
+INSERT INTO Projects (Name, Description) 
+VALUES ('Project A', 'Description for Project A'),
+       ('Project B', 'Description for Project B');
+
+INSERT INTO Clients (Name, Description) 
+VALUES ('Client X', 'Description for Client X'),
+       ('Client Y', 'Description for Client Y');
+
+INSERT INTO DayHours (UserID, Type, Date) 
+VALUES (1, 1, '2024-01-24 08:00:00'),
+       (1, 0, '2024-01-24 16:00:00'), 
+       (1, 1, '2024-01-25 08:00:00'),
+       (1, 0, '2024-01-25 16:00:00'),
+       (1, 1, '2024-01-26 08:00:00');
+
+INSERT INTO ProjectHours (UserID, ProjectID, Minutes) 
+VALUES (1, 1, 120),
+       (2, 2, 180);
+
+    
+    
+-- Procedures
+DELIMITER //
+CREATE PROCEDURE GetDayHours(IN userId INT, IN `from` DATETIME, IN `to` DATETIME)
+BEGIN
+    SELECT * FROM `DayHours` WHERE UserID = userId AND `Date` BETWEEN `from` AND `to`;
+END //
+DELIMITER ;
+
+SELECT * FROM `DayHours`
