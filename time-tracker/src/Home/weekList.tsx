@@ -16,7 +16,6 @@ export const WeekList = () => {
 
     const [currentDate, setCurrentDate] = useState<Date>(todayDate);
 
-
     useEffect(() => {
         const filterData = () => {
             const startOfCurrentWeek = startOfWeek(currentDate, {weekStartsOn: 1});
