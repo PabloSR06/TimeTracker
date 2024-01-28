@@ -1,41 +1,82 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import styles from "@/Home/weekList.module.css";
-import { startOfWeek, endOfWeek, addDays, format, subWeeks, addWeeks } from 'date-fns';
+import {addWeeks, subWeeks, startOfDay, endOfDay, eachDayOfInterval, startOfWeek, endOfWeek} from 'date-fns';
 import {DayBlock} from "@/Home/dayBlock";
+import axios from "axios";
 
 export const WeekList = () => {
-    const [currentWeek, setCurrentWeek] = useState<Date[]>([]);
-    const [weeksOffset, setWeeksOffset] = useState(0); // Número de semanas antes o después de la actual
+    const todayDate = new Date();
+    const startDateRange = subWeeks(startOfDay(todayDate), 2);
+    const endDateRange = endOfDay(addWeeks(todayDate, 2));
 
-    const updateWeek = (startOfWeekDate: Date) => {
-        const daysInWeek = [];
-        let currentDay = startOfWeekDate;
+    const [apiData, setApiData] = useState<[]>([]);
+    const [allData, setAllData] = useState<[]>([]);
 
-        while (currentDay <= endOfWeek(startOfWeekDate, { weekStartsOn: 1 })) {
-            daysInWeek.push(currentDay);
-            currentDay = addDays(currentDay, 1);
-        }
+    const [currentDate, setCurrentDate] = useState<Date>(todayDate);
 
-        setCurrentWeek(daysInWeek);
-        console.log(daysInWeek);
-    };
 
     useEffect(() => {
-        const today = new Date();
-        const startOfCurrentWeek = startOfWeek(today, { weekStartsOn: 1 });
-        const startOfWeekWithOffset = addWeeks(startOfCurrentWeek, weeksOffset);
-        updateWeek(startOfWeekWithOffset);
-    }, [weeksOffset]);
+        const filterData = () => {
+            const startOfCurrentWeek = startOfWeek(currentDate, { weekStartsOn: 1 });
+            const endOfCurrentWeek = endOfWeek(currentDate);
+
+            const diasIntervalo = eachDayOfInterval({
+                start: startOfCurrentWeek,
+                end: endOfCurrentWeek,
+            });
+
+            const datosPorDia = diasIntervalo.map(dia => ({
+                date: dia,
+                data: apiData.filter(item => {
+                    const itemDate = new Date(item.date);
+                    return startOfDay(itemDate).getTime() === startOfDay(dia).getTime();
+                })
+            }));
+
+            setAllData(datosPorDia);
+            console.log(datosPorDia);
+        }
+        filterData();
+    }, [apiData, currentDate]);
+
+    useEffect(() => {
+            const fetchData = async () => {
+                // TODO: CONFIG FILE
+                const config = {
+                    method: 'post',
+                    url: 'https://localhost:7225/Time/GetDayHours',
+                    data:
+                        {
+                            "userId": 0,
+                            "from": startDateRange,
+                            "to": endDateRange
+                        }
+                };
+                try {
+                    const response = await axios.request(config);
+                    setApiData(response.data);
+                } catch (error) {
+                    if (axios.isAxiosError(error)) {
+                        console.log(error);
+                    }
+                }
+            };
+
+        fetchData();
+    }, []);
+
+
 
     const goToPreviousWeek = () => {
-        if (weeksOffset > -5) {
-            setWeeksOffset((prevOffset) => prevOffset - 1);
+        if (currentDate >= startDateRange) {
+            setCurrentDate(subWeeks(currentDate, 1));
         }
     };
 
     const goToNextWeek = () => {
-        if (weeksOffset < 5) {
-            setWeeksOffset((prevOffset) => prevOffset + 1);
+        if (currentDate <= endDateRange) {
+            setCurrentDate(addWeeks(currentDate, 1));
+
         }
     };
 
@@ -49,9 +90,8 @@ export const WeekList = () => {
 
             </div>
 
-            {currentWeek.map((day, index) => (
-
-                <DayBlock day={day}/>
+            {allData.map((day, index) => (
+                <DayBlock key={index} day={day} />
             ))}
 
         </div>

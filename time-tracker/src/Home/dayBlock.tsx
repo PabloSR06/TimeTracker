@@ -9,11 +9,12 @@ export const DayBlock = (props: { day: any;  }) => {
     return (
         <div className={styles.dayContainer}>
             <div className={styles.dateContainer}>
-                <p>{format(day, 'EEEE')}</p>
-                <p>{format(day, 'd/MM')}</p>
+                <p>{format(day.date, 'EEEE')}</p>
+                <p>{format(day.date, 'd/MM')}</p>
+                <p>{format(day.date, 'yyyy')}</p>
             </div>
             <div>
-                <p>8h</p>
+                <p>{day.data.length}</p>
             </div>
         </div>
     );
