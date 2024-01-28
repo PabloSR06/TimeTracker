@@ -19,7 +19,7 @@ namespace timeTrakerApi
             builder.Services.AddSwaggerGen();
             builder.Services.AddMySqlDataSource(builder.Configuration.GetConnectionString("Default")!);
             builder.Services.AddTransient<IProjectRepository, ProjectRepository>();
-            builder.Services.AddTransient<IDayHoursRepository, DayHoursRepository>();
+            builder.Services.AddTransient<ITimeRepository, TimeRepository>();
             builder.Services.AddTransient<IClientRepository, ClientRepository>();
             builder.Services.AddTransient<IProjectHoursRepository, ProjectHoursRepository>();
             builder.Services.AddTransient<IUserRepository, UserRepository>();

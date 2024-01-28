@@ -2,9 +2,12 @@
 
 namespace timeTrakerApi.Data.Interface
 {
-    public interface IDayHoursRepository
+    public interface ITimeRepository
     {
         List<DayHoursModel> GetDayHoursByUserId(string userId);
         List<DayHoursModel> GetDayHours(HourInputModel input);
+        List<ProjectHoursModel> GetProjectHours(HourInputModel input);
+
+
     }
 }

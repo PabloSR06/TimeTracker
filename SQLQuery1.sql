@@ -44,6 +44,7 @@ CREATE TABLE ProjectHours (
     UserID INT,
     ProjectID INT,
     Minutes INT NOT NULL,
+    Date DATE NOT NULL, 
     CreateOnDate DATETIME,
     LastModifiedOnDate DATETIME,
     FOREIGN KEY (UserID) REFERENCES Users(Id),
@@ -76,9 +77,9 @@ VALUES (1, 1, '2024-01-24 08:00:00'),
        (1, 0, '2024-01-25 16:00:00'),
        (1, 1, '2024-01-26 08:00:00');
 
-INSERT INTO ProjectHours (UserID, ProjectID, Minutes) 
-VALUES (1, 1, 120),
-       (2, 2, 180);
+INSERT INTO ProjectHours (UserID, ProjectID, Minutes, Date) 
+VALUES (1, 1, 120, '2024-01-24 16:00:00'),
+       (2, 2, 180, '2024-01-24 16:00:00');
 
     
     
@@ -90,4 +91,10 @@ BEGIN
 END //
 DELIMITER ;
 
-SELECT * FROM `DayHours`
+DELIMITER //
+CREATE PROCEDURE GetProjectHours(IN userId INT, IN `from` DATETIME, IN `to` DATETIME)
+BEGIN
+    SELECT * FROM `ProjectHours` WHERE UserID = userId AND `Date` BETWEEN `from` AND `to`;
+END //
+DELIMITER ;
+

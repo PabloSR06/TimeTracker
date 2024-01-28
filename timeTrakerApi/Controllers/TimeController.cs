@@ -9,19 +9,26 @@ namespace timeTrakerApi.Controllers
     public class TimeController : ControllerBase
     {
         private readonly ILogger<TimeController> _logger;
-        private readonly IDayHoursRepository _dayHoursRepository;
+        private readonly ITimeRepository _timeRepository;
 
-        public TimeController(ILogger<TimeController> logger, IDayHoursRepository dayHoursRepository)
+        public TimeController(ILogger<TimeController> logger, ITimeRepository timeRepository)
         {
             _logger = logger;
-            _dayHoursRepository = dayHoursRepository;
+            _timeRepository = timeRepository;
         }
 
         [HttpPost("GetDayHours")]
         public List<DayHoursModel> GetDayHours(HourInputModel input)
         {
             _logger.LogInformation("GetDayHours");
-            return _dayHoursRepository.GetDayHours(input);
+            return _timeRepository.GetDayHours(input);
+        }
+        
+        [HttpPost("GetProjectHours")]
+        public List<ProjectHoursModel> GetProjectHours(HourInputModel input)
+        {
+            _logger.LogInformation("GetProjectHours");
+            return _timeRepository.GetProjectHours(input);
         }
     }
 }
