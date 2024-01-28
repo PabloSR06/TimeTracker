@@ -1,4 +1,5 @@
 ﻿using timeTrakerApi.Models.Project;
+using timeTrakerApi.Models.Time;
 
 namespace timeTrakerApi.Data.Interface
 {
@@ -6,7 +7,8 @@ namespace timeTrakerApi.Data.Interface
     {
         List<DayHoursModel> GetDayHoursByUserId(string userId);
         List<DayHoursModel> GetDayHours(HourInputModel input);
-        List<ProjectHoursModel> GetProjectHours(HourInputModel input);
+        List<HoursProjectModel> GetProjectHours(HourInputModel input);
+        bool insertDayHours(DayInputModel input);
 
 
     }

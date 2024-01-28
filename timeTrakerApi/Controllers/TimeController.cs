@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using timeTrakerApi.Data.Interface;
 using timeTrakerApi.Models.Project;
+using timeTrakerApi.Models.Time;
 
 namespace timeTrakerApi.Controllers
 {
@@ -25,10 +26,16 @@ namespace timeTrakerApi.Controllers
         }
         
         [HttpPost("GetProjectHours")]
-        public List<ProjectHoursModel> GetProjectHours(HourInputModel input)
+        public List<HoursProjectModel> GetProjectHours(HourInputModel input)
         {
             _logger.LogInformation("GetProjectHours");
             return _timeRepository.GetProjectHours(input);
+        }
+        [HttpPost("InsertDayHours")]
+        public bool InsertDayHours(DayInputModel input)
+        {
+            _logger.LogInformation("InsertDayHours");
+            return _timeRepository.insertDayHours(input);
         }
     }
 }

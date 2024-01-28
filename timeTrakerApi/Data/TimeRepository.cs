@@ -2,6 +2,8 @@
 using MySqlConnector;
 using timeTrakerApi.Models.Project;
 using System.Data;
+using System;
+using timeTrakerApi.Models.Time;
 
 namespace timeTrakerApi.Data
 {
@@ -68,9 +70,9 @@ namespace timeTrakerApi.Data
             return dayHours;
         }
 
-        public List<ProjectHoursModel> GetProjectHours(HourInputModel input)
+        public List<HoursProjectModel> GetProjectHours(HourInputModel input)
         {
-            List<ProjectHoursModel>? projectHours = new List<ProjectHoursModel>();
+            List<HoursProjectModel>? projectHours = new List<HoursProjectModel>();
 
             using (MySqlConnection connection = _database.CreateConnection())
             {
@@ -86,13 +88,36 @@ namespace timeTrakerApi.Data
                     {
                         while (reader.Read())
                         {
-                            projectHours.Add(ReadProjectHoursFromReader(reader));
+                            projectHours.Add(ReadHoursProjectModelFromReader(reader));
                         }
                     }
                 }
                 connection.Dispose();
             }
             return projectHours;
+        }
+
+        public bool insertDayHours(DayInputModel input)
+        {
+            int rowsAffected = 0;
+            using (MySqlConnection connection = _database.CreateConnection())
+            {
+                connection.Open();
+                using (MySqlCommand command = new MySqlCommand("InsertDayHours", connection))
+                {
+                    DateTime date = DateTime.Now.ToUniversalTime();
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@userId", input.UserId);
+                    command.Parameters.AddWithValue("@type", input.Type);
+                    command.Parameters.AddWithValue("@date", date);
+                    command.Parameters.AddWithValue("@createOnDate", date);
+                    command.Parameters.AddWithValue("@lastModifiedOnDate", date);
+
+                    rowsAffected = command.ExecuteNonQuery();
+                }
+                connection.Dispose();
+            }
+            return rowsAffected > 0;
         }
 
         private DayHoursModel ReadDayHoursFromReader(MySqlDataReader reader)
@@ -113,6 +138,25 @@ namespace timeTrakerApi.Data
                 dayHours.LastModifiedOnDate = reader.GetDateTime(reader.GetOrdinal("lastmodifiedondate"));
 
             return dayHours;
+        }
+        private HoursProjectModel ReadHoursProjectModelFromReader(MySqlDataReader reader)
+        {
+            HoursProjectModel hoursProjectModel = new HoursProjectModel();
+            if (!reader.IsDBNull(reader.GetOrdinal(nameof(HoursProjectModel.Id))))
+                hoursProjectModel.Id = reader.GetInt32(reader.GetOrdinal("id"));
+            if (!reader.IsDBNull(reader.GetOrdinal(nameof(HoursProjectModel.UserId))))
+                hoursProjectModel.UserId = reader.GetInt32(reader.GetOrdinal("userid"));
+            if (!reader.IsDBNull(reader.GetOrdinal(nameof(HoursProjectModel.ProjectId))))
+                hoursProjectModel.ProjectId = reader.GetInt32("projectid");
+            if (!reader.IsDBNull(reader.GetOrdinal(nameof(HoursProjectModel.Date))))
+                hoursProjectModel.Date = reader.GetDateTime("date");
+            if (!reader.IsDBNull(reader.GetOrdinal(nameof(HoursProjectModel.Minutes))))
+                hoursProjectModel.Minutes = reader.GetInt32("minutes");
+            if (!reader.IsDBNull(reader.GetOrdinal(nameof(HoursProjectModel.Name))))
+                hoursProjectModel.Name = reader.GetString("name");
+            if (!reader.IsDBNull(reader.GetOrdinal(nameof(HoursProjectModel.Description))))
+                hoursProjectModel.Description = reader.GetString("description");
+            return hoursProjectModel;
         }
         private ProjectHoursModel ReadProjectHoursFromReader(MySqlDataReader reader)
         {
