@@ -3,6 +3,7 @@ import styles from "@/Home/weekList.module.css";
 import {addWeeks, subWeeks, startOfDay, endOfDay, eachDayOfInterval, startOfWeek, endOfWeek} from 'date-fns';
 import {DayBlock} from "@/Home/dayBlock";
 import axios from "axios";
+import {apiUrl} from "@/Types/config";
 
 export const WeekList = () => {
     const todayDate = new Date();
@@ -21,41 +22,42 @@ export const WeekList = () => {
             const startOfCurrentWeek = startOfWeek(currentDate, {weekStartsOn: 1});
             const endOfCurrentWeek = endOfWeek(currentDate, {weekStartsOn: 1});
 
-            const diasIntervalo = eachDayOfInterval({
+            const daysRange = eachDayOfInterval({
                 start: startOfCurrentWeek,
                 end: endOfCurrentWeek,
             });
 
-            const datosPorDia = diasIntervalo.map(dia => ({
-                date: dia,
+            const dataPerDay = daysRange.map(day => ({
+                date: day,
                 data: apiData.filter(item => {
                     const itemDate = new Date(item.date);
-                    return startOfDay(itemDate).getTime() === startOfDay(dia).getTime();
+                    return startOfDay(itemDate).getTime() === startOfDay(day).getTime();
                 }),
                 projects: projectHours.filter(item => {
                     const itemDate = new Date(item.date);
-                    return startOfDay(itemDate).getTime() === startOfDay(dia).getTime();
+                    return startOfDay(itemDate).getTime() === startOfDay(day).getTime();
                 })
             }));
-            setAllData(datosPorDia);
+            setAllData(dataPerDay);
         }
         filterData();
     }, [apiData, currentDate, projectHours]);
 
     useEffect(() => {
-        const fetchData = async () => {
-            // TODO: CONFIG FILE
-            const config = {
-                method: 'post',
-                url: 'https://localhost:7225/Time/GetDayHours',
-                data:
-                    {
-                        "userId": 0,
-                        "from": startDateRange,
-                        "to": endDateRange
-                    }
-            };
+        // TODO: MAYBE CHANGE CONFIG FILE
+        const config = {
+            method: 'post',
+            url: '',
+            data:
+                {
+                    "userId": 0,
+                    "from": startDateRange,
+                    "to": endDateRange
+                }
+        };
+        const fetchDayHours = async () => {
             try {
+                config.url = apiUrl + '/Time/GetDayHours';
                 const response = await axios.request(config);
                 setApiData(response.data);
             } catch (error) {
@@ -64,19 +66,9 @@ export const WeekList = () => {
                 }
             }
         };
-        const fetchData2 = async () => {
-            // TODO: CONFIG FILE
-            const config = {
-                method: 'post',
-                url: 'https://localhost:7225/Time/GetProjectHours',
-                data:
-                    {
-                        "userId": 0,
-                        "from": startDateRange,
-                        "to": endDateRange
-                    }
-            };
+        const fetchProjectHours = async () => {
             try {
+                config.url = apiUrl + '/Time/GetProjectHours';
                 const response = await axios.request(config);
                 setProjectHours(response.data);
             } catch (error) {
@@ -86,8 +78,8 @@ export const WeekList = () => {
             }
         };
 
-        fetchData();
-        fetchData2();
+        fetchDayHours();
+        fetchProjectHours();
     }, []);
 
     const goToPreviousWeek = () => {
