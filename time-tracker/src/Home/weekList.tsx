@@ -9,16 +9,17 @@ export const WeekList = () => {
     const startDateRange = subWeeks(startOfDay(todayDate), 2);
     const endDateRange = endOfDay(addWeeks(todayDate, 2));
 
-    const [apiData, setApiData] = useState<[]>([]);
-    const [allData, setAllData] = useState<[]>([]);
+    const [apiData, setApiData] = useState<DayHours[]>([]);
+    const [projectHours, setProjectHours] = useState<ProjectHours[]>([]);
+    const [allData, setAllData] = useState<CustomDay[]>([]);
 
     const [currentDate, setCurrentDate] = useState<Date>(todayDate);
 
 
     useEffect(() => {
         const filterData = () => {
-            const startOfCurrentWeek = startOfWeek(currentDate, { weekStartsOn: 1 });
-            const endOfCurrentWeek = endOfWeek(currentDate);
+            const startOfCurrentWeek = startOfWeek(currentDate, {weekStartsOn: 1});
+            const endOfCurrentWeek = endOfWeek(currentDate, {weekStartsOn: 1});
 
             const diasIntervalo = eachDayOfInterval({
                 start: startOfCurrentWeek,
@@ -30,53 +31,73 @@ export const WeekList = () => {
                 data: apiData.filter(item => {
                     const itemDate = new Date(item.date);
                     return startOfDay(itemDate).getTime() === startOfDay(dia).getTime();
+                }),
+                projects: projectHours.filter(item => {
+                    const itemDate = new Date(item.date);
+                    return startOfDay(itemDate).getTime() === startOfDay(dia).getTime();
                 })
             }));
-
             setAllData(datosPorDia);
-            console.log(datosPorDia);
         }
         filterData();
-    }, [apiData, currentDate]);
+    }, [apiData, currentDate, projectHours]);
 
     useEffect(() => {
-            const fetchData = async () => {
-                // TODO: CONFIG FILE
-                const config = {
-                    method: 'post',
-                    url: 'https://localhost:7225/Time/GetDayHours',
-                    data:
-                        {
-                            "userId": 0,
-                            "from": startDateRange,
-                            "to": endDateRange
-                        }
-                };
-                try {
-                    const response = await axios.request(config);
-                    setApiData(response.data);
-                } catch (error) {
-                    if (axios.isAxiosError(error)) {
-                        console.log(error);
+        const fetchData = async () => {
+            // TODO: CONFIG FILE
+            const config = {
+                method: 'post',
+                url: 'https://localhost:7225/Time/GetDayHours',
+                data:
+                    {
+                        "userId": 0,
+                        "from": startDateRange,
+                        "to": endDateRange
                     }
-                }
             };
+            try {
+                const response = await axios.request(config);
+                setApiData(response.data);
+            } catch (error) {
+                if (axios.isAxiosError(error)) {
+                    console.log(error);
+                }
+            }
+        };
+        const fetchData2 = async () => {
+            // TODO: CONFIG FILE
+            const config = {
+                method: 'post',
+                url: 'https://localhost:7225/Time/GetProjectHours',
+                data:
+                    {
+                        "userId": 0,
+                        "from": startDateRange,
+                        "to": endDateRange
+                    }
+            };
+            try {
+                const response = await axios.request(config);
+                setProjectHours(response.data);
+            } catch (error) {
+                if (axios.isAxiosError(error)) {
+                    console.log(error);
+                }
+            }
+        };
 
         fetchData();
+        fetchData2();
     }, []);
-
-
 
     const goToPreviousWeek = () => {
         if (currentDate >= startDateRange) {
             setCurrentDate(subWeeks(currentDate, 1));
         }
     };
-
     const goToNextWeek = () => {
         if (currentDate <= endDateRange) {
             setCurrentDate(addWeeks(currentDate, 1));
-
         }
     };
 
@@ -91,7 +112,7 @@ export const WeekList = () => {
             </div>
 
             {allData.map((day, index) => (
-                <DayBlock key={index} day={day} />
+                <DayBlock key={index} day={day}/>
             ))}
 
         </div>
