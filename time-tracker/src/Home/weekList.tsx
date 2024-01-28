@@ -10,11 +10,18 @@ export const WeekList = () => {
     const startDateRange = subWeeks(startOfDay(todayDate), 2);
     const endDateRange = endOfDay(addWeeks(todayDate, 2));
 
+    const [counter, setCounter] = useState(0);
+
+
     const [apiData, setApiData] = useState<DayHours[]>([]);
-    const [projectHours, setProjectHours] = useState<ProjectHours[]>([]);
+    const [projectHours, setProjectHours] = useState<ProjectHoursName[]>([]);
     const [allData, setAllData] = useState<CustomDay[]>([]);
 
     const [currentDate, setCurrentDate] = useState<Date>(todayDate);
+
+    const reloadComponent = () => {
+        setCounter(counter + 1);
+    };
 
     useEffect(() => {
         const filterData = () => {
@@ -37,6 +44,7 @@ export const WeekList = () => {
                     return startOfDay(itemDate).getTime() === startOfDay(day).getTime();
                 })
             }));
+            console.log(projectHours);
             setAllData(dataPerDay);
         }
         filterData();
@@ -49,7 +57,7 @@ export const WeekList = () => {
             url: '',
             data:
                 {
-                    "userId": 0,
+                    "userId": 1,
                     "from": startDateRange,
                     "to": endDateRange
                 }
@@ -79,7 +87,7 @@ export const WeekList = () => {
 
         fetchDayHours();
         fetchProjectHours();
-    }, []);
+    }, [counter]);
 
     const goToPreviousWeek = () => {
         if (currentDate >= startDateRange) {
@@ -103,7 +111,7 @@ export const WeekList = () => {
             </div>
 
             {allData.map((day, index) => (
-                <DayBlock key={index} day={day}/>
+                <DayBlock key={index} day={day} reloadComponent={reloadComponent}/>
             ))}
 
         </div>

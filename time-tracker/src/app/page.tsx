@@ -10,6 +10,7 @@ import {DayBlock} from "@/Home/dayBlock";
 export default function Home() {
     const today = new Date();
 
+
   return (
     <div>
         <WeekList/>

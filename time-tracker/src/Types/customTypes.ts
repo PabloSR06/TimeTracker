@@ -9,7 +9,7 @@ type DayHours = {
 type CustomDay = {
     date: Date,
     data: DayHours[],
-    projects: ProjectHours[]
+    projects: ProjectHoursName[]
 };
 type ProjectHours = {
     "id": number,
@@ -19,4 +19,18 @@ type ProjectHours = {
     "date": Date,
     "createOnDate": Date,
     "lastModifiedOnDate": Date
-}
+};
+type Project = {
+    "id": number,
+    "name": string,
+    "description": string
+};
+type ProjectHoursName = {
+    "id": number,
+    "userId": number,
+    "projectId": number,
+    "minutes": number,
+    "date": Date,
+    "name": string,
+    "description": string,
+};
