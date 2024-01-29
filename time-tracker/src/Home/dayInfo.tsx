@@ -15,6 +15,7 @@ export const DayInfo = (props: { day: CustomDay; }) => {
             {day.projects.map((project, index) => (
                 <div key={index}>
                     <div>{project.name}</div>
+                    <div>{project.description}</div>
                 </div>
 
             ))}

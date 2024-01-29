@@ -34,3 +34,9 @@ type ProjectHoursName = {
     "name": string,
     "description": string,
 };
+type ProjectTimeInputModel = {
+    "userId": number,
+    "Minutes": number,
+    "Date": Date,
+    "ProjectId": number
+};

@@ -44,7 +44,6 @@ export const WeekList = () => {
                     return startOfDay(itemDate).getTime() === startOfDay(day).getTime();
                 })
             }));
-            console.log(projectHours);
             setAllData(dataPerDay);
         }
         filterData();
