@@ -97,7 +97,7 @@ namespace timeTrakerApi.Data
             return projectHours;
         }
 
-        public bool insertDayHours(DayInputModel input)
+        public bool InsertDayHours(DayInputModel input)
         {
             int rowsAffected = 0;
             using (MySqlConnection connection = _database.CreateConnection())
@@ -110,8 +110,6 @@ namespace timeTrakerApi.Data
                     command.Parameters.AddWithValue("@userId", input.UserId);
                     command.Parameters.AddWithValue("@type", input.Type);
                     command.Parameters.AddWithValue("@date", date);
-                    command.Parameters.AddWithValue("@createOnDate", date);
-                    command.Parameters.AddWithValue("@lastModifiedOnDate", date);
 
                     rowsAffected = command.ExecuteNonQuery();
                 }
@@ -119,6 +117,29 @@ namespace timeTrakerApi.Data
             }
             return rowsAffected > 0;
         }
+
+        public bool InsertProjectHours(ProjectTimeInputModel input)
+        {
+            int rowsAffected = 0;
+            using (MySqlConnection connection = _database.CreateConnection())
+            {
+                connection.Open();
+                using (MySqlCommand command = new MySqlCommand("InsertProjectHours", connection))
+                {
+                    DateTime date = DateTime.Now.ToUniversalTime();
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@userId", input.UserId);
+                    command.Parameters.AddWithValue("@projectId", input.ProjectId);
+                    command.Parameters.AddWithValue("@minutes", input.Minutes);
+                    command.Parameters.AddWithValue("@date", input.Date);
+
+                    rowsAffected = command.ExecuteNonQuery();
+                }
+                connection.Dispose();
+            }
+            return rowsAffected > 0;
+        }
+
 
         private DayHoursModel ReadDayHoursFromReader(MySqlDataReader reader)
         {

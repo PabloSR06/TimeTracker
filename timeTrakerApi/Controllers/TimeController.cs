@@ -35,7 +35,13 @@ namespace timeTrakerApi.Controllers
         public bool InsertDayHours(DayInputModel input)
         {
             _logger.LogInformation("InsertDayHours");
-            return _timeRepository.insertDayHours(input);
+            return _timeRepository.InsertDayHours(input);
+        }
+        [HttpPost("InsertProjectHours")]
+        public bool InsertProjectHours(ProjectTimeInputModel input)
+        {
+            _logger.LogInformation("InsertDayHours");
+            return _timeRepository.InsertProjectHours(input);
         }
     }
 }

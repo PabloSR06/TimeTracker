@@ -8,7 +8,8 @@ namespace timeTrakerApi.Data.Interface
         List<DayHoursModel> GetDayHoursByUserId(string userId);
         List<DayHoursModel> GetDayHours(HourInputModel input);
         List<HoursProjectModel> GetProjectHours(HourInputModel input);
-        bool insertDayHours(DayInputModel input);
+        bool InsertProjectHours(ProjectTimeInputModel input);
+        bool InsertDayHours(DayInputModel input);
 
 
     }
