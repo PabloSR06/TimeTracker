@@ -1,5 +1,12 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import { apiUrl } from "@/Types/config";
+import {
+    apiGetDayHours,
+    ApiGetDayHoursData,
+    apiGetProjectHours,
+    ApiInsertDayHoursData,
+    apiInsertDayHours,
+    apiUrl
+} from "@/Types/config";
 import axios from "axios";
 import {Dispatch} from "redux";
 
@@ -26,21 +33,15 @@ const hoursSlice = createSlice({
     }
 });
 export const fetchHours = async (dispatch: Dispatch, startDateRange:Date, endDateRange:Date) => {
-    // TODO: MAYBE CHANGE CONFIG FILE
-    const config = {
-        method: 'post',
-        url: '',
-        data:
-            {
-                "userId": 1,
-                "from": startDateRange,
-                "to": endDateRange
-            }
+    const data: ApiGetDayHoursData = {
+        userId: 1,
+        from: startDateRange,
+        to: endDateRange
     };
+
     const fetchDayHours = async () => {
         try {
-            config.url = apiUrl + '/Time/GetDayHours';
-            const response = await axios.request(config);
+            const response = await axios.request(apiGetDayHours(data));
             dispatch(loadApiData(response.data));
         } catch (error) {
             if (axios.isAxiosError(error)) {
@@ -50,8 +51,7 @@ export const fetchHours = async (dispatch: Dispatch, startDateRange:Date, endDat
     };
     const fetchProjectHours = async () => {
         try {
-            config.url = apiUrl + '/Time/GetProjectHours';
-            const response = await axios.request(config);
+            const response = await axios.request(apiGetProjectHours(data));
             dispatch(loadProjectHours(response.data));
         } catch (error) {
             if (axios.isAxiosError(error)) {
@@ -64,18 +64,14 @@ export const fetchHours = async (dispatch: Dispatch, startDateRange:Date, endDat
 };
 
 export const StartDayHours = async (dispatch: Dispatch, userId:number) => {
-    const config = {
-        method: 'post',
-        url: apiUrl + '/Time/InsertDayHours',
-        data:
-            {
-                "userId": userId,
-                "type": true
-            }
+
+    const data: ApiInsertDayHoursData = {
+        userId: userId,
+        type: true
     };
 
     try {
-        await axios.request(config);
+        await axios.request(apiInsertDayHours(data));
     } catch (error) {
         if (axios.isAxiosError(error)) {
             console.log(error);
@@ -84,18 +80,13 @@ export const StartDayHours = async (dispatch: Dispatch, userId:number) => {
 };
 
 export const EndDayHours = async (dispatch: Dispatch, userId:number) => {
-    const config = {
-        method: 'post',
-        url: apiUrl + '/Time/InsertDayHours',
-        data:
-            {
-                "userId": userId,
-                "type": false
-            }
+    const data: ApiInsertDayHoursData = {
+        userId: userId,
+        type: false
     };
 
     try {
-        await axios.request(config);
+        await axios.request(apiInsertDayHours(data));
     } catch (error) {
         if (axios.isAxiosError(error)) {
             console.log(error);

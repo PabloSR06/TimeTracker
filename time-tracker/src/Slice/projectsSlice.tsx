@@ -1,5 +1,5 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import { apiUrl } from "@/Types/config";
+import {apiGetAllProjects, apiUrl} from "@/Types/config";
 import axios from "axios";
 import {Dispatch} from "redux";
 
@@ -13,12 +13,8 @@ const projectsSlice = createSlice({
     }
 });
 export const fetchProjects = async (dispatch: Dispatch) => {
-    const config = {
-        method: 'GET',
-        url: apiUrl + '/Project/GetAllProjects'
-    };
     try {
-        const response = await axios.request(config);
+        const response = await axios.request(apiGetAllProjects());
         dispatch(projectsLoaded(response.data)); // Dispatch action to update the state with fetched todos
     } catch (error) {
         if (axios.isAxiosError(error)) {

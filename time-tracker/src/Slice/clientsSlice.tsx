@@ -1,10 +1,7 @@
-import {AnyAction, createSlice, PayloadAction, UnknownAction} from '@reduxjs/toolkit';
-import {apiUrl} from "@/Types/config";
+import {createSlice, PayloadAction, UnknownAction} from '@reduxjs/toolkit';
+import {apiGetAllProjects, apiUrl} from "@/Types/config";
 import axios from "axios";
 import {Dispatch} from "redux";
-
-
-
 
 const clientsSlice = createSlice({
     name: 'clients',
@@ -17,12 +14,9 @@ const clientsSlice = createSlice({
 });
 
 export const fetchClients = async (dispatch: Dispatch) => {
-    const config = {
-        method: 'GET',
-        url: apiUrl + '/Project/GetAllProjects'
-    };
+    //TODO: CHANGE FOR CLIENTS
     try {
-        const response = await axios.request(config);
+        const response = await axios.request(apiGetAllProjects());
         dispatch(loadClients(response.data));
     } catch (error) {
         if (axios.isAxiosError(error)) {

@@ -173,8 +173,10 @@ namespace timeTrakerApi.Data
                 hoursProjectModel.Date = reader.GetDateTime("date");
             if (!reader.IsDBNull(reader.GetOrdinal(nameof(HoursProjectModel.Minutes))))
                 hoursProjectModel.Minutes = reader.GetInt32("minutes");
-            if (!reader.IsDBNull(reader.GetOrdinal(nameof(HoursProjectModel.Name))))
-                hoursProjectModel.Name = reader.GetString("name");
+            if (!reader.IsDBNull(reader.GetOrdinal(nameof(HoursProjectModel.ProjectName))))
+                hoursProjectModel.ProjectName = reader.GetString(nameof(HoursProjectModel.ProjectName));
+            if (!reader.IsDBNull(reader.GetOrdinal(nameof(HoursProjectModel.ClientName))))
+                hoursProjectModel.ClientName = reader.GetString(nameof(HoursProjectModel.ClientName));
             if (!reader.IsDBNull(reader.GetOrdinal(nameof(HoursProjectModel.Description))))
                 hoursProjectModel.Description = reader.GetString("description");
             return hoursProjectModel;

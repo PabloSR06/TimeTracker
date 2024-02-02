@@ -1,16 +1,10 @@
 import React, {useEffect, useState} from "react";
-import {eachDayOfInterval, endOfWeek, minutesToHours, startOfDay, startOfWeek} from "date-fns";
-import {DayBlock} from "@/Home/dayBlock";
-import {apiUrl} from "@/Types/config";
-import axios from "axios";
-import DatePicker from "react-datepicker";
-import { yupResolver } from "@hookform/resolvers/yup"
-import * as yup from "yup"
-
+import {apiInsertProjectHours, ApiInsertProjectHoursData} from "@/Types/config";
 import "react-datepicker/dist/react-datepicker.css";
 import {FormProvider, useForm} from "react-hook-form";
-import {Input} from "postcss";
-import {ProjectTimeSchema} from "@/Types/customTypes";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "@/Slice/store";
+import {number} from "prop-types";
 
 interface ProjectInputProps {
     forDate: Date;
@@ -20,19 +14,20 @@ export const ProjectInput: React.FC<ProjectInputProps> = ({forDate}) => {
     const [inputData, setInputData] = useState<ProjectTimeInputModel>();
     const [selectedDate, setSelectedDate] = useState<Date>(forDate);
 
+    const dispatch = useDispatch();
+
+    const clients = useSelector((state: RootState) => state.clients);
+    const projects = useSelector((state: RootState) => state.projects);
+
+
     const sendData = async () => {
-        // TODO: MAYBE CHANGE CONFIG FILE
-        const config = {
-            method: 'post',
-            url: apiUrl + '/Time/InsertProjectHours',
-            data: {
-                "userId": 1,
-                "projectId": 1,
-                "minutes": 10,
-                "date": selectedDate
-            }
+        const data: ApiInsertProjectHoursData = {
+            userId: 1,
+            projectId: 1,
+            minutes: 10,
+            date: selectedDate
         };
-        console.log(config);
+        console.log(apiInsertProjectHours(data));
         // try {
         //     const response = await axios.request(config);
         // } catch (error) {

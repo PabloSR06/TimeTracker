@@ -23,7 +23,6 @@ export default function Home() {
 
     useEffect(() => {
 
-        console.log(count);
     }, [count]);
 
     // useEffect(() => {
