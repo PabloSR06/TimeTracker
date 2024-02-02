@@ -62,5 +62,45 @@ export const fetchHours = async (dispatch: Dispatch, startDateRange:Date, endDat
     fetchDayHours();
     fetchProjectHours();
 };
+
+export const StartDayHours = async (dispatch: Dispatch, userId:number) => {
+    const config = {
+        method: 'post',
+        url: apiUrl + '/Time/InsertDayHours',
+        data:
+            {
+                "userId": userId,
+                "type": true
+            }
+    };
+
+    try {
+        await axios.request(config);
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            console.log(error);
+        }
+    }
+};
+
+export const EndDayHours = async (dispatch: Dispatch, userId:number) => {
+    const config = {
+        method: 'post',
+        url: apiUrl + '/Time/InsertDayHours',
+        data:
+            {
+                "userId": userId,
+                "type": false
+            }
+    };
+
+    try {
+        await axios.request(config);
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            console.log(error);
+        }
+    }
+};
 export const { loadApiData, loadProjectHours } = hoursSlice.actions;
 export default hoursSlice.reducer;
