@@ -69,12 +69,11 @@ namespace timeTrakerApi.Data
             {
                 connection.Open();
 
-                string query = "INSERT INTO " + Constants.Tables.Clients + " (Name, Description) VALUES (@Name, @Description)";
+                string query = "INSERT INTO " + Constants.Tables.Clients + " (Name) VALUES (@Name)";
 
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@Name", client.Name);
-                    command.Parameters.AddWithValue("@Email", client.Description);
 
                     int rowsAffected = command.ExecuteNonQuery();
 
@@ -108,8 +107,6 @@ namespace timeTrakerApi.Data
                     client.Id = reader.GetInt32(reader.GetOrdinal("id"));
                 if (!reader.IsDBNull(reader.GetOrdinal(nameof(ClientModel.Name))))
                     client.Name = reader.GetString(reader.GetOrdinal("name"));
-                if (!reader.IsDBNull(reader.GetOrdinal(nameof(ClientModel.Description))))
-                    client.Description = reader.GetString(reader.GetOrdinal("description"));
                 if (!reader.IsDBNull(reader.GetOrdinal(nameof(ClientModel.CreateOnDate))))
                     client.CreateOnDate = reader.GetDateTime(reader.GetOrdinal("createondate"));
                 if (!reader.IsDBNull(reader.GetOrdinal(nameof(ClientModel.LastModifiedOnDate))))

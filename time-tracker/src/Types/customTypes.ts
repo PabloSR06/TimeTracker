@@ -20,10 +20,11 @@ type ProjectHours = {
     "createOnDate": Date,
     "lastModifiedOnDate": Date
 };
-type Project = {
+type ProjectModel = {
     "id": number,
     "name": string,
-    "description": string
+    "description": string,
+    "clientId": number,
 };
 type ProjectHoursName = {
     "id": number,
@@ -39,4 +40,10 @@ type ProjectTimeInputModel = {
     "Minutes": number,
     "Date": Date,
     "ProjectId": number
+};
+type ClientModel = {
+    id: number,
+    name: string,
+    createOnDate: Date,
+    lastModifiedOnDate: Date
 };

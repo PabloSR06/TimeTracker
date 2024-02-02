@@ -51,6 +51,12 @@ export const apiGetAllProjects = () => {
         url: apiUrl + '/Project/GetAllProjects'
     };
 };
+export const apiGetAllClients = () => {
+    return{
+        method: 'GET',
+        url: apiUrl + '/Client/GetAllClients'
+    };
+};
 
 
 export const apiInsertProjectHours = (data: ApiInsertProjectHoursData) => {

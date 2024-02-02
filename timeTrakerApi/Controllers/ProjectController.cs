@@ -6,32 +6,22 @@ namespace timeTrakerApi.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class ProjectController : ControllerBase
+    public class ClientController : ControllerBase
     {
-        private readonly ILogger<ProjectController> _logger;
-        private readonly IProjectRepository _projectRepository;
+        private readonly ILogger<ClientController> _logger;
+        private readonly IClientRepository _clientRepository;
 
-        public ProjectController(ILogger<ProjectController> logger, IProjectRepository projectRepository)
+        public ClientController(ILogger<ClientController> logger, IClientRepository clientRepository)
         {
             _logger = logger;
-            _projectRepository = projectRepository;
+            _clientRepository = clientRepository;
         }
 
-        [HttpGet("GetAllProjects")]
-        public List<ProjectModel> GetAllProjects()
+        [HttpGet("GetAllClients")]
+        public List<ClientModel> GetAllClients()
         {
-            return _projectRepository.Get();
+            return _clientRepository.Get();
         }
-        [HttpGet("GetProjectById")]
-        public ProjectModel GetProjectById(string id)
-        {
-            return _projectRepository.GetById(id);
-        }
-
-        [HttpPost("InsertProject")]
-        public bool InsertProject(ProjectModel project)
-        {
-            return _projectRepository.Insert(project);
-        }
+        
     }
 }

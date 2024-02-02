@@ -6,6 +6,8 @@ import {store, RootState} from "@/Slice/store";
 import {Provider, useDispatch, useSelector} from 'react-redux';
 import {fetchClients} from "@/Slice/clientsSlice";
 import {WeekList} from "@/Home/weekList";
+import {ProjectInput} from "@/Home/projectInput";
+import {fetchProjects} from "@/Slice/projectsSlice";
 
 //import {todosSlice} from "@/Home/counterSlice";
 
@@ -17,6 +19,7 @@ export default function Home() {
 
     useEffect(() => {
         //dispatch(fetchProjects());
+        fetchProjects(dispatch);
         fetchClients(dispatch);
 
     }, []);
@@ -25,17 +28,14 @@ export default function Home() {
 
     }, [count]);
 
-    // useEffect(() => {
-    //     dispatch(todoAdded()); // Despacha la acción para cargar los todos cuando el componente se monte
-    //     console.log(count);
-    // }, [dispatch]); // Asegúrate de incluir dispatch como dependencia para evitar advertencias de lint
+
 
 
     return (
 
     <div>
-       <WeekList/>
-       {/* <ProjectInput forDate={new Date()}/>*/}
+       {/*<WeekList/>*/}
+        <ProjectInput forDate={new Date()}/>
     </div>
   );
 }

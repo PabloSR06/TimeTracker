@@ -106,6 +106,8 @@ namespace timeTrakerApi.Data
 
             if (!reader.IsDBNull(reader.GetOrdinal(nameof(ProjectModel.Id))))
                 project.Id = reader.GetInt32(reader.GetOrdinal("id"));
+            if (!reader.IsDBNull(reader.GetOrdinal(nameof(ProjectModel.ClientId))))
+                project.ClientId = reader.GetInt32(reader.GetOrdinal("ClientID"));
             if (!reader.IsDBNull(reader.GetOrdinal(nameof(ProjectModel.Name))))
                 project.Name = reader.GetString(reader.GetOrdinal("name"));
             if (!reader.IsDBNull(reader.GetOrdinal(nameof(ProjectModel.Description))))
