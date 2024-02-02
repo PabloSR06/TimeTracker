@@ -2,14 +2,10 @@
 import Image from "next/image";
 import styles from "./page.module.css";
 import React, {useEffect} from "react";
-import {WeekList} from "@/Home/weekList";
-import {DayBlock} from "@/Home/dayBlock";
-import {ProjectInput} from "@/Home/projectInput";
-import {apiUrl} from "@/Types/config";
 import {store, RootState} from "@/Slice/store";
 import {Provider, useDispatch, useSelector} from 'react-redux';
-import {fetchProjects, projectsLoaded} from "@/Slice/projectsSlice";
 import {fetchClients} from "@/Slice/clientsSlice";
+import {WeekList} from "@/Home/weekList";
 
 //import {todosSlice} from "@/Home/counterSlice";
 
@@ -17,7 +13,7 @@ import {fetchClients} from "@/Slice/clientsSlice";
 export default function Home() {
 
     const dispatch = useDispatch();
-    const count = useSelector((state: RootState) => state.projects);
+    const count = useSelector((state: RootState) => state.clients);
 
     useEffect(() => {
         //dispatch(fetchProjects());
@@ -26,6 +22,7 @@ export default function Home() {
     }, []);
 
     useEffect(() => {
+
         console.log(count);
     }, [count]);
 
@@ -38,7 +35,7 @@ export default function Home() {
     return (
 
     <div>
-       {/*<WeekList/>*/}
+       <WeekList/>
        {/* <ProjectInput forDate={new Date()}/>*/}
     </div>
   );
