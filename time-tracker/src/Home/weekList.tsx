@@ -4,6 +4,9 @@ import {addWeeks, subWeeks, startOfDay, endOfDay, eachDayOfInterval, startOfWeek
 import {DayBlock} from "@/Home/dayBlock";
 import axios from "axios";
 import {apiUrl} from "@/Types/config";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "@/Slice/store";
+import {fetchHours} from "@/Slice/hoursSlice";
 
 export const WeekList = () => {
     const todayDate = new Date();
@@ -11,13 +14,14 @@ export const WeekList = () => {
     const endDateRange = endOfDay(addWeeks(todayDate, 2));
 
     const [counter, setCounter] = useState(0);
-
-
-    const [apiData, setApiData] = useState<DayHours[]>([]);
-    const [projectHours, setProjectHours] = useState<ProjectHoursName[]>([]);
     const [allData, setAllData] = useState<CustomDay[]>([]);
 
     const [currentDate, setCurrentDate] = useState<Date>(todayDate);
+
+    const dispatch = useDispatch();
+
+    const apiData = useSelector((state: RootState) => state.hours.ApiData);
+    const projectHours = useSelector((state: RootState) => state.hours.ProjectHours);
 
     const reloadComponent = () => {
         setCounter(counter + 1);
@@ -50,42 +54,7 @@ export const WeekList = () => {
     }, [apiData, currentDate, projectHours]);
 
     useEffect(() => {
-        // TODO: MAYBE CHANGE CONFIG FILE
-        const config = {
-            method: 'post',
-            url: '',
-            data:
-                {
-                    "userId": 1,
-                    "from": startDateRange,
-                    "to": endDateRange
-                }
-        };
-        const fetchDayHours = async () => {
-            try {
-                config.url = apiUrl + '/Time/GetDayHours';
-                const response = await axios.request(config);
-                setApiData(response.data);
-            } catch (error) {
-                if (axios.isAxiosError(error)) {
-                    console.log(error);
-                }
-            }
-        };
-        const fetchProjectHours = async () => {
-            try {
-                config.url = apiUrl + '/Time/GetProjectHours';
-                const response = await axios.request(config);
-                setProjectHours(response.data);
-            } catch (error) {
-                if (axios.isAxiosError(error)) {
-                    console.log(error);
-                }
-            }
-        };
-
-        fetchDayHours();
-        fetchProjectHours();
+        fetchHours(dispatch, startDateRange, endDateRange);
     }, [counter]);
 
     const goToPreviousWeek = () => {

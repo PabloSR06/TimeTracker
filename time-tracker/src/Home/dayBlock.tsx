@@ -1,11 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import styles from "@/Home/dayBlock.module.css";
 import {addWeeks, differenceInHours, format, minutesToHours} from "date-fns";
-import {number} from "prop-types";
-import {minutesInHour} from "date-fns/constants";
-import {apiUrl} from "@/Types/config";
-import axios from "axios";
 import {DayInfo} from "@/Home/dayInfo";
+import {useDispatch} from "react-redux";
+import {EndDayHours, StartDayHours} from "@/Slice/hoursSlice";
 
 interface DayBlockProps {
     day: CustomDay;
@@ -14,7 +12,7 @@ interface DayBlockProps {
 
 export const DayBlock: React.FC<DayBlockProps> = ({ reloadComponent, day }) => {
 
-
+    const dispatch = useDispatch();
 
     const [projectCount, setProjectCount] = useState<number>(0);
     const [dayCount, setDayCount] = useState<number>(0);
@@ -51,53 +49,17 @@ export const DayBlock: React.FC<DayBlockProps> = ({ reloadComponent, day }) => {
 
     const startDay = async () => {
         console.log(day);
-        const config = {
-            method: 'post',
-            url: apiUrl + '/Time/InsertDayHours',
-            data:
-                {
-                    "userId": 1,
-                    "type": true
-                }
-        };
-
-        try {
-            const response = await axios.request(config);
-            reloadComponent();
-        } catch (error) {
-            if (axios.isAxiosError(error)) {
-                console.log(error);
-            }
-        }
+        StartDayHours(dispatch, 1).then(() => reloadComponent());
     }
     const endDay = async () => {
-        const config = {
-            method: 'post',
-            url: apiUrl + '/Time/InsertDayHours',
-            data:
-                {
-                    "userId": 1,
-                    "type": false
-                }
-        };
+        EndDayHours(dispatch, 1).then(() => reloadComponent());
 
-        try {
-            const response = await axios.request(config);
-            reloadComponent();
-
-        } catch (error) {
-            if (axios.isAxiosError(error)) {
-                console.log(error);
-            }
-        }
     }
 
     useEffect(() => {
         DayCount();
         ProjectCount();
     }, [day]);
-
-
 
 
     //format(dia, 'EEEE, d MMM yyyy')
