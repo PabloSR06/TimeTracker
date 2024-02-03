@@ -36,13 +36,15 @@ export const apiInsertDayHours = (data: ApiInsertDayHoursData) => {
         url: apiUrl + '/Time/InsertDayHours',
         data: {
             userId: data.userId,
-            type: data.type
+            type: data.type,
+            date: data.date
         }
     };
 };
 export type ApiInsertDayHoursData = {
     userId: number,
-    type: boolean
+    type: boolean,
+    date: Date
 };
 
 export const apiGetAllProjects = () => {

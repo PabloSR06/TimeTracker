@@ -63,15 +63,10 @@ export const fetchHours = async (dispatch: Dispatch, startDateRange:Date, endDat
     fetchProjectHours();
 };
 
-export const StartDayHours = async (dispatch: Dispatch, userId:number) => {
-
-    const data: ApiInsertDayHoursData = {
-        userId: userId,
-        type: true
-    };
-
+export const InsertDayHours = async (dispatch: Dispatch, input: ApiInsertDayHoursData) => {
+    console.log('a');
     try {
-        await axios.request(apiInsertDayHours(data));
+        await axios.request(apiInsertDayHours(input));
     } catch (error) {
         if (axios.isAxiosError(error)) {
             console.log(error);
@@ -79,19 +74,6 @@ export const StartDayHours = async (dispatch: Dispatch, userId:number) => {
     }
 };
 
-export const EndDayHours = async (dispatch: Dispatch, userId:number) => {
-    const data: ApiInsertDayHoursData = {
-        userId: userId,
-        type: false
-    };
 
-    try {
-        await axios.request(apiInsertDayHours(data));
-    } catch (error) {
-        if (axios.isAxiosError(error)) {
-            console.log(error);
-        }
-    }
-};
 export const { loadApiData, loadProjectHours } = hoursSlice.actions;
 export default hoursSlice.reducer;

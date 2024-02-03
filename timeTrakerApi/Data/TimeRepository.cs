@@ -109,7 +109,7 @@ namespace timeTrakerApi.Data
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.AddWithValue("@userId", input.UserId);
                     command.Parameters.AddWithValue("@type", input.Type);
-                    command.Parameters.AddWithValue("@date", date);
+                    command.Parameters.AddWithValue("@date", input.Date);
 
                     rowsAffected = command.ExecuteNonQuery();
                 }
