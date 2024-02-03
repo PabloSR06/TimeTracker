@@ -3,22 +3,21 @@ import {apiInsertProjectHours, ApiInsertProjectHoursData} from "@/Types/config";
 import "react-datepicker/dist/react-datepicker.css";
 import {useSelector} from "react-redux";
 import {RootState} from "@/Slice/store";
-import ReactDatePicker from "react-datepicker";
+import DatePicker from "react-datepicker";
 import axios from "axios";
+import styles from '@/Home/projectInput.module.css';
 
-interface ProjectInputProps {
-    forDate: Date;
-}
-export const ProjectInput: React.FC<ProjectInputProps> = ({forDate}) => {
+
+export const ProjectInput = () => {
 
     const clients = useSelector((state: RootState) => state.clients);
     const projects = useSelector((state: RootState) => state.projects);
 
-    const [selectedDate, setSelectedDate] = useState<Date>(forDate);
+    const [selectedDate, setSelectedDate] = useState(new Date());
     const [selectedClient, setSelectedClient] = useState(-1);
     const [selectedProject, setSelectedProject] = useState(-1);
     const [formMinutes, setFormMinutes] = useState(0);
-    const [formDescription, setFormDescription] = useState<string>();
+    const [formDescription, setFormDescription] = useState<string>("");
 
     const [filteredProjects, setFilteredProjects] = useState<ProjectModel[]>([]);
 
@@ -30,7 +29,7 @@ export const ProjectInput: React.FC<ProjectInputProps> = ({forDate}) => {
         } else {
             setFilteredProjects([]);
         }
-    }, [selectedClient, projects]);
+    }, [selectedClient]);
 
     const handleClientChange = (e: BaseSyntheticEvent) => {
         setSelectedClient(parseInt(e.target.value));
@@ -71,8 +70,6 @@ export const ProjectInput: React.FC<ProjectInputProps> = ({forDate}) => {
     }, [clients]);
 
 
-
-
     const handleSend = () => {
         // Here you can perform any action you want with the form data
         console.log("Client:", selectedClient);
@@ -94,36 +91,40 @@ export const ProjectInput: React.FC<ProjectInputProps> = ({forDate}) => {
 
 
     return (
-        <div className="app">
-            <div className="formInput">
-                <select className="col-6" value={selectedClient} onChange={handleClientChange}>
+        <div className={styles.formContainer}>
+            <div>
+                <select className={styles.formInput}>
                     <option value="-1">Select a Client</option>
                     {clients.map(client => <option key={client.id} value={client.id}>{client.name}</option>)}
                 </select>
             </div>
-            <div className="formInput">
-                <select className="col-6" value={selectedProject} onChange={handleProjectChange}>
+            <div>
+                <select className={styles.formInput}>
                     <option value="-1">Select a Project</option>
-                    {filteredProjects.map(project => <option key={project.id}
-                                                             value={project.id}>{project.name}</option>)}
+                    {filteredProjects.map(project => <option key={project.id} value={project.id}>{project.name}</option>)}
                 </select>
             </div>
-            <div className="formInput">
-                <input type="number" value={formMinutes} onChange={handleMinutesChange}/>
+            <div>
+                <input className={`${styles.formInput} ${styles.formNumber}`}  type="number" placeholder="Enter a Number"/>
             </div>
-            <div className="formInput">
-                <input type="text" value={formDescription} onChange={handleDescriptionChange}/>
+            <div>
+                <textarea className={`${styles.formInput} ${styles.formArea}`}  placeholder="Enter your message"></textarea>
             </div>
-            <div className="formInput">
-                <ReactDatePicker
+            <div>
+                <DatePicker
+                    className={styles.formInput}
                     showIcon
                     selected={selectedDate}
-                    onChange={handleDateChange}
+                    onChange={(date: Date) => {
+                        setSelectedDate(date);
+                    }}
                 />
             </div>
-
-            <button onClick={handleSend}>Send</button>
+            <button className={styles.formButton}>Send</button>
         </div>
-    );
+
+
+    )
+        ;
 
 };

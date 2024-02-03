@@ -1,11 +1,8 @@
 "use client";
-import Image from "next/image";
-import styles from "./page.module.css";
 import React, {useEffect} from "react";
 import {store, RootState} from "@/Slice/store";
 import {Provider, useDispatch, useSelector} from 'react-redux';
 import {fetchClients} from "@/Slice/clientsSlice";
-import {WeekList} from "@/Home/weekList";
 import {ProjectInput} from "@/Home/projectInput";
 import {fetchProjects} from "@/Slice/projectsSlice";
 
@@ -29,13 +26,12 @@ export default function Home() {
     }, [count]);
 
 
-
-
     return (
 
     <div>
        {/*<WeekList/>*/}
-        <ProjectInput forDate={new Date()}/>
+       {/* <ProjectInput forDate={new Date()}/>*/}
+        <ProjectInput />
     </div>
   );
 }
