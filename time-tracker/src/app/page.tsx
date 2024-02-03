@@ -5,6 +5,7 @@ import {Provider, useDispatch, useSelector} from 'react-redux';
 import {fetchClients} from "@/Slice/clientsSlice";
 import {ProjectInput} from "@/Home/projectInput";
 import {fetchProjects} from "@/Slice/projectsSlice";
+import {WeekList} from "@/Home/weekList";
 
 //import {todosSlice} from "@/Home/counterSlice";
 
@@ -29,9 +30,9 @@ export default function Home() {
     return (
 
     <div>
-       {/*<WeekList/>*/}
+       <WeekList/>
        {/* <ProjectInput forDate={new Date()}/>*/}
-        <ProjectInput />
+
     </div>
   );
 }

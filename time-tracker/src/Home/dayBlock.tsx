@@ -43,17 +43,16 @@ export const DayBlock: React.FC<DayBlockProps> = ({ reloadComponent, day }) => {
                 toDate = date;
                 setDayFinished(true);
             }
+
         });
         setDayCount(differenceInHours(toDate, fromDate));
     }
 
     const startDay = async () => {
-        console.log(day);
         StartDayHours(dispatch, 1).then(() => reloadComponent());
     }
     const endDay = async () => {
         EndDayHours(dispatch, 1).then(() => reloadComponent());
-
     }
 
     useEffect(() => {
@@ -83,8 +82,10 @@ export const DayBlock: React.FC<DayBlockProps> = ({ reloadComponent, day }) => {
                 <p>Open {'' +dayStarted}</p>
                 <p>Close {'' +dayFinished}</p>
 
-                <button onClick={startDay}>Open</button>
-                <button onClick={endDay}>Close</button>
+                {!dayStarted ? (<button onClick={startDay}>Open</button>) : null}
+                {dayStarted && !dayFinished ? (<button onClick={endDay}>Close</button>) : null}
+
+
             </div>
             <DayInfo day={day}/>
         </div>
