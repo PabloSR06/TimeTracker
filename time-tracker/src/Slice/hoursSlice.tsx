@@ -64,7 +64,6 @@ export const fetchHours = async (dispatch: Dispatch, startDateRange:Date, endDat
 };
 
 export const InsertDayHours = async (dispatch: Dispatch, input: ApiInsertDayHoursData) => {
-    console.log('a');
     try {
         await axios.request(apiInsertDayHours(input));
     } catch (error) {
