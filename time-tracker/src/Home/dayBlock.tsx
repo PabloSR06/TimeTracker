@@ -100,17 +100,16 @@ export const DayBlock: React.FC<DayBlockProps> = ({ reloadComponent, day }) => {
                 <p>{format(day.date, '/yyyy')}</p>
             </div>
             <div>
-                <p>{day.data.length}</p>
-                <p>Other</p>
-                <p>{day.projects.length}</p>
+                <div>
+                    <p>Day</p>
+                    <p>{dayCount}</p>
+                </div>
+                <div>
+                    <p>Projects</p>
+                    <p>{projectCount}</p>
+                </div>
             </div>
             <div>
-                <p>{dayCount}</p>
-                <p>{projectCount}</p>
-            </div>
-            <div>
-                <p>Open {'' +dayStarted}</p>
-                <p>Close {'' +dayFinished}</p>
 
                 {!dayStarted ? (<button onClick={startDay}>Open</button>) : null}
                 {dayStarted && !dayFinished ? (<button onClick={endDay}>Close</button>) : null}
