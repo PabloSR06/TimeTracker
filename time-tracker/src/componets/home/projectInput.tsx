@@ -1,11 +1,11 @@
-import React, {BaseSyntheticEvent, useEffect, useState} from "react";
-import {apiInsertProjectHours, ApiInsertProjectHoursData} from "@/Types/config";
+import {BaseSyntheticEvent, useEffect, useState} from "react";
+import {apiInsertProjectHours, ApiInsertProjectHoursData} from "../types/config";
 import "react-datepicker/dist/react-datepicker.css";
 import {useSelector} from "react-redux";
-import {RootState} from "@/Slice/store";
+import {RootState} from "../slice/store";
 import DatePicker from "react-datepicker";
 import axios from "axios";
-import styles from '@/Home/projectInput.module.css';
+import styles from './projectInput.module.css';
 
 
 export const ProjectInput = () => {
@@ -31,6 +31,7 @@ export const ProjectInput = () => {
         }
     }, [selectedClient]);
 
+
     const handleClientChange = (e: BaseSyntheticEvent) => {
         setSelectedClient(parseInt(e.target.value));
     };
@@ -44,9 +45,9 @@ export const ProjectInput = () => {
     const handleDescriptionChange = (e: BaseSyntheticEvent) => {
         setFormDescription(e.target.value);
     };
-    const handleDateChange = (date: Date) => {
-        setSelectedDate(date);
-    };
+    // const handleDateChange = (date: Date) => {
+    //     setSelectedDate(date);
+    // };
 
     const sendData = async () => {
         const data: ApiInsertProjectHoursData = {
@@ -63,11 +64,6 @@ export const ProjectInput = () => {
             }
         }
     };
-
-
-    useEffect(() => {
-        console.log(clients);
-    }, [clients]);
 
 
     const handleSend = () => {
@@ -93,22 +89,22 @@ export const ProjectInput = () => {
     return (
         <div className={styles.formContainer}>
             <div>
-                <select className={styles.formInput}>
+                <select className={styles.formInput} onChange={handleClientChange}>
                     <option value="-1">Select a Client</option>
                     {clients.map(client => <option key={client.id} value={client.id}>{client.name}</option>)}
                 </select>
             </div>
             <div>
-                <select className={styles.formInput}>
+                <select className={styles.formInput} onChange={handleProjectChange}>
                     <option value="-1">Select a Project</option>
                     {filteredProjects.map(project => <option key={project.id} value={project.id}>{project.name}</option>)}
                 </select>
             </div>
             <div>
-                <input className={`${styles.formInput} ${styles.formNumber}`}  type="number" placeholder="Enter a Number"/>
+                <input className={`${styles.formInput} ${styles.formNumber}`}  type="number" placeholder="Enter a Number" onChange={handleMinutesChange}/>
             </div>
             <div>
-                <textarea className={`${styles.formInput} ${styles.formArea}`}  placeholder="Enter your message"></textarea>
+                <textarea className={`${styles.formInput} ${styles.formArea}`}  placeholder="Enter your message" onClick={handleDescriptionChange}></textarea>
             </div>
             <div>
                 <DatePicker
@@ -120,11 +116,7 @@ export const ProjectInput = () => {
                     }}
                 />
             </div>
-            <button className={styles.formButton}>Send</button>
+            <button className={styles.formButton} onClick={handleSend}>Send</button>
         </div>
-
-
-    )
-        ;
-
+    );
 };

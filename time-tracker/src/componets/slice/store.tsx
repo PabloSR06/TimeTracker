@@ -1,7 +1,7 @@
 import {combineReducers, configureStore} from '@reduxjs/toolkit'
-import projectsSlice from "@/Slice/projectsSlice";
-import clientsSlice from "@/Slice/clientsSlice";
-import hoursSlice from "@/Slice/hoursSlice";
+import projectsSlice from "../slice/projectsSlice";
+import clientsSlice from "../slice/clientsSlice";
+import hoursSlice from "../slice//hoursSlice";
 
 const rootReducer = combineReducers({
     projects: projectsSlice,
