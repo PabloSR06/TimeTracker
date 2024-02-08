@@ -45,9 +45,9 @@ export const ProjectInput = () => {
     const handleDescriptionChange = (e: BaseSyntheticEvent) => {
         setFormDescription(e.target.value);
     };
-    const handleDateChange = (date: Date) => {
-        setSelectedDate(date);
-    };
+    // const handleDateChange = (date: Date) => {
+    //     setSelectedDate(date);
+    // };
 
     const sendData = async () => {
         const data: ApiInsertProjectHoursData = {
@@ -89,22 +89,22 @@ export const ProjectInput = () => {
     return (
         <div className={styles.formContainer}>
             <div>
-                <select className={styles.formInput}>
+                <select className={styles.formInput} onChange={handleClientChange}>
                     <option value="-1">Select a Client</option>
                     {clients.map(client => <option key={client.id} value={client.id}>{client.name}</option>)}
                 </select>
             </div>
             <div>
-                <select className={styles.formInput}>
+                <select className={styles.formInput} onChange={handleProjectChange}>
                     <option value="-1">Select a Project</option>
                     {filteredProjects.map(project => <option key={project.id} value={project.id}>{project.name}</option>)}
                 </select>
             </div>
             <div>
-                <input className={`${styles.formInput} ${styles.formNumber}`}  type="number" placeholder="Enter a Number"/>
+                <input className={`${styles.formInput} ${styles.formNumber}`}  type="number" placeholder="Enter a Number" onChange={handleMinutesChange}/>
             </div>
             <div>
-                <textarea className={`${styles.formInput} ${styles.formArea}`}  placeholder="Enter your message"></textarea>
+                <textarea className={`${styles.formInput} ${styles.formArea}`}  placeholder="Enter your message" onClick={handleDescriptionChange}></textarea>
             </div>
             <div>
                 <DatePicker
@@ -116,7 +116,7 @@ export const ProjectInput = () => {
                     }}
                 />
             </div>
-            <button className={styles.formButton}>Send</button>
+            <button className={styles.formButton} onClick={handleSend}>Send</button>
         </div>
     );
 };
