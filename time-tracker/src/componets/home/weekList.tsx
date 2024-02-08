@@ -1,12 +1,11 @@
-import React, {useState, useEffect} from 'react';
-import styles from "@/Home/weekList.module.css";
+import {useState, useEffect} from 'react';
+import styles from "./weekList.module.css";
 import {addWeeks, subWeeks, startOfDay, endOfDay, eachDayOfInterval, startOfWeek, endOfWeek} from 'date-fns';
-import {DayBlock} from "@/Home/dayBlock";
-import axios from "axios";
-import {apiUrl} from "@/Types/config";
+import {DayBlock} from "./dayBlock.tsx";
 import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "@/Slice/store";
-import {fetchHours} from "@/Slice/hoursSlice";
+import {RootState} from "../slice/store";
+import {fetchHours} from "../slice/hoursSlice";
+import {ProjectInput} from "./projectInput.tsx";
 
 export const WeekList = () => {
     const todayDate = new Date();
@@ -81,6 +80,8 @@ export const WeekList = () => {
             {allData.map((day, index) => (
                 <DayBlock key={index} day={day} reloadComponent={reloadComponent}/>
             ))}
+
+            <ProjectInput />
 
         </div>
     );

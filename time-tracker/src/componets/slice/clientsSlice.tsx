@@ -1,13 +1,15 @@
-import {createSlice, PayloadAction, UnknownAction} from '@reduxjs/toolkit';
-import {apiGetAllClients, apiGetAllProjects, apiUrl} from "@/Types/config";
+import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {apiGetAllClients} from "../types/config";
 import axios from "axios";
 import {Dispatch} from "redux";
 
+const initialState: ClientModel[] = [];
+
 const clientsSlice = createSlice({
     name: 'clients',
-    initialState: [] as ClientModel[],
+    initialState,
     reducers: {
-        loadClients(state, action: PayloadAction<[]>) {
+        loadClients(_state, action: PayloadAction<[]>) {
             return action.payload;
         }
     }

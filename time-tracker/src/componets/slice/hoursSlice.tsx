@@ -1,12 +1,11 @@
-import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {createSlice} from '@reduxjs/toolkit';
 import {
     apiGetDayHours,
     ApiGetDayHoursData,
     apiGetProjectHours,
     ApiInsertDayHoursData,
-    apiInsertDayHours,
-    apiUrl
-} from "@/Types/config";
+    apiInsertDayHours
+} from "../types/config";
 import axios from "axios";
 import {Dispatch} from "redux";
 
@@ -63,7 +62,7 @@ export const fetchHours = async (dispatch: Dispatch, startDateRange:Date, endDat
     fetchProjectHours();
 };
 
-export const InsertDayHours = async (dispatch: Dispatch, input: ApiInsertDayHoursData) => {
+export const InsertDayHours = async (input: ApiInsertDayHoursData) => {
     try {
         await axios.request(apiInsertDayHours(input));
     } catch (error) {

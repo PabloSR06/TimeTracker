@@ -1,10 +1,9 @@
 import React, {useEffect, useState} from 'react';
-import styles from "@/Home/dayBlock.module.css";
-import {addWeeks, differenceInHours, format, minutesToHours, differenceInSeconds} from "date-fns";
-import {DayInfo} from "@/Home/dayInfo";
-import {useDispatch} from "react-redux";
-import {InsertDayHours} from "@/Slice/hoursSlice";
-import {ApiInsertDayHoursData} from "@/Types/config";
+import styles from "./dayBlock.module.css";
+import {differenceInHours, format, minutesToHours} from "date-fns";
+import {DayInfo} from "./dayInfo";
+import {InsertDayHours} from "../slice/hoursSlice";
+import {ApiInsertDayHoursData} from "../types/config";
 import {CalendarCheck, CalendarX} from "react-bootstrap-icons";
 
 interface DayBlockProps {
@@ -13,8 +12,6 @@ interface DayBlockProps {
 }
 
 export const DayBlock: React.FC<DayBlockProps> = ({reloadComponent, day}) => {
-
-    const dispatch = useDispatch();
 
     const [projectCount, setProjectCount] = useState<number>(0);
     const [dayCount, setDayCount] = useState<number>(0);
@@ -60,15 +57,14 @@ export const DayBlock: React.FC<DayBlockProps> = ({reloadComponent, day}) => {
     }
 
     const combineDate = (date: Date) => {
-        let dayOfMonth = day.date.getDate();
-        let month = day.date.getMonth();
-        let year = day.date.getFullYear();
+        const dayOfMonth = date.getDate();
+        const month = date.getMonth();
+        const year = date.getFullYear();
 
-
-        let currentDate = new Date();
-        let hours = currentDate.getHours();
-        let minutes = currentDate.getMinutes();
-        let seconds = currentDate.getSeconds();
+        const currentDate = new Date();
+        const hours = currentDate.getHours();
+        const minutes = currentDate.getMinutes();
+        const seconds = currentDate.getSeconds();
 
         return new Date(year, month, dayOfMonth, hours, minutes, seconds);
     }
@@ -81,7 +77,7 @@ export const DayBlock: React.FC<DayBlockProps> = ({reloadComponent, day}) => {
             date: combineDate(day.date),
             type: true
         };
-        InsertDayHours(dispatch, data).then(() => reloadComponent());
+        InsertDayHours(data).then(() => reloadComponent());
     }
     const endDay = async () => {
         const data: ApiInsertDayHoursData = {
@@ -89,7 +85,7 @@ export const DayBlock: React.FC<DayBlockProps> = ({reloadComponent, day}) => {
             date: combineDate(day.date),
             type: false
         };
-        InsertDayHours(dispatch, data).then(() => reloadComponent());
+        InsertDayHours(data).then(() => reloadComponent());
     }
 
     useEffect(() => {

@@ -1,11 +1,11 @@
-import React, {BaseSyntheticEvent, useEffect, useState} from "react";
-import {apiInsertProjectHours, ApiInsertProjectHoursData} from "@/Types/config";
+import {BaseSyntheticEvent, useEffect, useState} from "react";
+import {apiInsertProjectHours, ApiInsertProjectHoursData} from "../types/config";
 import "react-datepicker/dist/react-datepicker.css";
 import {useSelector} from "react-redux";
-import {RootState} from "@/Slice/store";
+import {RootState} from "../slice/store";
 import DatePicker from "react-datepicker";
 import axios from "axios";
-import styles from '@/Home/projectInput.module.css';
+import styles from './projectInput.module.css';
 
 
 export const ProjectInput = () => {
@@ -30,6 +30,7 @@ export const ProjectInput = () => {
             setFilteredProjects([]);
         }
     }, [selectedClient]);
+
 
     const handleClientChange = (e: BaseSyntheticEvent) => {
         setSelectedClient(parseInt(e.target.value));
@@ -63,11 +64,6 @@ export const ProjectInput = () => {
             }
         }
     };
-
-
-    useEffect(() => {
-        console.log(clients);
-    }, [clients]);
 
 
     const handleSend = () => {
@@ -122,9 +118,5 @@ export const ProjectInput = () => {
             </div>
             <button className={styles.formButton}>Send</button>
         </div>
-
-
-    )
-        ;
-
+    );
 };

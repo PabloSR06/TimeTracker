@@ -1,4 +1,3 @@
-import {number} from "prop-types";
 
 export const apiUrl = 'https://localhost:7225';
 

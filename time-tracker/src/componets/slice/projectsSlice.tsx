@@ -1,13 +1,15 @@
-import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {apiGetAllProjects, apiUrl} from "@/Types/config";
+import {createSlice} from '@reduxjs/toolkit';
+import {apiGetAllProjects} from "../types/config";
 import axios from "axios";
 import {Dispatch} from "redux";
 
+const initialState: ProjectModel[] = [];
+
 const projectsSlice = createSlice({
     name: 'projects',
-    initialState: [] as ProjectModel[],
+    initialState,
     reducers: {
-        projectsLoaded(state, action) {
+        projectsLoaded(_state,  action) {
             return action.payload; // Replace the state with the todos fetched from API
         }
     }
