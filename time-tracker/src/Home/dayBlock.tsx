@@ -5,13 +5,14 @@ import {DayInfo} from "@/Home/dayInfo";
 import {useDispatch} from "react-redux";
 import {InsertDayHours} from "@/Slice/hoursSlice";
 import {ApiInsertDayHoursData} from "@/Types/config";
+import {CalendarCheck, CalendarX} from "react-bootstrap-icons";
 
 interface DayBlockProps {
     day: CustomDay;
     reloadComponent: () => void;
 }
 
-export const DayBlock: React.FC<DayBlockProps> = ({ reloadComponent, day }) => {
+export const DayBlock: React.FC<DayBlockProps> = ({reloadComponent, day}) => {
 
     const dispatch = useDispatch();
 
@@ -20,6 +21,9 @@ export const DayBlock: React.FC<DayBlockProps> = ({ reloadComponent, day }) => {
 
     const [dayStarted, setDayStarted] = useState<boolean>(false);
     const [dayFinished, setDayFinished] = useState<boolean>(false);
+
+    const [fromDate, setFromDate] = useState<Date>();
+    const [toDate, setToDate] = useState<Date>();
 
 
     function ProjectCount() {
@@ -44,14 +48,17 @@ export const DayBlock: React.FC<DayBlockProps> = ({ reloadComponent, day }) => {
                 fromDate = date;
                 toDate = combineDate(date)
                 setDayStarted(true);
+                setFromDate(date);
             } else {
                 toDate = date;
                 setDayFinished(true);
+                setToDate(date);
             }
 
         });
         setDayCount(differenceInHours(toDate, fromDate));
     }
+
     const combineDate = (date: Date) => {
         let dayOfMonth = day.date.getDate();
         let month = day.date.getMonth();
@@ -90,34 +97,45 @@ export const DayBlock: React.FC<DayBlockProps> = ({ reloadComponent, day }) => {
         ProjectCount();
     }, [day]);
 
+    const test = async () => {
+        console.log('click');
+        return <DayInfo day={day}/>
+    }
 
-    //format(dia, 'EEEE, d MMM yyyy')
     return (
-        <div className={styles.dayContainer}>
+        <div className={styles.dayContainer} onClick={test}>
             <div className={styles.dateContainer}>
-                <p>{format(day.date, 'EEEE')}</p>
-                <p>{format(day.date, 'd/MM')}</p>
-                <p>{format(day.date, '/yyyy')}</p>
+                <div className={styles.monthContainer}>
+                    <p>{format(day.date, 'd')}</p>
+                    <p>/</p>
+                    <p>{format(day.date, 'MM')}</p>
+                </div>
+                <div className={styles.yearContainer}>
+                    <p>{format(day.date, 'yyyy')}</p>
+                </div>
             </div>
-            <div>
-                <div>
-                    <p>Day</p>
+            <div className={styles.countContainer}>
+                <div className={styles.dayCountContainer}>
+                    <p>Work day</p>
                     <p>{dayCount}</p>
                 </div>
-                <div>
+                <div className={styles.projectCountContainer}>
                     <p>Projects</p>
                     <p>{projectCount}</p>
                 </div>
             </div>
-            <div>
-
-                {!dayStarted ? (<button onClick={startDay}>Open</button>) : null}
-                {dayStarted && !dayFinished ? (<button onClick={endDay}>Close</button>) : null}
+            <div className={styles.buttomContainer}>
+                <div className={styles.hourContainer}>
 
 
+                    {!dayStarted ? (<button className={styles.startButton} onClick={startDay}>Open</button>) :
+                        <p><span><CalendarCheck className={styles.calendarIcon}/></span>{fromDate?.getHours()}:{fromDate?.getMinutes()}</p>}
+                    {dayStarted && !dayFinished ? (<button className={styles.startButton} onClick={endDay}>Close</button>) :
+                        dayFinished ? <p><span><CalendarX className={styles.calendarIcon}/></span>{toDate?.getHours()}:{toDate?.getMinutes()}</p> : null}
+                </div>
             </div>
-            <DayInfo day={day}/>
         </div>
+
 
     );
 };

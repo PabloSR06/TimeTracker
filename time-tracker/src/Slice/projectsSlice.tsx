@@ -15,7 +15,7 @@ const projectsSlice = createSlice({
 export const fetchProjects = async (dispatch: Dispatch) => {
     try {
         const response = await axios.request(apiGetAllProjects());
-        dispatch(projectsLoaded(response.data)); // Dispatch action to update the state with fetched todos
+        dispatch(projectsLoaded(response.data));
     } catch (error) {
         if (axios.isAxiosError(error)) {
             console.log(error);

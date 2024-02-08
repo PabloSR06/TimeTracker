@@ -4,6 +4,9 @@ import {Inter} from "next/font/google";
 import "./globals.css";
 import {Provider} from "react-redux";
 import {store} from "@/Slice/store";
+import {BrowserRouter, Route, Routes} from "react-router-dom";
+import React from "react";
+import {WeekList} from "@/Home/weekList";
 
 const inter = Inter({subsets: ["latin"]});
 
@@ -19,9 +22,11 @@ export default function RootLayout({
 }>) {
     return (
         <Provider store={store}>
-            <html lang="en">
-            <body className={inter.className}>{children}</body>
-            </html>
+            <BrowserRouter>
+                <Routes>
+                    <Route path="/" element={<WeekList />} />
+                </Routes>
+            </BrowserRouter>
         </Provider>
 
     );
