@@ -5,6 +5,8 @@ import {Dispatch} from "redux";
 
 const initialState: ProjectModel[] = [];
 
+
+
 const projectsSlice = createSlice({
     name: 'projects',
     initialState,

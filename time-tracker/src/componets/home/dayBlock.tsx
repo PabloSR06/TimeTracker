@@ -1,17 +1,23 @@
 import React, {useEffect, useState} from 'react';
 import styles from "./dayBlock.module.css";
 import {differenceInHours, format, minutesToHours} from "date-fns";
-import {DayInfo} from "./dayInfo";
-import {InsertDayHours} from "../slice/hoursSlice";
+import {fetchHours, InsertDayHours} from "../slice/hoursSlice";
 import {ApiInsertDayHoursData} from "../types/config";
 import {CalendarCheck, CalendarX} from "react-bootstrap-icons";
+import {useDispatch} from "react-redux";
+import {useNavigate} from "react-router-dom";
 
 interface DayBlockProps {
     day: CustomDay;
-    reloadComponent: () => void;
+    index: number;
+
 }
 
-export const DayBlock: React.FC<DayBlockProps> = ({reloadComponent, day}) => {
+export const DayBlock: React.FC<DayBlockProps> = ({day, index}) => {
+
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
 
     const [projectCount, setProjectCount] = useState<number>(0);
     const [dayCount, setDayCount] = useState<number>(0);
@@ -57,6 +63,7 @@ export const DayBlock: React.FC<DayBlockProps> = ({reloadComponent, day}) => {
     }
 
     const combineDate = (date: Date) => {
+        date = new Date(date);
         const dayOfMonth = date.getDate();
         const month = date.getMonth();
         const year = date.getFullYear();
@@ -71,13 +78,12 @@ export const DayBlock: React.FC<DayBlockProps> = ({reloadComponent, day}) => {
 
     const startDay = async () => {
 
-
         const data: ApiInsertDayHoursData = {
             userId: 1,
             date: combineDate(day.date),
             type: true
         };
-        InsertDayHours(data).then(() => reloadComponent());
+        InsertDayHours(data).then(() => fetchHours(dispatch));
     }
     const endDay = async () => {
         const data: ApiInsertDayHoursData = {
@@ -85,7 +91,7 @@ export const DayBlock: React.FC<DayBlockProps> = ({reloadComponent, day}) => {
             date: combineDate(day.date),
             type: false
         };
-        InsertDayHours(data).then(() => reloadComponent());
+        InsertDayHours(data).then(() => fetchHours(dispatch));
     }
 
     useEffect(() => {
@@ -94,12 +100,13 @@ export const DayBlock: React.FC<DayBlockProps> = ({reloadComponent, day}) => {
     }, [day]);
 
     const test = async () => {
-        console.log('click');
-        return <DayInfo day={day}/>
+        // navigate(`/day/${index}`);
+        console.log(day)
+        navigate(`/day`, {state: {day: day}});
     }
 
     return (
-        <div className={styles.dayContainer} onClick={test}>
+        <div className={styles.dayContainer}  onClick={test}>
             <div className={styles.dateContainer}>
                 <div className={styles.monthContainer}>
                     <p>{format(day.date, 'd')}</p>

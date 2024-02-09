@@ -1,68 +1,48 @@
 import {useState, useEffect} from 'react';
 import styles from "./weekList.module.css";
-import {addWeeks, subWeeks, startOfDay, endOfDay, eachDayOfInterval, startOfWeek, endOfWeek} from 'date-fns';
+import {addWeeks, subWeeks, startOfWeek, endOfWeek} from 'date-fns';
 import {DayBlock} from "./dayBlock.tsx";
-import {useDispatch, useSelector} from "react-redux";
+import { useSelector} from "react-redux";
 import {RootState} from "../slice/store";
-import {fetchHours} from "../slice/hoursSlice";
-import {ProjectInput} from "./projectInput.tsx";
 
 export const WeekList = () => {
     const todayDate = new Date();
-    const startDateRange = subWeeks(startOfDay(todayDate), 2);
-    const endDateRange = endOfDay(addWeeks(todayDate, 2));
+    const weekAmount = 2;
+    const startDateRange = subWeeks(startOfWeek(todayDate, {weekStartsOn: 1}), weekAmount);
+    const endDateRange = addWeeks(endOfWeek(todayDate, {weekStartsOn: 1}), weekAmount);
 
-    const [counter, setCounter] = useState(0);
-    const [allData, setAllData] = useState<CustomDay[]>([]);
 
     const [currentDate, setCurrentDate] = useState<Date>(todayDate);
+    const [weekToShow, setWeekToShow] = useState<CustomDay[]>([]);
 
-    const dispatch = useDispatch();
 
-    const apiData = useSelector((state: RootState) => state.hours.ApiData);
-    const projectHours = useSelector((state: RootState) => state.hours.ProjectHours);
+    const allData = useSelector((state: RootState) => state.hours);
 
-    const reloadComponent = () => {
-        setCounter(counter + 1);
-    };
 
     useEffect(() => {
         const filterData = () => {
             const startOfCurrentWeek = startOfWeek(currentDate, {weekStartsOn: 1});
             const endOfCurrentWeek = endOfWeek(currentDate, {weekStartsOn: 1});
 
-            const daysRange = eachDayOfInterval({
-                start: startOfCurrentWeek,
-                end: endOfCurrentWeek,
+            const selectedWeek = allData.filter((day) => {
+                return startOfCurrentWeek <= new Date(day.date) && new Date(day.date) <= endOfCurrentWeek;
             });
 
-            const dataPerDay = daysRange.map(day => ({
-                date: day,
-                data: apiData.filter(item => {
-                    const itemDate = new Date(item.date);
-                    return startOfDay(itemDate).getTime() === startOfDay(day).getTime();
-                }),
-                projects: projectHours.filter(item => {
-                    const itemDate = new Date(item.date);
-                    return startOfDay(itemDate).getTime() === startOfDay(day).getTime();
-                })
-            }));
-            setAllData(dataPerDay);
+            setWeekToShow(selectedWeek);
         }
         filterData();
-    }, [apiData, currentDate, projectHours]);
+    }, [currentDate, allData]);
 
-    useEffect(() => {
-        fetchHours(dispatch, startDateRange, endDateRange);
-    }, [counter]);
 
     const goToPreviousWeek = () => {
-        if (currentDate >= startDateRange) {
-            setCurrentDate(subWeeks(currentDate, 1));
+        const newDate = subWeeks(currentDate, 1);
+        if (newDate >= startDateRange) {
+            setCurrentDate(newDate);
         }
     };
     const goToNextWeek = () => {
-        if (currentDate <= endDateRange) {
+        const newDate = addWeeks(currentDate, 1);
+        if (newDate <= endDateRange) {
             setCurrentDate(addWeeks(currentDate, 1));
         }
     };
@@ -77,11 +57,12 @@ export const WeekList = () => {
 
             </div>
 
-            {allData.map((day, index) => (
-                <DayBlock key={index} day={day} reloadComponent={reloadComponent}/>
+            {weekToShow.map((day, index) => (
+
+                <DayBlock key={index} day={day} index={index} />
+
             ))}
 
-            <ProjectInput />
 
         </div>
     );

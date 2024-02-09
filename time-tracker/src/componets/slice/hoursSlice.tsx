@@ -8,58 +8,60 @@ import {
 } from "../types/config";
 import axios from "axios";
 import {Dispatch} from "redux";
+import {addWeeks, eachDayOfInterval, endOfWeek, startOfDay, startOfWeek, subWeeks} from "date-fns";
 
-interface HoursState {
-    ApiData: DayHours[];
-    ProjectHours: ProjectHoursName[];
-}
 
-const initialState: HoursState = {
-    ApiData: [],
-    ProjectHours: []
-};
+const initialState: CustomDay[] = [];
+
+const todayDate = new Date();
+const startDateRange = subWeeks(startOfWeek(todayDate, {weekStartsOn: 1}), 2);
+const endDateRange = addWeeks(endOfWeek(todayDate, {weekStartsOn: 1}), 2);
 
 const hoursSlice = createSlice({
     name: 'hours',
     initialState,
     reducers: {
-        loadApiData(state, action) {
-            state.ApiData = action.payload;
-        },
-        loadProjectHours(state, action) {
-            state.ProjectHours = action.payload;
+        loadTimeData(_state, action) {
+            return  action.payload;
         }
     }
 });
-export const fetchHours = async (dispatch: Dispatch, startDateRange:Date, endDateRange:Date) => {
+export const fetchHours = async (dispatch: Dispatch) => {
     const data: ApiGetDayHoursData = {
         userId: 1,
         from: startDateRange,
         to: endDateRange
     };
 
-    const fetchDayHours = async () => {
-        try {
-            const response = await axios.request(apiGetDayHours(data));
-            dispatch(loadApiData(response.data));
-        } catch (error) {
+    const daysRange = eachDayOfInterval({
+        start: startDateRange,
+        end: endDateRange,
+    });
+
+    const fetchDayHours = () => axios.request(apiGetDayHours(data));
+    const fetchProjectHours = () => axios.request(apiGetProjectHours(data));
+
+    Promise.all([fetchDayHours(), fetchProjectHours()])
+        .then(([dayHoursResponse, projectHoursResponse]) => {
+             const dataPerDay = daysRange.map(day => ({
+                date: day.toString() as string,
+
+                data: dayHoursResponse.data.filter(item => {
+                    const itemDate = new Date(item.date);
+                    return startOfDay(itemDate).getTime() === startOfDay(day).getTime();
+                }),
+                projects: projectHoursResponse.data.filter(item => {
+                    const itemDate = new Date(item.date);
+                    return startOfDay(itemDate).getTime() === startOfDay(day).getTime();
+                })
+            }));
+            dispatch(loadTimeData(dataPerDay));
+        })
+        .catch(error => {
             if (axios.isAxiosError(error)) {
                 console.log(error);
             }
-        }
-    };
-    const fetchProjectHours = async () => {
-        try {
-            const response = await axios.request(apiGetProjectHours(data));
-            dispatch(loadProjectHours(response.data));
-        } catch (error) {
-            if (axios.isAxiosError(error)) {
-                console.log(error);
-            }
-        }
-    };
-    fetchDayHours();
-    fetchProjectHours();
+        });
 };
 
 export const InsertDayHours = async (input: ApiInsertDayHoursData) => {
@@ -73,5 +75,5 @@ export const InsertDayHours = async (input: ApiInsertDayHoursData) => {
 };
 
 
-export const { loadApiData, loadProjectHours } = hoursSlice.actions;
+export const { loadTimeData } = hoursSlice.actions;
 export default hoursSlice.reducer;

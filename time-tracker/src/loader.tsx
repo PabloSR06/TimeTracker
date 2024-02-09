@@ -1,22 +1,20 @@
 
-import { Route, Routes } from 'react-router-dom'
-import NavBar from './componets/NavBar'
-import {WeekList} from "./componets/home/weekList.tsx";
-import {Provider, useDispatch} from "react-redux";
-import {store} from "./componets/slice/store.tsx";
-import {ProjectInput} from "./componets/home/projectInput.tsx";
+import {useDispatch} from "react-redux";
 import {useEffect} from "react";
 import {fetchProjects} from "./componets/slice/projectsSlice.tsx";
 import {fetchClients} from "./componets/slice/clientsSlice.tsx";
+import {fetchHours} from "./componets/slice/hoursSlice.tsx";
 
 function Loader() {
     const dispatch = useDispatch();
 
 
     useEffect(() => {
-        //dispatch(fetchProjects());
-        fetchProjects(dispatch);
-        fetchClients(dispatch);
+
+
+        Promise.all([fetchHours(dispatch), fetchProjects(dispatch),fetchClients(dispatch)]).then(() => {
+            console.log('All data fetched');
+        });
 
     }, []);
 
