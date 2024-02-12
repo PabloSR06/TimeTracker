@@ -6,6 +6,7 @@ import {RootState} from "../slice/store";
 import DatePicker from "react-datepicker";
 import axios from "axios";
 import styles from './projectInput.module.css';
+import {useLocation} from "react-router-dom";
 
 
 export const ProjectInput = () => {
@@ -13,13 +14,18 @@ export const ProjectInput = () => {
     const clients = useSelector((state: RootState) => state.clients);
     const projects = useSelector((state: RootState) => state.projects);
 
-    const [selectedDate, setSelectedDate] = useState(new Date());
+    const location = useLocation();
+    const stateDate: Date = location.state.date ? location.state.date : undefined;
+
+
+    const [selectedDate, setSelectedDate] = useState(stateDate);
     const [selectedClient, setSelectedClient] = useState(-1);
     const [selectedProject, setSelectedProject] = useState(-1);
     const [formMinutes, setFormMinutes] = useState(0);
     const [formDescription, setFormDescription] = useState<string>("");
 
     const [filteredProjects, setFilteredProjects] = useState<ProjectModel[]>([]);
+
 
 
     useEffect(() => {

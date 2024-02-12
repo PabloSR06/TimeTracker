@@ -23,8 +23,9 @@ type ProjectHoursName = {
     "projectId": number,
     "minutes": number,
     "date": Date,
-    "name": string,
+    "projectName": string,
     "description": string,
+    "clientName": string
 };
 type ClientModel = {
     id: number,

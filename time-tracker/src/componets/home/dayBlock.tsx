@@ -13,7 +13,7 @@ interface DayBlockProps {
 
 }
 
-export const DayBlock: React.FC<DayBlockProps> = ({day, index}) => {
+export const DayBlock: React.FC<DayBlockProps> = ({day}) => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();

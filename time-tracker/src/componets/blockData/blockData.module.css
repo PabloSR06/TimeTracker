@@ -1,0 +1,57 @@
+.blockContainer{
+    display: flex;
+    border: solid;
+    border-radius: 10px;
+    margin: 10px;
+    height: 60px;
+    align-items: center;
+    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
+}
+
+.infoContainer{
+    justify-content: space-between;
+}
+.newProjectContainer{
+    justify-content: center;
+}
+.timeNumber{
+    width: 50px;
+    height: 50px;
+    background-color: rgb(61, 51, 51);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 20px;
+    margin: 5px 15px 5px 5px;
+}
+.textContainer{
+    display: flex;
+    align-items: flex-end;
+    flex-direction: column;
+    justify-content: center;
+    text-transform: uppercase;
+    font-weight: bold;
+    margin-right: 15px;
+}
+.clientName{
+    color: #969696;
+    margin: 0 ;
+    font-size: 12px;
+}
+.projectName p {
+    margin: 0 ;
+}
+.clientName p{
+    margin: 0 ;
+}
+.rightContainer{
+    display: flex;
+}
+.iconContainer{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-right: 10px;
+}

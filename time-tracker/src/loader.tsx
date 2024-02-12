@@ -8,10 +8,7 @@ import {fetchHours} from "./componets/slice/hoursSlice.tsx";
 function Loader() {
     const dispatch = useDispatch();
 
-
     useEffect(() => {
-
-
         Promise.all([fetchHours(dispatch), fetchProjects(dispatch),fetchClients(dispatch)]).then(() => {
             console.log('All data fetched');
         });
