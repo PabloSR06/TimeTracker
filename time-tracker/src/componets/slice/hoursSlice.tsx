@@ -46,11 +46,11 @@ export const fetchHours = async (dispatch: Dispatch) => {
              const dataPerDay = daysRange.map(day => ({
                 date: day.toString() as string,
 
-                data: dayHoursResponse.data.filter(item => {
+                data: dayHoursResponse.data.filter((item: { date: string | number | Date; }) => {
                     const itemDate = new Date(item.date);
                     return startOfDay(itemDate).getTime() === startOfDay(day).getTime();
                 }),
-                projects: projectHoursResponse.data.filter(item => {
+                projects: projectHoursResponse.data.filter((item: { date: string | number | Date; }) => {
                     const itemDate = new Date(item.date);
                     return startOfDay(itemDate).getTime() === startOfDay(day).getTime();
                 })

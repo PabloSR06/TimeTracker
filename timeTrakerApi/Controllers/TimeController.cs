@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using timeTrakerApi.Data.Interface;
 using timeTrakerApi.Models.Project;
@@ -19,29 +20,55 @@ namespace timeTrakerApi.Controllers
         }
 
         [HttpPost("GetDayHours")]
+        [Authorize]
         public List<DayHoursModel> GetDayHours(HourInputModel input)
         {
             _logger.LogInformation("GetDayHours");
-            return _timeRepository.GetDayHours(input);
+            string? userId = User.FindFirst("userid")?.Value;
+            if(userId != null)
+            {
+                return _timeRepository.GetDayHours(input, userId);
+            }
+            return new List<DayHoursModel>();
         }
         
         [HttpPost("GetProjectHours")]
+        [Authorize]
         public List<HoursProjectModel> GetProjectHours(HourInputModel input)
         {
             _logger.LogInformation("GetProjectHours");
-            return _timeRepository.GetProjectHours(input);
+            string? userId = User.FindFirst("userid")?.Value;
+            if (userId != null)
+            {
+                return _timeRepository.GetProjectHours(input, userId);
+            }
+            return new List<HoursProjectModel>();
+            
         }
         [HttpPost("InsertDayHours")]
+        [Authorize]
         public bool InsertDayHours(DayInputModel input)
         {
             _logger.LogInformation("InsertDayHours");
-            return _timeRepository.InsertDayHours(input);
+            
+            string? userId = User.FindFirst("userid")?.Value;
+            if (userId != null)
+            {
+                return _timeRepository.InsertDayHours(input, userId);
+            }
+            return false;
         }
         [HttpPost("InsertProjectHours")]
+        [Authorize]
         public bool InsertProjectHours(ProjectTimeInputModel input)
         {
             _logger.LogInformation("InsertDayHours");
-            return _timeRepository.InsertProjectHours(input);
+            string? userId = User.FindFirst("userid")?.Value;
+            if (userId != null)
+            {
+                return _timeRepository.InsertProjectHours(input, userId);
+            }
+            return false;
         }
     }
 }

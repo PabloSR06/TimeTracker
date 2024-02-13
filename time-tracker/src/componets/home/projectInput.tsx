@@ -72,24 +72,24 @@ export const ProjectInput = () => {
     };
 
 
-    const handleSend = () => {
-        // Here you can perform any action you want with the form data
-        console.log("Client:", selectedClient);
-        console.log("Project:", selectedProject);
-        console.log("Minutes:", formMinutes);
-        console.log("Description:", formDescription);
-        console.log("Date:", selectedDate);
+        const handleSend = () => {
+            // Here you can perform any action you want with the form data
+            console.log("Client:", selectedClient);
+            console.log("Project:", selectedProject);
+            console.log("Minutes:", formMinutes);
+            console.log("Description:", formDescription);
+            console.log("Date:", selectedDate);
 
-        sendData().then(() => {
-            setSelectedClient(-1);
-            setSelectedProject(-1);
-            setFormMinutes(0);
-            setFormDescription("");
-            setSelectedDate(new Date());
-        });
+            sendData().then(() => {
+                setSelectedClient(-1);
+                setSelectedProject(-1);
+                setFormMinutes(0);
+                setFormDescription("");
+                setSelectedDate(new Date());
+            });
 
 
-    }
+        }
 
 
     return (

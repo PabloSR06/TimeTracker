@@ -115,7 +115,7 @@ namespace timeTrakerApi
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
                 c.DocExpansion(DocExpansion.None);
             });
-
+            app.UseAuthorization();
             app.Run();
         }
     }

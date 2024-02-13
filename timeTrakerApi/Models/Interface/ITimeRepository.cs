@@ -6,10 +6,10 @@ namespace timeTrakerApi.Data.Interface
     public interface ITimeRepository
     {
         List<DayHoursModel> GetDayHoursByUserId(string userId);
-        List<DayHoursModel> GetDayHours(HourInputModel input);
-        List<HoursProjectModel> GetProjectHours(HourInputModel input);
-        bool InsertProjectHours(ProjectTimeInputModel input);
-        bool InsertDayHours(DayInputModel input);
+        List<DayHoursModel> GetDayHours(HourInputModel input, string userId);
+        List<HoursProjectModel> GetProjectHours(HourInputModel input, string userId);
+        bool InsertProjectHours(ProjectTimeInputModel input, string userId);
+        bool InsertDayHours(DayInputModel input, string userId);
 
 
     }

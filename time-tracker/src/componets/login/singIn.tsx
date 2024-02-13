@@ -1,11 +1,8 @@
 import {BaseSyntheticEvent, useState} from "react";
-import {apiLogInUser, ApiLogInUserData} from "../types/config.ts";
+import { apiInsertUser, ApiInsertUserData} from "../types/config.ts";
 import axios from "axios";
 
-export const Login = () => {
-
-    const [token, setToken] = useState<string>("");
-
+export const SingIn = () => {
 
     const [selectedEmail, setSelectedEmail] = useState("");
     const [selectedPassword, setSelectedPassword] = useState("");
@@ -17,13 +14,12 @@ export const Login = () => {
     };
 
     const sendData = async () => {
-        const data: ApiLogInUserData = {
+        const data: ApiInsertUserData = {
             email: selectedEmail,
             password: selectedPassword
         };
         try {
-            const response = await axios.request(apiLogInUser(data));
-            setToken(response.data.token);
+            await axios.request(apiInsertUser(data));
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 console.log(error);
@@ -36,9 +32,6 @@ export const Login = () => {
         sendData().then(() => {
             setSelectedEmail("");
             setSelectedPassword("");
-            localStorage.setItem('token', token);
-
-            console.log(token);
         });
 
     }
@@ -55,7 +48,7 @@ export const Login = () => {
                     <input onChange={handlePassword} type="password"/>
                 </label>
                 <div>
-                    <a onClick={handleSend}>Submit</a>
+                    <button type="submit" onClick={handleSend}>Submit</button>
                 </div>
             </form>
         </div>

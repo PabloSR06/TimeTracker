@@ -115,11 +115,6 @@ namespace timeTrakerApi.Data
                 user.Name = reader.GetString(reader.GetOrdinal("name"));
             if (!reader.IsDBNull(reader.GetOrdinal(nameof(UserModel.Email))))
                 user.Email = reader.GetString(reader.GetOrdinal("email"));
-            if (!reader.IsDBNull(reader.GetOrdinal(nameof(UserModel.CreateOnDate))))
-                user.CreateOnDate = reader.GetDateTime(reader.GetOrdinal("createondate"));
-            if (!reader.IsDBNull(reader.GetOrdinal(nameof(UserModel.LastModifiedOnDate))))
-                user.LastModifiedOnDate = reader.GetDateTime(reader.GetOrdinal("lastmodifiedondate"));
-
 
             return user;
 

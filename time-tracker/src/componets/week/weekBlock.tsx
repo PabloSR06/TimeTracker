@@ -52,8 +52,6 @@ export const WeekBlock = () => {
     };
 
     const goToDay = async (day:CustomDay) => {
-        // navigate(`/day/${index}`);
-        console.log(day);
         navigate(`../day`, {state: {day: day}, replace: true});
     }
 

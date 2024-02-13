@@ -100,8 +100,6 @@ export const DayBlock: React.FC<DayBlockProps> = ({day}) => {
     }, [day]);
 
     const test = async () => {
-        // navigate(`/day/${index}`);
-        console.log(day)
         navigate(`/day`, {state: {day: day}});
     }
 

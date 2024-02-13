@@ -43,7 +43,7 @@ namespace timeTrakerApi.Data
             return dayHours;
         }
 
-        public List<DayHoursModel> GetDayHours(HourInputModel input)
+        public List<DayHoursModel> GetDayHours(HourInputModel input, string userId)
         {
             List<DayHoursModel>? dayHours = new List<DayHoursModel>();
 
@@ -53,7 +53,7 @@ namespace timeTrakerApi.Data
                 using (MySqlCommand command = new MySqlCommand("GetDayHours", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.AddWithValue("@userId", input.UserId);
+                    command.Parameters.AddWithValue("@userId", userId);
                     command.Parameters.AddWithValue("@from", input.From);
                     command.Parameters.AddWithValue("@to", input.To);
 
@@ -70,7 +70,7 @@ namespace timeTrakerApi.Data
             return dayHours;
         }
 
-        public List<HoursProjectModel> GetProjectHours(HourInputModel input)
+        public List<HoursProjectModel> GetProjectHours(HourInputModel input, string userId)
         {
             List<HoursProjectModel>? projectHours = new List<HoursProjectModel>();
 
@@ -80,7 +80,7 @@ namespace timeTrakerApi.Data
                 using (MySqlCommand command = new MySqlCommand("GetProjectHours", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.AddWithValue("@userId", input.UserId);
+                    command.Parameters.AddWithValue("@userId", userId);
                     command.Parameters.AddWithValue("@from", input.From);
                     command.Parameters.AddWithValue("@to", input.To);
 
@@ -97,7 +97,7 @@ namespace timeTrakerApi.Data
             return projectHours;
         }
 
-        public bool InsertDayHours(DayInputModel input)
+        public bool InsertDayHours(DayInputModel input, string userId)
         {
             int rowsAffected = 0;
             using (MySqlConnection connection = _database.CreateConnection())
@@ -107,7 +107,7 @@ namespace timeTrakerApi.Data
                 {
                     DateTime date = DateTime.Now.ToUniversalTime();
                     command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.AddWithValue("@userId", input.UserId);
+                    command.Parameters.AddWithValue("@userId", userId);
                     command.Parameters.AddWithValue("@type", input.Type);
                     command.Parameters.AddWithValue("@date", input.Date);
 
@@ -118,7 +118,7 @@ namespace timeTrakerApi.Data
             return rowsAffected > 0;
         }
 
-        public bool InsertProjectHours(ProjectTimeInputModel input)
+        public bool InsertProjectHours(ProjectTimeInputModel input, string userId)
         {
             int rowsAffected = 0;
             using (MySqlConnection connection = _database.CreateConnection())
@@ -128,7 +128,7 @@ namespace timeTrakerApi.Data
                 {
                     DateTime date = DateTime.Now.ToUniversalTime();
                     command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.AddWithValue("@userId", input.UserId);
+                    command.Parameters.AddWithValue("@userId", userId);
                     command.Parameters.AddWithValue("@projectId", input.ProjectId);
                     command.Parameters.AddWithValue("@minutes", input.Minutes);
                     command.Parameters.AddWithValue("@date", input.Date);

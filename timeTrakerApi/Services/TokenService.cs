@@ -1,4 +1,5 @@
 ﻿using Microsoft.IdentityModel.Tokens;
+using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -20,11 +21,10 @@ namespace timeTrakerApi.Services
             var claims = new List<Claim> {
                 new Claim(JwtRegisteredClaimNames.Sub, userProfile.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim("userid", userProfile.Id.ToString())
             };
-            foreach (var role in userProfile.Roles)
-            {
-                claims.Add(new Claim(ClaimTypes.Role, role.Name));
-            }
+
+            claims.AddRange(userProfile.Roles.Select(role => new Claim(ClaimTypes.Role, role.Name)));
 
             SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
             SigningCredentials creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

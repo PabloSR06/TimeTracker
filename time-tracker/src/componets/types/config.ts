@@ -1,25 +1,30 @@
-
 export const apiUrl = 'https://localhost:7225';
 
+// @ts-ignore
+export const getTokenFromLocalStorage = ():string => localStorage.getItem('token')
 export const apiGetDayHours = (data: ApiGetDayHoursData) => {
-    return{
+    return {
         method: 'POST',
         url: apiUrl + '/Time/GetDayHours',
         data: {
-            userId: data.userId,
             from: data.from,
             to: data.to
+        },
+        headers: {
+            Authorization: `Bearer ${getTokenFromLocalStorage()}`
         }
     };
 };
 export const apiGetProjectHours = (data: ApiGetDayHoursData) => {
-    return{
+    return {
         method: 'POST',
         url: apiUrl + '/Time/GetProjectHours',
         data: {
-            userId: data.userId,
             from: data.from,
             to: data.to
+        },
+        headers: {
+            Authorization: `Bearer ${getTokenFromLocalStorage()}`
         }
     };
 };
@@ -30,13 +35,15 @@ export type ApiGetDayHoursData = {
 };
 
 export const apiInsertDayHours = (data: ApiInsertDayHoursData) => {
-    return{
+    return {
         method: 'POST',
         url: apiUrl + '/Time/InsertDayHours',
         data: {
-            userId: data.userId,
             type: data.type,
             date: data.date
+        },
+        headers: {
+            Authorization: `Bearer ${getTokenFromLocalStorage()}`
         }
     };
 };
@@ -47,28 +54,36 @@ export type ApiInsertDayHoursData = {
 };
 
 export const apiGetAllProjects = () => {
-    return{
+    return {
         method: 'GET',
-        url: apiUrl + '/Project/GetAllProjects'
+        url: apiUrl + '/Project/GetAllProjects',
+        headers: {
+            Authorization: `Bearer ${getTokenFromLocalStorage()}`
+        }
     };
 };
 export const apiGetAllClients = () => {
-    return{
+    return {
         method: 'GET',
-        url: apiUrl + '/Client/GetAllClients'
+        url: apiUrl + '/Client/GetAllClients',
+        headers: {
+            Authorization: `Bearer ${getTokenFromLocalStorage()}`
+        }
     };
 };
 
 
 export const apiInsertProjectHours = (data: ApiInsertProjectHoursData) => {
-    return{
+    return {
         method: 'POST',
         url: apiUrl + '/Time/InsertProjectHours',
         data: {
-            userId: data.userId,
             projectId: data.projectId,
             minutes: data.minutes,
             date: data.date
+        },
+        headers: {
+            Authorization: `Bearer ${getTokenFromLocalStorage()}`
         }
     };
 };
@@ -78,3 +93,35 @@ export type ApiInsertProjectHoursData = {
     minutes: number,
     date: Date
 };
+
+export const apiInsertUser = (data: ApiInsertUserData) => {
+    return {
+        method: 'POST',
+        url: apiUrl + '/Auth/Register',
+        data: {
+            email: data.email,
+            password: data.password
+        }
+    };
+};
+export type ApiInsertUserData = {
+    email: string,
+    password: string
+};
+
+export const apiLogInUser = (data: ApiLogInUserData) => {
+    return {
+        method: 'POST',
+        url: apiUrl + '/Auth/Login',
+        data: {
+            email: data.email,
+            password: data.password
+        }
+    };
+};
+export type ApiLogInUserData = {
+    email: string,
+    password: string
+};
+
+

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
 using timeTrakerApi.Data.Interface;
+using timeTrakerApi.Models.Project;
 using timeTrakerApi.Models.User;
 
 namespace timeTrakerApi.Controllers
@@ -11,12 +12,14 @@ namespace timeTrakerApi.Controllers
     {
         private readonly ILogger<AuthController> _logger;
         private readonly ITokenService _tokenService;
+        private readonly IUserRepository _userRepository;
 
 
-        public AuthController(ILogger<AuthController> logger, ITokenService tokenService)
+        public AuthController(ILogger<AuthController> logger, ITokenService tokenService, IUserRepository userRepository)
         {
             _logger = logger;
             _tokenService = tokenService;
+            _userRepository = userRepository;
         }
 
         [HttpPost("Login")]
@@ -25,27 +28,33 @@ namespace timeTrakerApi.Controllers
             UserProfileModel userProfile = new UserProfileModel();
             userProfile.Email = credentials.Email;
             userProfile.Roles = new List<RoleModel> { new RoleModel { Name = "Admin" } };
+            userProfile.Id = 1;
 
             return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(_tokenService.GenerateToken(userProfile)) });
-            
+
 
             //return Unauthorized();
         }
 
-        //[HttpPost("Register")]
-        //public IActionResult Register([FromBody] UserProfileModel credentials)
-        //{
-        //    bool register = _userRepository.Register(credentials);
+        [HttpPost("Register")]
+        public IActionResult Register([FromBody] UserCredentialsModel credentials)
+        {
+            var userProfile = new UserModel();
+            userProfile.Email = credentials.Email;
+            userProfile.Password = credentials.Password;
+            userProfile.Name = credentials.Email;
 
-        //    if (register)
-        //    {
-        //        return Ok();
-        //    }
-        //    else
-        //    {
-        //        return BadRequest();
-        //    }
+            bool register = _userRepository.Insert(userProfile);
 
-        //}
+            if (register)
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest();
+            }
+
+        }
     }
 }
