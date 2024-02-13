@@ -3,6 +3,7 @@ import {ProjectHourBlock} from "../blockData/projectHourBlock.tsx";
 import {DayHourBlock} from "../blockData/dayHourBlock.tsx";
 import {useEffect, useState} from "react";
 import {NewProjectBlock} from "../blockData/newProjectBlock.tsx";
+import {WeekBlock} from "../week/weekBlock.tsx";
 
 export const DayInfo = () => {
 
@@ -14,6 +15,8 @@ export const DayInfo = () => {
     const [endDay, setEndDay] = useState<DayHours>();
 
     useEffect(() => {
+        setStartDay(undefined);
+        setEndDay(undefined);
         const startDay = data.data.filter(item => item.type);
         const endDay = data.data.filter(item => !item.type);
         if(startDay.length > 0) {
@@ -26,16 +29,21 @@ export const DayInfo = () => {
 
     return (
         <div>
-            {startDay === undefined ? null : <DayHourBlock isStart={true} date={startDay.date}/>}
+            <div><p>{data.date.toString()}</p></div>
+            <WeekBlock />
             <div>
-                {data.projects.map((project, index) => (
-                    <div key={index}>
-                        <ProjectHourBlock minutes={project.minutes} projectName={project.projectName} clientName={project.clientName}/>
-                    </div>
-                ))}
-                <NewProjectBlock date={data.date}/>
+                {startDay === undefined ? null : <DayHourBlock isStart={true} date={startDay.date}/>}
+                <div>
+                    {data.projects.map((project, index) => (
+                        <div key={index}>
+                            <ProjectHourBlock minutes={project.minutes} projectName={project.projectName}
+                                              clientName={project.clientName}/>
+                        </div>
+                    ))}
+                    <NewProjectBlock date={data.date}/>
+                </div>
+                {endDay === undefined ? null : <DayHourBlock isStart={false} date={endDay.date}/>}
             </div>
-            {endDay === undefined ? null : <DayHourBlock isStart={false} date={endDay.date}/>}
         </div>
     );
 };

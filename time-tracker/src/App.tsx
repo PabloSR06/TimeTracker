@@ -1,5 +1,5 @@
 import {Route, Routes} from 'react-router-dom'
-import {WeekList} from "./componets/home/weekList.tsx";
+import {WeekList} from "./componets/week/weekList.tsx";
 import {Provider} from "react-redux";
 import {store} from "./componets/slice/store.tsx";
 import Loader from "./loader.tsx";

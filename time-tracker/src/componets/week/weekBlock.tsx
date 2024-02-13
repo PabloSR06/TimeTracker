@@ -1,11 +1,12 @@
 import {useState, useEffect} from 'react';
-import styles from "./weekList.module.css";
+import styles from "./weekBlock.module.css";
 import {addWeeks, subWeeks, startOfWeek, endOfWeek} from 'date-fns';
-import {DayBlock} from "./dayBlock.tsx";
-import { useSelector} from "react-redux";
-import {RootState} from "../slice/store";
+import {useSelector} from "react-redux";
+import {RootState} from "../slice/store.tsx";
+import {ArrowLeft, ArrowRight} from "react-bootstrap-icons";
+import {useNavigate} from "react-router-dom";
 
-export const WeekList = () => {
+export const WeekBlock = () => {
     const todayDate = new Date();
     const weekAmount = 2;
     const startDateRange = subWeeks(startOfWeek(todayDate, {weekStartsOn: 1}), weekAmount);
@@ -17,6 +18,9 @@ export const WeekList = () => {
 
 
     const allData = useSelector((state: RootState) => state.hours);
+
+    const navigate = useNavigate();
+
 
 
     useEffect(() => {
@@ -47,21 +51,30 @@ export const WeekList = () => {
         }
     };
 
+    const goToDay = async (day:CustomDay) => {
+        // navigate(`/day/${index}`);
+        console.log(day);
+        navigate(`../day`, {state: {day: day}, replace: true});
+    }
+
+
     return (
         <div>
-            <h2>Semana Actual</h2>
-            <div className={styles.weekControl}>
-                <button className={styles.weekButton} onClick={goToPreviousWeek}>Semana Anterior</button>
-                <p>Week Control</p>
-                <button className={styles.weekButton} onClick={goToNextWeek}>Semana Siguiente</button>
 
+            <div className={styles.weekBlockContainer}>
+                <ArrowLeft className={styles.weekButton} onClick={goToPreviousWeek} size={20}/>
+                <div className={styles.weekContainer}>
+                    {weekToShow.map((day, index) => (
+
+                        <div key={index} className={styles.dayContainer} onClick={() => goToDay(day)}>
+                            {new Date(day.date).getUTCDate()}
+                        </div>
+
+
+                    ))}
+                </div>
+                <ArrowRight className={styles.weekButton} onClick={goToNextWeek} size={20}/>
             </div>
-
-            {weekToShow.map((day, index) => (
-
-                <DayBlock key={index} day={day} index={index} />
-
-            ))}
 
 
         </div>

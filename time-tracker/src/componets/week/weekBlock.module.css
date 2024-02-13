@@ -1,0 +1,17 @@
+.weekBlockContainer{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 10px;
+    border: solid;
+    border-radius: 10px;
+}
+.weekContainer{
+    display: flex;
+}
+.weekButton{
+    margin: 5px
+}
+.dayContainer{
+    margin: 0px 7px 0px 7px;
+}
