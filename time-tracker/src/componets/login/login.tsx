@@ -1,14 +1,17 @@
-import {BaseSyntheticEvent, useState} from "react";
-import {apiLogInUser, ApiLogInUserData} from "../types/config.ts";
+import {BaseSyntheticEvent, useEffect, useState} from "react";
+import {apiLogInUser, ApiLogInUserData, checkTokenValidity} from "../types/config.ts";
 import axios from "axios";
+import {useNavigate} from "react-router-dom";
+import {jwtDecode} from "jwt-decode";
 
 export const Login = () => {
-
-    const [token, setToken] = useState<string>("");
-
+    const navigate = useNavigate();
 
     const [selectedEmail, setSelectedEmail] = useState("");
     const [selectedPassword, setSelectedPassword] = useState("");
+
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+
     const handleEmail = (e: BaseSyntheticEvent) => {
         setSelectedEmail(e.target.value);
     };
@@ -23,7 +26,7 @@ export const Login = () => {
         };
         try {
             const response = await axios.request(apiLogInUser(data));
-            setToken(response.data.token);
+            return response.data.token;
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 console.log(error);
@@ -32,20 +35,36 @@ export const Login = () => {
     };
 
     const handleSend = () => {
-
-        sendData().then(() => {
-            setSelectedEmail("");
-            setSelectedPassword("");
-            localStorage.setItem('token', token);
-
-            console.log(token);
+        sendData().then(token => {
+            if (token) {
+                console.log(token);
+                localStorage.setItem('token', token);
+                setSelectedEmail("");
+                setSelectedPassword("");
+            }
+            navigate('/', {replace: true});
         });
+
 
     }
 
+
+    useEffect(() => {
+        console.log('Login useEffect');
+        setIsLoggedIn(checkTokenValidity());
+        if (isLoggedIn) {
+            navigate('/', {replace: true});
+        }
+
+        console.log(isLoggedIn);
+
+    }, []);
+
+
+
     return (
         <div>
-            <form >
+            <form>
                 <label>
                     <p>Email</p>
                     <input onChange={handleEmail} type="text"/>

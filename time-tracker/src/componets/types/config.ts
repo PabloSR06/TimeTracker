@@ -1,7 +1,28 @@
+import {jwtDecode} from "jwt-decode";
+
 export const apiUrl = 'https://localhost:7225';
 
 // @ts-ignore
 export const getTokenFromLocalStorage = ():string => localStorage.getItem('token')
+
+export const checkTokenValidity = ():boolean => {
+    const token = localStorage.getItem('token');
+    if (token) {
+        try {
+            const decodedToken = jwtDecode(token);
+            const currentTime = Date.now() / 1000;
+            if (currentTime > decodedToken.exp) {
+                localStorage.removeItem('token');
+                return false;
+            } else {
+                return true;
+            }
+        } catch (error) {
+            console.error('Error al verificar el token:', error);
+        }
+    }
+    return false;
+};
 export const apiGetDayHours = (data: ApiGetDayHoursData) => {
     return {
         method: 'POST',

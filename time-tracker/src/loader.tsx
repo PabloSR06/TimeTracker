@@ -4,6 +4,7 @@ import {useEffect} from "react";
 import {fetchProjects} from "./componets/slice/projectsSlice.tsx";
 import {fetchClients} from "./componets/slice/clientsSlice.tsx";
 import {fetchHours} from "./componets/slice/hoursSlice.tsx";
+import {WeekList} from "./componets/week/weekList.tsx";
 
 function Loader() {
     const dispatch = useDispatch();
@@ -17,7 +18,7 @@ function Loader() {
 
   return (
     <>
-
+        <WeekList />
     </>
   )
 }

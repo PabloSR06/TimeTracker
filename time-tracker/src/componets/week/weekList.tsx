@@ -49,7 +49,6 @@ export const WeekList = () => {
 
     return (
         <div>
-
             <div className={styles.weekControl}>
                 <button className={styles.weekButton} onClick={goToPreviousWeek}>Semana Anterior</button>
                 <p>Week Control</p>
@@ -58,12 +57,8 @@ export const WeekList = () => {
             </div>
 
             {weekToShow.map((day, index) => (
-
                 <DayBlock key={index} day={day} index={index} />
-
             ))}
-
-
         </div>
     );
 };
