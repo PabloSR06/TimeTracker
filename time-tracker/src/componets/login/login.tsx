@@ -9,16 +9,16 @@ import {useTranslation} from "react-i18next";
 
 export const Login = () => {
     const { t } = useTranslation();
-
     const navigate = useNavigate();
     const dispatch = useDispatch();
-
 
     const [selectedEmail, setSelectedEmail] = useState("");
     const [selectedPassword, setSelectedPassword] = useState("");
 
-
     const token = useSelector((state: RootState) => state.user.userToken);
+
+    const [isLoading, setIsLoading] = useState(false);
+
 
     const handleEmail = (e: BaseSyntheticEvent) => {
         setSelectedEmail(e.target.value);
@@ -27,9 +27,9 @@ export const Login = () => {
         setSelectedPassword(e.target.value);
     };
 
-
-    //TODO: LOADER WHEN LOGGING IN
+    
     const handleSend = async () => {
+        setIsLoading(true);
         const data: ApiLogInUserData = {
             email: selectedEmail,
             password: selectedPassword
@@ -44,6 +44,7 @@ export const Login = () => {
             } else {
                 console.log('No token');
             }
+            setIsLoading(false);
         });
     }
 
@@ -65,8 +66,8 @@ export const Login = () => {
                     <p>{t("password")}</p>
                     <input className={styles.loginInput} onChange={handlePassword} type="password"/>
                 </label>
-                <div className={styles.loginSubmit}>
-                    <a onClick={handleSend}>{t("logIn")}</a>
+                <div>
+                    <button disabled={isLoading} onClick={handleSend} className={styles.loginSubmit}>{t("logIn")}</button>
                 </div>
             </form>
         </div>

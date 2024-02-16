@@ -9,10 +9,7 @@ import {useEffect, useState} from "react";
 import Loader from "./loader.tsx";
 import {checkTokenValidity} from "./componets/types/config.ts";
 import {WeekList} from "./componets/week/weekList.tsx";
-import { useTranslation} from "react-i18next";
-
 function App() {
-    const { t } = useTranslation();
 
     const location = useLocation();
 

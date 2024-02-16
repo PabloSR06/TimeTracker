@@ -26,7 +26,7 @@
     background-color: #f8f8f8;
 }
 .loginSubmit {
-    display: inline-block;
+    border-width: 0;
     padding: 10px 20px;
     background-color: #007bff;
     color: #fff;
@@ -34,7 +34,12 @@
     border-radius: 5px;
     text-align: center;
     cursor: pointer;
+    width: 100%;
 }
 .loginSubmit:hover {
     background-color: #0056b3;
+}
+.loginSubmit:disabled{
+    background-color: #ccc;
+    cursor: not-allowed;
 }
