@@ -1,16 +1,24 @@
 import {BaseSyntheticEvent, useEffect, useState} from "react";
-import {apiLogInUser, ApiLogInUserData, checkTokenValidity} from "../types/config.ts";
-import axios from "axios";
+import { ApiLogInUserData, checkTokenValidity} from "../types/config.ts";
 import {useNavigate} from "react-router-dom";
-import {jwtDecode} from "jwt-decode";
+import {useDispatch, useSelector} from "react-redux";
+import {logIn} from "../slice/userSlice.tsx";
+import {RootState} from "../slice/store.tsx";
+import styles from './login.module.css';
+import {useTranslation} from "react-i18next";
 
 export const Login = () => {
+    const { t } = useTranslation();
+
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+
 
     const [selectedEmail, setSelectedEmail] = useState("");
     const [selectedPassword, setSelectedPassword] = useState("");
 
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+    const token = useSelector((state: RootState) => state.user.userToken);
 
     const handleEmail = (e: BaseSyntheticEvent) => {
         setSelectedEmail(e.target.value);
@@ -19,62 +27,46 @@ export const Login = () => {
         setSelectedPassword(e.target.value);
     };
 
-    const sendData = async () => {
+
+    //TODO: LOADER WHEN LOGGING IN
+    const handleSend = async () => {
         const data: ApiLogInUserData = {
             email: selectedEmail,
             password: selectedPassword
         };
-        try {
-            const response = await axios.request(apiLogInUser(data));
-            return response.data.token;
-        } catch (error) {
-            if (axios.isAxiosError(error)) {
-                console.log(error);
-            }
-        }
-    };
-
-    const handleSend = () => {
-        sendData().then(token => {
+        await logIn(dispatch, data).then(() => {
+            console.log('Token: ' + token)
             if (token) {
-                console.log(token);
-                localStorage.setItem('token', token);
                 setSelectedEmail("");
                 setSelectedPassword("");
+
+                navigate('/', {replace: true, state: {isLoggedIn: true}});
+            } else {
+                console.log('No token');
             }
-            navigate('/', {replace: true});
         });
-
-
     }
 
-
     useEffect(() => {
-        console.log('Login useEffect');
-        setIsLoggedIn(checkTokenValidity());
-        if (isLoggedIn) {
-            navigate('/', {replace: true});
+        if (checkTokenValidity()) {
+            navigate('/', {replace: true, state: {isLoggedIn: true}});
         }
-
-        console.log(isLoggedIn);
-
-    }, []);
-
-
+    }, [token]);
 
     return (
-        <div>
-            <form>
-                <label>
-                    <p>Email</p>
-                    <input onChange={handleEmail} type="text"/>
+        <div className={styles.loginContainer}>
+
+            <form className={styles.loginForm}>
+                <label className={styles.loginLabel}>
+                    <p>{t("email")}</p>
+                    <input className={styles.loginInput} onChange={handleEmail} type="text"/>
                 </label>
-                <label>
-                    <p>Password</p>
-                    <input onChange={handlePassword} type="password"/>
+                <label className={styles.loginLabel}>
+                    <p>{t("password")}</p>
+                    <input className={styles.loginInput} onChange={handlePassword} type="password"/>
                 </label>
-                <div>
-                    <a onClick={handleSend}>Submit</a>
+                <div className={styles.loginSubmit}>
+                    <a onClick={handleSend}>{t("logIn")}</a>
                 </div>
             </form>
         </div>
