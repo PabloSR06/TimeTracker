@@ -1,24 +1,34 @@
 
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {useEffect} from "react";
+import {RootState} from "./componets/slice/store.tsx";
+import {fetchHours} from "./componets/slice/hoursSlice.tsx";
 import {fetchProjects} from "./componets/slice/projectsSlice.tsx";
 import {fetchClients} from "./componets/slice/clientsSlice.tsx";
-import {fetchHours} from "./componets/slice/hoursSlice.tsx";
-import {WeekList} from "./componets/week/weekList.tsx";
+import {checkTokenValidity} from "./componets/types/config.ts";
 
-function Loader() {
+interface LoaderProps {
+    handleToken: (token: string) => void;
+}
+export const Loader: React.FC<LoaderProps> = ({handleToken}) => {
     const dispatch = useDispatch();
 
-    useEffect(() => {
-        Promise.all([fetchHours(dispatch), fetchProjects(dispatch),fetchClients(dispatch)]).then(() => {
-            console.log('All data fetched');
-        });
+    const token = useSelector((state: RootState) => state.user.userToken);
 
-    }, []);
+    useEffect(() => {
+        if(checkTokenValidity()){
+            Promise.all([fetchHours(dispatch), fetchProjects(dispatch),fetchClients(dispatch)]).then(() => {
+                console.log('All data fetched');
+            });
+        }
+        handleToken(token);
+    }, [token]);
+
+
 
   return (
     <>
-        <WeekList />
+
     </>
   )
 }
