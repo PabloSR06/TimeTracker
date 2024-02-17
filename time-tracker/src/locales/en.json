@@ -10,6 +10,11 @@
   "sendingEmail": "Sending email",
   "emailSent": "Email sent",
   "error": "Error, please try again",
+  "emailRequired": "Email is required",
+  "passwordRequired": "Password is required",
+  "passwordsDoNotMatch": "Passwords do not match",
+  "passwordRequirement": "Min 8 characters, UpperCase, LowerCase, Number/SpecialChar",
+
 
   "smallDateFormat": "MMMM dd"
 }

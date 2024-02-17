@@ -26,7 +26,7 @@
     background-color: #f8f8f8;
 }
 .loginSubmit {
-    border-width: 0;
+    border: none;
     padding: 10px 20px;
     background-color: #007bff;
     color: #fff;
@@ -39,7 +39,23 @@
 .loginSubmit:hover {
     background-color: #0056b3;
 }
-.loginSubmit:disabled{
+.loginSubmit:disabled {
     background-color: #ccc;
     cursor: not-allowed;
+}
+.errorMsg {
+    color: red;
+    font-size: 12px;
+}
+.forgotPassword {
+    margin-bottom: 10px;
+    text-align: right;
+    font-size: 14px;
+    color: #007bff;
+    cursor: pointer;
+}
+
+.forgotPassword:hover {
+    text-decoration: underline;
+    color: #0056b3;
 }
