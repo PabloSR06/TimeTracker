@@ -4,35 +4,55 @@ import {DayHourBlock} from "../blockData/dayHourBlock.tsx";
 import {useEffect, useState} from "react";
 import {NewProjectBlock} from "../blockData/newProjectBlock.tsx";
 import {WeekBlock} from "../week/weekBlock.tsx";
+import {NewDayHourBlock} from "../blockData/newDayHourBlock.tsx";
+import {useSelector} from "react-redux";
+import {RootState} from "../slice/store.tsx";
+
 
 export const DayInfo = () => {
-
-    const location = useLocation();
-
-    const data: CustomDay = location.state.day ? location.state.day : undefined;
 
     const [startDay, setStartDay] = useState<DayHours>();
     const [endDay, setEndDay] = useState<DayHours>();
 
+    const location = useLocation();
+    const allData = useSelector((state: RootState) => state.hours);
+
+    const index: number = location.state.id ? location.state.id : undefined;
+    const [data, setData] = useState<CustomDay>();
+
+
+
+    useEffect(() => {
+        setData(allData.find(obj => obj.id === index) as  CustomDay);
+    }, [allData, index]);
+
+
     useEffect(() => {
         setStartDay(undefined);
         setEndDay(undefined);
-        const startDay = data.data.filter(item => item.type);
-        const endDay = data.data.filter(item => !item.type);
-        if(startDay.length > 0) {
-            setStartDay(startDay[0] as DayHours);
-        }
-        if(endDay.length > 0) {
-            setEndDay(endDay[0] as DayHours);
+
+        if (data && data.data) {
+            const startDay = data.data.filter(item => item.type);
+            const endDay = data.data.filter(item => !item.type);
+            if (startDay.length > 0) {
+                setStartDay(startDay[0] as DayHours);
+            }
+            if (endDay.length > 0) {
+                setEndDay(endDay[0] as DayHours);
+            }
         }
     }, [data]);
+
+    if (!data) {
+        return <div>Loading...</div>;
+    }
 
     return (
         <div>
             <div><p>{data.date.toString()}</p></div>
             <WeekBlock />
             <div>
-                {startDay === undefined ? null : <DayHourBlock isStart={true} date={startDay.date}/>}
+                {startDay === undefined ? <NewDayHourBlock isStart={true} date={data.date}/> : <DayHourBlock isStart={true} date={startDay.date}/>}
                 <div>
                     {data.projects.map((project, index) => (
                         <div key={index}>
@@ -42,7 +62,8 @@ export const DayInfo = () => {
                     ))}
                     <NewProjectBlock date={data.date}/>
                 </div>
-                {endDay === undefined ? null : <DayHourBlock isStart={false} date={endDay.date}/>}
+                {startDay !== undefined && endDay === undefined ? <NewDayHourBlock isStart={false} date={data.date}/> : null}
+                {startDay !== undefined && endDay !== undefined ? <DayHourBlock isStart={false} date={endDay.date}/> : null}
             </div>
         </div>
     );

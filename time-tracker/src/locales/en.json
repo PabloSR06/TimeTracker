@@ -1,5 +1,7 @@
 {
   "email": "Email",
   "password": "Password",
-  "logIn": "LogIn"
+  "logIn": "LogIn",
+  "clockIn": "Clock In",
+  "clockOut": "Clock Out"
 }

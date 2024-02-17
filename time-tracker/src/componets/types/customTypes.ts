@@ -7,6 +7,7 @@ type DayHours = {
     "lastModifiedOnDate": Date
 };
 type CustomDay = {
+    id: number,
     date: Date,
     data: DayHours[],
     projects: ProjectHoursName[]

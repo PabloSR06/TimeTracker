@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import styles from "./dayBlock.module.css";
 import {differenceInHours, format, minutesToHours} from "date-fns";
-import {fetchHours, InsertDayHours} from "../slice/hoursSlice";
+import {combineDate, fetchHours, InsertDayHours} from "../slice/hoursSlice";
 import {ApiInsertDayHoursData} from "../types/config";
 import {CalendarCheck, CalendarX} from "react-bootstrap-icons";
 import {useDispatch} from "react-redux";
@@ -62,24 +62,11 @@ export const DayBlock: React.FC<DayBlockProps> = ({day}) => {
         setDayCount(differenceInHours(toDate, fromDate));
     }
 
-    const combineDate = (date: Date) => {
-        date = new Date(date);
-        const dayOfMonth = date.getDate();
-        const month = date.getMonth();
-        const year = date.getFullYear();
 
-        const currentDate = new Date();
-        const hours = currentDate.getHours();
-        const minutes = currentDate.getMinutes();
-        const seconds = currentDate.getSeconds();
-
-        return new Date(year, month, dayOfMonth, hours, minutes, seconds);
-    }
 
     const startDay = async () => {
 
         const data: ApiInsertDayHoursData = {
-            userId: 1,
             date: combineDate(day.date),
             type: true
         };
@@ -87,7 +74,6 @@ export const DayBlock: React.FC<DayBlockProps> = ({day}) => {
     }
     const endDay = async () => {
         const data: ApiInsertDayHoursData = {
-            userId: 1,
             date: combineDate(day.date),
             type: false
         };
@@ -100,7 +86,7 @@ export const DayBlock: React.FC<DayBlockProps> = ({day}) => {
     }, [day]);
 
     const test = async () => {
-        navigate(`/day`, {state: {day: day}});
+        navigate(`/day`, {state: {id: day.id}});
     }
 
     return (

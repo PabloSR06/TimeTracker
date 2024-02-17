@@ -43,9 +43,9 @@ export const fetchHours = async (dispatch: Dispatch) => {
 
     Promise.all([fetchDayHours(), fetchProjectHours()])
         .then(([dayHoursResponse, projectHoursResponse]) => {
-             const dataPerDay = daysRange.map(day => ({
+            const dataPerDay = daysRange.map((day, index) => ({
+                id: index,
                 date: day.toString() as string,
-
                 data: dayHoursResponse.data.filter((item: { date: string | number | Date; }) => {
                     const itemDate = new Date(item.date);
                     return startOfDay(itemDate).getTime() === startOfDay(day).getTime();
@@ -73,6 +73,20 @@ export const InsertDayHours = async (input: ApiInsertDayHoursData) => {
         }
     }
 };
+
+export const combineDate = (date: Date) => {
+    date = new Date(date);
+    const dayOfMonth = date.getDate();
+    const month = date.getMonth();
+    const year = date.getFullYear();
+
+    const currentDate = new Date();
+    const hours = currentDate.getHours();
+    const minutes = currentDate.getMinutes();
+    const seconds = currentDate.getSeconds();
+
+    return new Date(year, month, dayOfMonth, hours, minutes, seconds);
+}
 
 
 export const { loadTimeData } = hoursSlice.actions;

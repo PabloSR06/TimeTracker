@@ -69,7 +69,6 @@ export const apiInsertDayHours = (data: ApiInsertDayHoursData) => {
     };
 };
 export type ApiInsertDayHoursData = {
-    userId: number,
     type: boolean,
     date: Date
 };

@@ -7,6 +7,8 @@ import {ArrowLeft, ArrowRight} from "react-bootstrap-icons";
 import {useNavigate} from "react-router-dom";
 
 export const WeekBlock = () => {
+    const navigate = useNavigate();
+
     const todayDate = new Date();
     const weekAmount = 2;
     const startDateRange = subWeeks(startOfWeek(todayDate, {weekStartsOn: 1}), weekAmount);
@@ -18,9 +20,6 @@ export const WeekBlock = () => {
 
 
     const allData = useSelector((state: RootState) => state.hours);
-
-    const navigate = useNavigate();
-
 
 
     useEffect(() => {
@@ -51,8 +50,8 @@ export const WeekBlock = () => {
         }
     };
 
-    const goToDay = async (day:CustomDay) => {
-        navigate(`../day`, {state: {day: day}, replace: true});
+    const goToDay = async (id:number) => {
+        navigate(`../day`, {state: {id: id}, replace: true});
     }
 
 
@@ -64,7 +63,7 @@ export const WeekBlock = () => {
                 <div className={styles.weekContainer}>
                     {weekToShow.map((day, index) => (
 
-                        <div key={index} className={styles.dayContainer} onClick={() => goToDay(day)}>
+                        <div key={index} className={styles.dayContainer} onClick={() => goToDay(day.id)}>
                             {new Date(day.date).getUTCDate()}
                         </div>
 
