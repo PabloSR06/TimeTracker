@@ -157,10 +157,6 @@ namespace timeTrakerApi.Data
 
         public bool ResetPassword(UserCredentialsModel userCredential, string userId)
         {
-
-            if (userProfile == null)
-                return false;
-
             int affectedRows = 0;
 
             using (MySqlConnection connection = _database.CreateConnection())

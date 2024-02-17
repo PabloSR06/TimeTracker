@@ -54,7 +54,7 @@ export const Login = () => {
         }
     }, [token]);
 
-    const goToForgotPassword = () => navigate('/forgot', {replace: true});
+    const goToForgotPassword = () => navigate('/password/forgot', {replace: true});
 
     return (
         <div className={styles.loginContainer}>
