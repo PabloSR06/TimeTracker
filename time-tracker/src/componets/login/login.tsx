@@ -1,5 +1,5 @@
 import {BaseSyntheticEvent, useEffect, useState} from "react";
-import {ApiLogInUserData, checkTokenValidity, getTokenFromLocalStorage} from "../types/config.ts";
+import {ApiLogInUserData, checkTokenValidity} from "../types/config.ts";
 import {useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {logIn} from "../slice/userSlice.tsx";

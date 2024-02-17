@@ -4,13 +4,12 @@ import styles from './login.module.css';
 import {useTranslation} from "react-i18next";
 import {useParams} from "react-router-dom";
 import {
-    apiForgotPassword,
     apiResetPassword,
-    checkTokenValidity,
     isTokenValid,
     ResetPasswordData
 } from "../types/config.ts";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 export const ChangePassword = () => {
     const {t} = useTranslation();
@@ -21,19 +20,20 @@ export const ChangePassword = () => {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
 
-    const { token } = useParams<string>();
+    const {token} = useParams<string>();
 
     const [error, setError] = useState('');
 
     const [isValid, setIsValid] = useState(false);
+    const [isSend, setIsSend] = useState(false);
 
 
     useEffect(() => {
         if (token != undefined) {
             setIsValid(isTokenValid(token));
         }
-        console.log(token);
-        console.log(isTokenValid(token));
+
+
     }, [token]);
 
     const handleChangePassword = async () => {
@@ -43,23 +43,24 @@ export const ChangePassword = () => {
             setIsLoading(false);
             return;
         }
-        handleReset().then(() => {});
+
+        await toast.promise(handleReset(), {
+            loading: t("loading"),
+            success: t("passwordChanged"),
+            error: t("error"),
+        });
+
+
         setIsLoading(false);
     }
 
     const handleReset = async () => {
-        const data :ResetPasswordData = {
+
+        const data: ResetPasswordData = {
             password: password,
             token: token
         }
-
-        try {
-            return axios.request(apiResetPassword(data));
-        } catch (error) {
-            if (axios.isAxiosError(error)) {
-                console.log(error);
-            }
-        }
+        await axios.request(apiResetPassword(data));
 
     }
 
@@ -80,7 +81,7 @@ export const ChangePassword = () => {
                            type="text"/>
                 </label>
                 <div>
-                    <button disabled={isLoading || !isValid}  onClick={handleChangePassword}
+                    <button disabled={isLoading || !isValid } onClick={handleChangePassword}
                             className={styles.loginSubmit}>{t("changePassword")}</button>
                 </div>
             </div>

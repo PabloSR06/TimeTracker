@@ -6,5 +6,10 @@
   "clockOut": "Clock Out",
   "changePassword": "Change Password",
   "repeatPassword": "Repeat Password",
+  "invalidToken": "Invalid token",
+  "sendingEmail": "Sending email",
+  "emailSent": "Email sent",
+  "error": "Error, please try again",
+
   "smallDateFormat": "MMMM dd"
 }

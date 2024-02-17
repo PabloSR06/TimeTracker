@@ -3,10 +3,14 @@ import {useDispatch,} from "react-redux";
 import {ForgotPasswordEmail} from "../slice/userSlice.tsx";
 import styles from './login.module.css';
 import {useTranslation} from "react-i18next";
+import toast from "react-hot-toast";
+import {useNavigate} from "react-router-dom";
 
 export const ForgotPassword = () => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+
 
     const [selectedEmail, setSelectedEmail] = useState("");
     const [isLoading, setIsLoading] = useState(false);
@@ -20,8 +24,15 @@ export const ForgotPassword = () => {
     const handleSend = async () => {
         setIsLoading(true);
 
-
-        await ForgotPasswordEmail(dispatch, selectedEmail);
+        await toast.promise(ForgotPasswordEmail(dispatch, selectedEmail).then(() => {
+            setTimeout(() => {
+                navigate('/', {replace: true});
+            }, 1000);
+        }), {
+            loading: t("sendingEmail"),
+            success: t("passwordChanged"),
+            error: t("error"),
+        });
 
         setIsLoading(false);
     }

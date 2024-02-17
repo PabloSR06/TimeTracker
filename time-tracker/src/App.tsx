@@ -11,6 +11,7 @@ import {checkTokenValidity} from "./componets/types/config.ts";
 import {WeekList} from "./componets/week/weekList.tsx";
 import {ForgotPassword} from "./componets/login/forgotPassword.tsx";
 import {ChangePassword} from "./componets/login/changePassword.tsx";
+import {Toaster} from "react-hot-toast";
 function App() {
 
     const location = useLocation();
@@ -41,6 +42,7 @@ function App() {
     return (
         <>
             <Provider store={store}>
+                <Toaster position="top-left"/>
                 <div>
                     <Loader handleToken={handleToken}/>
                 </div>

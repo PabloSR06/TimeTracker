@@ -19,7 +19,6 @@ export const checkTokenValidity = (): boolean => {
     return false;
 };
 export const isTokenValid = (token: string): boolean => {
-    console.log('token', token);
     if (token) {
         return checkToken(token);
     }
