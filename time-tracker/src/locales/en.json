@@ -3,5 +3,6 @@
   "password": "Password",
   "logIn": "LogIn",
   "clockIn": "Clock In",
-  "clockOut": "Clock Out"
+  "clockOut": "Clock Out",
+  "smallDateFormat": "MMMM dd"
 }

@@ -7,6 +7,7 @@ import {WeekBlock} from "../week/weekBlock.tsx";
 import {NewDayHourBlock} from "../blockData/newDayHourBlock.tsx";
 import {useSelector} from "react-redux";
 import {RootState} from "../slice/store.tsx";
+import {ButtonsBlock} from "../controls/buttonsBlock.tsx";
 
 
 export const DayInfo = () => {
@@ -49,7 +50,7 @@ export const DayInfo = () => {
 
     return (
         <div>
-            <div><p>{data.date.toString()}</p></div>
+            <ButtonsBlock date={data.date}/>
             <WeekBlock />
             <div>
                 {startDay === undefined ? <NewDayHourBlock isStart={true} date={data.date}/> : <DayHourBlock isStart={true} date={startDay.date}/>}
