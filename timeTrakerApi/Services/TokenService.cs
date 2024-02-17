@@ -3,8 +3,9 @@ using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using timeTrakerApi.Data.Interface;
+using timeTrakerApi.Models.Project;
 using timeTrakerApi.Models.User;
+using timeTrakerApi.Services.Interfaces;
 
 namespace timeTrakerApi.Services
 {
@@ -39,7 +40,7 @@ namespace timeTrakerApi.Services
             return token;
         }
 
-        public JwtSecurityToken GenerateGuestToken(UserProfileModel userProfile)
+        public JwtSecurityToken GenerateGuestToken(UserModel userProfile)
         {
             var claims = new List<Claim> {
                 new Claim(JwtRegisteredClaimNames.Sub, userProfile.Email),

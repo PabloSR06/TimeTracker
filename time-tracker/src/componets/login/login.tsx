@@ -1,5 +1,5 @@
 import {BaseSyntheticEvent, useEffect, useState} from "react";
-import { ApiLogInUserData, checkTokenValidity} from "../types/config.ts";
+import {ApiLogInUserData, checkTokenValidity, getTokenFromLocalStorage} from "../types/config.ts";
 import {useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {logIn} from "../slice/userSlice.tsx";
@@ -54,6 +54,8 @@ export const Login = () => {
         }
     }, [token]);
 
+    const goToForgotPassword = () => navigate('/forgot', {replace: true});
+
     return (
         <div className={styles.loginContainer}>
 
@@ -66,6 +68,7 @@ export const Login = () => {
                     <p>{t("password")}</p>
                     <input className={styles.loginInput} onChange={handlePassword} type="password"/>
                 </label>
+                <a onClick={goToForgotPassword}>Forgot Password</a>
                 <div>
                     <button disabled={isLoading} onClick={handleSend} className={styles.loginSubmit}>{t("logIn")}</button>
                 </div>

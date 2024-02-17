@@ -1,5 +1,5 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {apiLogInUser, ApiLogInUserData} from "../types/config";
+import {apiForgotPassword, apiLogInUser, ApiLogInUserData} from "../types/config";
 import axios from "axios";
 import {Dispatch} from "redux";
 
@@ -30,5 +30,17 @@ export const logIn = async (dispatch: Dispatch, data: ApiLogInUserData) => {
         }
     }
 };
+
+export const ForgotPasswordEmail = async (dispatch: Dispatch, email: string) => {
+    try {
+        const response = await axios.request(apiForgotPassword(email));
+        console.log(response);
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            console.log(error);
+        }
+    }
+};
+
 export const {loadToken} = userSlice.actions;
 export default userSlice.reducer;

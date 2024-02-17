@@ -15,9 +15,6 @@ export const ButtonsBlock: React.FC<ButtonsBlockProps> = ({date}) => {
     const navigate = useNavigate();
 
 
-    const dateFormat = t('smallDateFormat');
-
-
     const handleHome = () => {
         navigate(`/`, {replace: true});
     };
@@ -28,7 +25,7 @@ export const ButtonsBlock: React.FC<ButtonsBlockProps> = ({date}) => {
                 <House size={20}/>
             </div>
             <div>
-                <p className={styles.dateText}>{format(date, dateFormat)}</p>
+                <p className={styles.dateText}>{format(date, t('smallDateFormat'))}</p>
             </div>
             <div className={styles.iconContainer}>
                 <BoxArrowInRight size={20}/>

@@ -1,17 +1,25 @@
 ﻿using timeTrakerApi.Data.Interface;
 using MySqlConnector;
 using timeTrakerApi.Models.Project;
+using System.IdentityModel.Tokens.Jwt;
+using timeTrakerApi.Services.Interfaces;
+using System.Data;
+using timeTrakerApi.Models.User;
 
 namespace timeTrakerApi.Data
 {
     public class UserRepository : IUserRepository
     {
         private readonly MySqlDataSource _database;
+        private readonly IMailService _mailService;
+        private readonly ITokenService _tokenService;
 
 
-        public UserRepository(MySqlDataSource database)
+        public UserRepository(MySqlDataSource database, IMailService mailService, ITokenService tokenService)
         {
             _database = database;
+            _mailService = mailService;
+            _tokenService = tokenService;
         }
 
         public List<UserModel> Get()
@@ -104,6 +112,74 @@ namespace timeTrakerApi.Data
                 }
             }
         }
+
+        public UserModel? GetUserWithEmail(string email)
+        {
+            UserModel? user = default;
+
+            using (MySqlConnection connection = _database.CreateConnection())
+            {
+                connection.Open();
+                string query = "SELECT * FROM " + Constants.Tables.Users + " WHERE Email = @Email";
+                using (MySqlCommand command = new MySqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Email", email);
+
+                    using (MySqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            user = ReadUserFromReader(reader);
+                        }
+                        reader.Close();
+                    }
+                    connection.Dispose();
+                }
+            }
+            return user;
+        }
+        public bool ForgotPassword(string email)
+        {
+
+            UserModel? userProfile = GetUserWithEmail(email);
+
+            if (userProfile == null)
+                return false;
+
+            ////TODO: Add name to user profile
+
+            JwtSecurityToken token = _tokenService.GenerateGuestToken(userProfile);
+            _mailService.SendForgotMail(userProfile.Email, userProfile.Name, token);
+
+
+            return true;
+        }
+
+        public bool ResetPassword(UserCredentialsModel userCredential, string userId)
+        {
+
+            if (userProfile == null)
+                return false;
+
+            int affectedRows = 0;
+
+            using (MySqlConnection connection = _database.CreateConnection())
+            {
+                connection.Open();
+                using (MySqlCommand command = new MySqlCommand("ResetPassword", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@id", userId);
+                    command.Parameters.AddWithValue("@password", userCredential.Password);
+
+                    affectedRows = command.ExecuteNonQuery();
+                }
+                connection.Dispose();
+            }
+
+            return affectedRows > 0;
+        }
+
         private UserModel ReadUserFromReader(MySqlDataReader reader)
         {
 

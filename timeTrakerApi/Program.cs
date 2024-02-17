@@ -7,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using timeTrakerApi.Services;
+using timeTrakerApi.Services.Interfaces;
 
 namespace timeTrakerApi
 {
@@ -93,6 +94,7 @@ namespace timeTrakerApi
             builder.Services.AddTransient<IProjectHoursRepository, ProjectHoursRepository>();
             builder.Services.AddTransient<IUserRepository, UserRepository>();
             builder.Services.AddTransient<ITokenService, TokenService>();
+            builder.Services.AddTransient<IMailService, MailService>();
 
             var app = builder.Build();
 

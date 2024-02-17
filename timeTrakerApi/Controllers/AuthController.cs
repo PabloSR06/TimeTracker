@@ -1,8 +1,11 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using timeTrakerApi.Data.Interface;
 using timeTrakerApi.Models.Project;
 using timeTrakerApi.Models.User;
+using timeTrakerApi.Services.Interfaces;
 
 namespace timeTrakerApi.Controllers
 {
@@ -55,6 +58,43 @@ namespace timeTrakerApi.Controllers
                 return BadRequest();
             }
 
+        }
+
+        [HttpGet("ForgotPassword")]
+
+        public IActionResult ForgotPassword(string Email)
+        {
+
+            _userRepository.ForgotPassword(Email);
+
+            return Ok();
+        }
+
+
+        [HttpPut("ResetPassword")]
+        [Authorize(Roles = "Guest")]
+        public IActionResult ResetPassword([FromBody] ResetPasswordModel input)
+        {
+
+            var claimsIdentity = this.User.Identity as ClaimsIdentity;
+            if (claimsIdentity != null)
+            {
+                var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+                var claimValue = claim?.Value;
+                var userId = User.FindFirst("userid")?.Value;
+
+                UserCredentialsModel userCredential = new UserCredentialsModel
+                {
+                    Email = claimValue,
+                    Password = input.Password
+                };
+
+                _userRepository.ResetPassword(userCredential, userId);
+
+                return Ok();
+            }
+
+            return Unauthorized();
         }
     }
 }

@@ -121,5 +121,14 @@ BEGIN
 END //
 DELIMITER ;
 
+DELIMITER //
+
+CREATE PROCEDURE ResetPassword(IN `id` INT, IN `password` LONGTEXT)
+BEGIN
+	UPDATE Users SET Password = `password` WHERE id = `id`;
+END //
+
+DELIMITER ;
+
 
 

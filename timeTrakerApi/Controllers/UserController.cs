@@ -19,13 +19,6 @@ namespace timeTrakerApi.Controllers
             _logger = logger;
             _userRepository = userRepository;
         }
-
-        [HttpGet("GetAllUsers")]
-        [Authorize]
-        public List<UserModel> GetAllUsers()
-        {
-            return _userRepository.Get();
-        }
         [HttpGet("GetUserById")]
         [Authorize]
         public UserModel GetUserById()

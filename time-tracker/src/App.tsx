@@ -9,6 +9,8 @@ import {useEffect, useState} from "react";
 import Loader from "./loader.tsx";
 import {checkTokenValidity} from "./componets/types/config.ts";
 import {WeekList} from "./componets/week/weekList.tsx";
+import {ForgotPassword} from "./componets/login/forgotPassword.tsx";
+import {ChangePassword} from "./componets/login/changePassword.tsx";
 function App() {
 
     const location = useLocation();
@@ -49,6 +51,8 @@ function App() {
                     <Route path="/login" element={<Login/>}/>
                     <Route path="/SingIn" element={<SingIn/>}/>
                     <Route path="*" element={<Navigate to="/"/>}/>
+                    <Route path="/password/forgot" element={<ForgotPassword />}/>
+                    <Route path="/password/change/:token" element={<ChangePassword />}/>
                 </Routes>
             </Provider>
         </>

@@ -3,27 +3,40 @@ import {jwtDecode} from "jwt-decode";
 export const apiUrl = 'https://localhost:7225';
 
 // @ts-ignore
-export const getTokenFromLocalStorage = ():string => localStorage.getItem('token')
+export const getTokenFromLocalStorage = (): string => localStorage.getItem('token')
 
-export const checkTokenValidity = ():boolean => {
+export const checkTokenValidity = (): boolean => {
+
     const token = localStorage.getItem('token');
     if (token) {
-        try {
-            const decodedToken = jwtDecode(token);
-            const currentTime = Date.now() / 1000;
-            // @ts-ignore
-            if (currentTime > decodedToken.exp) {
-                localStorage.removeItem('token');
-                return false;
-            } else {
-                return true;
-            }
-        } catch (error) {
-            console.error('Error al verificar el token:', error);
+        if(!checkToken(token)){
+            localStorage.removeItem('token');
+            return false;
+        }else {
+            return true;
         }
     }
     return false;
 };
+export const isTokenValid = (token: string): boolean => {
+    console.log('token', token);
+    if (token) {
+        return checkToken(token);
+    }
+    return false;
+};
+
+const checkToken = (token: string): boolean=> {
+    try {
+        const decodedToken = jwtDecode(token);
+        const currentTime = Date.now() / 1000;
+        // @ts-ignore
+        return currentTime <= decodedToken.exp;
+    } catch (error) {
+        return false;
+    }
+}
+
 export const apiGetDayHours = (data: ApiGetDayHoursData) => {
     return {
         method: 'POST',
@@ -144,5 +157,30 @@ export type ApiLogInUserData = {
     email: string,
     password: string
 };
+
+
+export const apiForgotPassword = (email: string) => {
+    return {
+        method: 'GET',
+        url: apiUrl + '/Auth/ForgotPassword?Email=' + email
+    };
+};
+export const apiResetPassword = (data: ResetPasswordData) => {
+    return {
+        method: 'PUT',
+        url: apiUrl + '/Auth/ResetPassword',
+        data: {
+            password: data.password,
+        },
+        headers: {
+            Authorization: `Bearer ${data.token}`
+        }
+    };
+};
+
+export type ResetPasswordData = {
+    password: string,
+    token: string
+}
 
 

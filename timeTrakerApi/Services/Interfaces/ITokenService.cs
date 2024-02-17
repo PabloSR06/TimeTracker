@@ -2,11 +2,11 @@
 using timeTrakerApi.Models.Project;
 using timeTrakerApi.Models.User;
 
-namespace timeTrakerApi.Data.Interface
+namespace timeTrakerApi.Services.Interfaces
 {
     public interface ITokenService
     {
         JwtSecurityToken GenerateToken(UserProfileModel userProfile);
-        JwtSecurityToken GenerateGuestToken(UserProfileModel userProfile);
+        JwtSecurityToken GenerateGuestToken(UserModel userProfile);
     }
 }
