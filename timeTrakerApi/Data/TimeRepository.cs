@@ -53,7 +53,7 @@ namespace timeTrakerApi.Data
                 using (MySqlCommand command = new MySqlCommand("GetDayHours", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.AddWithValue("@userId", userId);
+                    command.Parameters.AddWithValue("@userIdInput", userId);
                     command.Parameters.AddWithValue("@from", input.From);
                     command.Parameters.AddWithValue("@to", input.To);
 
@@ -80,7 +80,7 @@ namespace timeTrakerApi.Data
                 using (MySqlCommand command = new MySqlCommand("GetProjectHours", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.AddWithValue("@userId", userId);
+                    command.Parameters.AddWithValue("@userIdInput", userId);
                     command.Parameters.AddWithValue("@from", input.From);
                     command.Parameters.AddWithValue("@to", input.To);
 

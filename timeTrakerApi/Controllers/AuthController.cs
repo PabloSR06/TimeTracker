@@ -28,15 +28,14 @@ namespace timeTrakerApi.Controllers
         [HttpPost("Login")]
         public IActionResult Login([FromBody] UserCredentialsModel credentials)
         {
-            UserProfileModel userProfile = new UserProfileModel();
-            userProfile.Email = credentials.Email;
-            userProfile.Roles = new List<RoleModel> { new RoleModel { Name = "Admin" } };
-            userProfile.Id = 1;
+            UserProfileModel userProfile = _userRepository.GetUserLogIn(credentials);
+
+            if (userProfile.Id == 0)
+            {
+                return Unauthorized();
+            }
 
             return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(_tokenService.GenerateToken(userProfile)) });
-
-
-            //return Unauthorized();
         }
 
         [HttpPost("Register")]

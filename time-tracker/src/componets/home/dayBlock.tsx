@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import styles from "./dayBlock.module.css";
 import {differenceInHours, format, minutesToHours} from "date-fns";
-import {combineDate, fetchHours, InsertDayHours} from "../slice/hoursSlice";
+import {fetchHours, InsertDayHours} from "../slice/hoursSlice";
 import {ApiInsertDayHoursData} from "../types/config";
 import {CalendarCheck, CalendarX} from "react-bootstrap-icons";
 import {useDispatch} from "react-redux";
 import {useNavigate} from "react-router-dom";
-import {getTime} from "../tools.ts";
+import {combineDate, getTime} from "../tools.ts";
 import {ColorBar} from "./colorBar.tsx";
 
 interface DayBlockProps {
@@ -37,7 +37,6 @@ export const DayBlock: React.FC<DayBlockProps> = ({day}) => {
         day.projects.forEach(item => {
             count += item.minutes;
         })
-
         setProjectCount(minutesToHours(count));
     }
 
@@ -47,12 +46,13 @@ export const DayBlock: React.FC<DayBlockProps> = ({day}) => {
 
         setDayStarted(false);
         setDayFinished(false);
+        setState(0);
 
         day.data.forEach(item => {
             const date = new Date(item.date);
             if (item.type) {
                 fromDate = date;
-                toDate = combineDate(date)
+
                 setDayStarted(true);
                 setFromDate(date);
                 setState(1);
@@ -62,7 +62,6 @@ export const DayBlock: React.FC<DayBlockProps> = ({day}) => {
                 setToDate(date);
                 setState(2);
             }
-
         });
         setDayCount(differenceInHours(toDate, fromDate));
     }
@@ -89,46 +88,50 @@ export const DayBlock: React.FC<DayBlockProps> = ({day}) => {
         ProjectCount();
     }, [day]);
 
-    const test = async () => {
+    const goToDay = async () => {
         navigate(`/day`, {state: {id: day.id}});
     }
 
     return (
-        <div className={`${styles.blockContainer} ${styles.dayContainer}`} onClick={test}>
-            <div className={styles.leftContainer}>
-                <ColorBar state={state}/>
-                <div className={styles.dateContainer}>
-                    <div className={styles.monthContainer}>
-                        <p>{format(day.date, 'd')}</p>
-                        <p>/</p>
-                        <p>{format(day.date, 'MM')}</p>
-                    </div>
-                    <div className={styles.yearContainer}>
-                        <p>{format(day.date, 'yyyy')}</p>
-                    </div>
+        <div className={`blockContainer ${styles.dayContainer}`} onClick={goToDay}>
+                <div className={styles.leftContainer}>
+                    <ColorBar state={state}/>
+                    <div className={styles.dateContainer}>
+                        <div className={styles.monthContainer}>
+                            <p>{format(day.date, 'd')}</p>
+                            <p>/</p>
+                            <p>{format(day.date, 'MM')}</p>
+                        </div>
+                        <div className={styles.yearContainer}>
+                            <p>{format(day.date, 'yyyy')}</p>
+                        </div>
 
+                    </div>
                 </div>
-            </div>
 
-            <div className={styles.countContainer}>
-                <div className={styles.dayCountContainer}>
-                    <p>Work day</p>
-                    <p>{dayCount}</p>
+                <div className={styles.countContainer}>
+                    <div className={styles.dayCountContainer}>
+                        <p>Work day</p>
+                        <p>{dayCount}</p>
+                    </div>
+                    <div className={styles.projectCountContainer}>
+                        <p>Projects</p>
+                        <p>{projectCount}</p>
+                    </div>
                 </div>
-                <div className={styles.projectCountContainer}>
-                    <p>Projects</p>
-                    <p>{projectCount}</p>
-                </div>
-            </div>
-            <div className={styles.buttomContainer}>
+            <div className={styles.buttonContainer}>
                 <div className={styles.hourContainer}>
-
-
-                    {!dayStarted ? (<button className={styles.startButton} onClick={startDay}>Open</button>) :
-                        <p><span><CalendarCheck
-                            className={styles.calendarIcon}/></span>{getTime(fromDate)}</p>}
+                    {!dayStarted ? (<button className={styles.startButton} onClick={(e) => {
+                                e.stopPropagation();
+                                startDay();
+                            }}>Open</button>
+                        ) :
+                        <p><span><CalendarCheck className={styles.calendarIcon}/></span>{getTime(fromDate)}</p>}
                     {dayStarted && !dayFinished ? (
-                            <button className={styles.startButton} onClick={endDay}>Close</button>) :
+                            <button className={styles.startButton} onClick={(e) => {
+                                e.stopPropagation();
+                                endDay();
+                            }}>Close</button>) :
                         dayFinished ? <p><span><CalendarX
                             className={styles.calendarIcon}/></span>{getTime(toDate)}
                         </p> : null}

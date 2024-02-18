@@ -74,6 +74,34 @@ namespace timeTrakerApi.Data
             return user;
         }
 
+        public UserProfileModel GetUserLogIn(UserCredentialsModel input)
+        {
+            UserProfileModel profile = new UserProfileModel();
+
+            using (MySqlConnection connection = _database.CreateConnection())
+            {
+                connection.Open();
+                using (MySqlCommand command = new MySqlCommand("UserLogIn", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@inputEmail", input.Email);
+                    command.Parameters.AddWithValue("@inputPassword", input.Password);
+
+
+                    using (MySqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            profile = ReadProfileFromReader(reader);
+                        }
+                        reader.Close();
+                    }
+                }
+                connection.Dispose();
+            }
+            return profile;
+        }
+
         public bool Insert(UserModel user)
         {
             using (MySqlConnection connection = _database.CreateConnection())
@@ -189,6 +217,23 @@ namespace timeTrakerApi.Data
                 user.Email = reader.GetString(reader.GetOrdinal("email"));
 
             return user;
+
+        }
+        private UserProfileModel ReadProfileFromReader(MySqlDataReader reader)
+        {
+
+            UserProfileModel profile = new UserProfileModel();
+
+            if (!reader.IsDBNull(reader.GetOrdinal(nameof(UserProfileModel.Id))))
+                profile.Id = reader.GetInt32(nameof(UserProfileModel.Id));
+            if (!reader.IsDBNull(reader.GetOrdinal(nameof(UserProfileModel.Name))))
+                profile.Name = reader.GetString(nameof(UserProfileModel.Name));
+            if (!reader.IsDBNull(reader.GetOrdinal(nameof(UserProfileModel.Email))))
+                profile.Email = reader.GetString(nameof(UserProfileModel.Email));
+            if (!reader.IsDBNull(reader.GetOrdinal(nameof(UserProfileModel.Roles))))
+                profile.Roles = reader.GetString(nameof(UserProfileModel.Roles)).Split(",").ToList();
+
+            return profile;
 
         }
     }

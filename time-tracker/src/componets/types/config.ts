@@ -63,7 +63,6 @@ export const apiGetProjectHours = (data: ApiGetDayHoursData) => {
     };
 };
 export type ApiGetDayHoursData = {
-    userId: number,
     from: Date,
     to: Date
 };
@@ -121,7 +120,6 @@ export const apiInsertProjectHours = (data: ApiInsertProjectHoursData) => {
     };
 };
 export type ApiInsertProjectHoursData = {
-    userId: number,
     projectId: number,
     minutes: number,
     date: Date

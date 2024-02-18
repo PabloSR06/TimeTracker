@@ -12,5 +12,6 @@ namespace timeTrakerApi.Data.Interface
         bool Delete(string id);
         bool ForgotPassword(string email);
         bool ResetPassword(UserCredentialsModel userCredential, string userId);
+        UserProfileModel GetUserLogIn(UserCredentialsModel input);
     }
 }

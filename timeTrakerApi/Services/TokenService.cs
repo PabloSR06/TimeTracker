@@ -25,7 +25,7 @@ namespace timeTrakerApi.Services
                 new Claim("userid", userProfile.Id.ToString())
             };
 
-            claims.AddRange(userProfile.Roles.Select(role => new Claim(ClaimTypes.Role, role.Name)));
+            claims.AddRange(userProfile.Roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
             SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
             SigningCredentials creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

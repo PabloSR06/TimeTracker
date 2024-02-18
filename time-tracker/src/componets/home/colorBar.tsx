@@ -5,8 +5,6 @@ interface ColorBarProps {
     state: number;
 }
 export const ColorBar: React.FC<ColorBarProps> = ({state}) => {
-
-
     const [color, setColor] = useState<string>('');
 
     useEffect(() => {
@@ -15,11 +13,10 @@ export const ColorBar: React.FC<ColorBarProps> = ({state}) => {
                 setColor(styles.colorRed);
                 break;
             case 1:
-                setColor(styles.colorGreen);
-
+                setColor(styles.colorOrange);
                 break;
             case 2:
-                setColor(styles.colorOrange);
+                setColor(styles.colorGreen);
                 break;
             default:
                 setColor(styles.colorRed);

@@ -61,7 +61,7 @@ export const DayInfo = () => {
                                               clientName={project.clientName}/>
                         </div>
                     ))}
-                    <NewProjectBlock date={data.date}/>
+                    {startDay !== undefined ? <NewProjectBlock date={data.date}/> : null}
                 </div>
                 {startDay !== undefined && endDay === undefined ? <NewDayHourBlock isStart={false} date={data.date}/> : null}
                 {startDay !== undefined && endDay !== undefined ? <DayHourBlock isStart={false} date={endDay.date}/> : null}

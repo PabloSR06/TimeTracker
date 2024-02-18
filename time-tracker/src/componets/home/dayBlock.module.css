@@ -1,42 +1,33 @@
-.blockContainer {
+.toDayContainer{
     display: flex;
-    border: solid;
-    border-radius: 10px;
-    margin: 10px;
-    height: 60px;
-    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
+    align-items: center;
+    justify-content: space-between;
+    width: 50%;
 }
-
 .leftContainer{
     display: flex;
     align-items: center;
 }
 .dayContainer{
+    height: 60px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
 }
-
 .dateContainer {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
 }
-
-.dateContainer p {
-    margin: 0;
-}
-
 .monthContainer {
     display: flex;
     font-size: 20px;
     font-weight: bold;
 }
-
 .yearContainer {
     font-size: 13px;
 }
-
 .startButton {
     padding: 2px 20px;
     color: black;
@@ -45,41 +36,34 @@
     cursor: pointer;
     transition: background-color 0.3s ease, border-color 0.3s ease;
 }
-
 .startButton:hover {
     background-color: #bfbfbf;
     border-color: #ff8a42;
 }
-
 .countContainer {
     margin: 0;
     padding: 0;
     width: 55px;
 }
-
 .dayCountContainer, .projectCountContainer {
     font-size: 10px;
     display: flex;
     justify-content: space-between;
 }
-
 .dayCountContainer {
     margin-bottom: 3px;
 }
-
 .projectCountContainer {
     margin-top: 3px;
 }
-
-.dayCountContainer p, .projectCountContainer p {
-    margin: 0;
+.hourContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-right: 10px;
 }
-
-.buttomContainer{
+.buttonContainer{
     width: 80px;
-}
-.hourContainer p{
-    margin: 0;
 }
 .calendarIcon{
     width: 10px;
