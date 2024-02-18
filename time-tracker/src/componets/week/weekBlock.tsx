@@ -1,4 +1,4 @@
-import {useState, useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import styles from "./weekBlock.module.css";
 import {addWeeks, subWeeks, startOfWeek, endOfWeek} from 'date-fns';
 import {useSelector} from "react-redux";
@@ -6,7 +6,12 @@ import {RootState} from "../slice/store.tsx";
 import {ArrowLeft, ArrowRight} from "react-bootstrap-icons";
 import {useNavigate} from "react-router-dom";
 
-export const WeekBlock = () => {
+interface WeekBlockProps {
+    date: Date;
+}
+
+
+export const WeekBlock: React.FC<WeekBlockProps> = ({date}) => {
     const navigate = useNavigate();
 
     const todayDate = new Date();
@@ -15,7 +20,7 @@ export const WeekBlock = () => {
     const endDateRange = addWeeks(endOfWeek(todayDate, {weekStartsOn: 1}), weekAmount);
 
 
-    const [currentDate, setCurrentDate] = useState<Date>(todayDate);
+    const [currentDate, setCurrentDate] = useState<Date>(date);
     const [weekToShow, setWeekToShow] = useState<CustomDay[]>([]);
 
 

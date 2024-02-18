@@ -18,7 +18,7 @@ export const DayInfo = () => {
     const location = useLocation();
     const allData = useSelector((state: RootState) => state.hours);
 
-    const index: number = location.state.id ? location.state.id : undefined;
+    const index: number = location.state.id ? location.state.id : 0;
     const [data, setData] = useState<CustomDay>();
 
 
@@ -51,7 +51,7 @@ export const DayInfo = () => {
     return (
         <div>
             <ButtonsBlock date={data.date}/>
-            <WeekBlock />
+            <WeekBlock date={data.date}/>
             <div>
                 {startDay === undefined ? <NewDayHourBlock isStart={true} date={data.date}/> : <DayHourBlock isStart={true} date={startDay.date}/>}
                 <div>
