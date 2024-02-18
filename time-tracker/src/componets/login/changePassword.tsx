@@ -1,5 +1,4 @@
 import {useEffect, useState} from "react";
-
 import styles from './login.module.css';
 import {useTranslation} from "react-i18next";
 import {useParams} from "react-router-dom";
@@ -10,81 +9,104 @@ import {
 } from "../types/config.ts";
 import axios from "axios";
 import toast from "react-hot-toast";
+import {useForm} from "react-hook-form";
 
 export const ChangePassword = () => {
     const {t} = useTranslation();
 
-    const [isLoading, setIsLoading] = useState(false);
-
-
-    const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
-
     const {token} = useParams<string>();
 
-    const [error, setError] = useState('');
+    const {register, handleSubmit, formState: {errors}} = useForm();
+    const [formData, setFormData] = useState({password: '', confirmPassword: ''});
 
     const [isValid, setIsValid] = useState(false);
-    const [isSend, setIsSend] = useState(false);
 
 
     useEffect(() => {
         if (token != undefined) {
             setIsValid(isTokenValid(token));
         }
-
-
     }, [token]);
 
-    const handleChangePassword = async () => {
-        setIsLoading(true);
-        if (password !== confirmPassword) {
-            setError('Las contraseñas no coinciden');
-            setIsLoading(false);
-            return;
+
+    const onSubmit = async () => {
+        if(isValid){
+            const data: ResetPasswordData = {
+                password: formData.password,
+                token: token
+            }
+
+            await toast.promise(axios.request(apiResetPassword(data)), {
+                loading: t("loading"),
+                success: t("passwordChanged"),
+                error: t("error"),
+            });
+        }else{
+            toast.error(t("invalidToken"));
         }
 
-        await toast.promise(handleReset(), {
-            loading: t("loading"),
-            success: t("passwordChanged"),
-            error: t("error"),
-        });
 
+    };
 
-        setIsLoading(false);
-    }
-
-    const handleReset = async () => {
-
-        const data: ResetPasswordData = {
-            password: password,
-            token: token
-        }
-        await axios.request(apiResetPassword(data));
-
-    }
-
+    const handleInputChange = (e: { target: { name: string; value: string; }; }) => {
+        const {name, value} = e.target;
+        setFormData((prevData) => ({
+            ...prevData,
+            [name]: value,
+        }));
+    };
 
     return (
         <div className={styles.loginContainer}>
-            {error && <p>{error}</p>}
-            {!isValid && <p>{t("invalidToken")}</p>}
+            <h3>{t("changePassword")}</h3>
+            {/*{!isValid && <p>{t("invalidToken")}</p>}*/}
 
-            <div className={styles.loginForm}>
+            <form className={styles.loginForm} onSubmit={handleSubmit(onSubmit)}>
                 <label className={styles.loginLabel}>
                     <p>{t("password")}</p>
-                    <input className={styles.loginInput} onChange={(e) => setPassword(e.target.value)} type="text"/>
+                    <input
+                        className={styles.loginInput}
+                        {...register("password", {
+                            required: true,
+                            pattern: /(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/
+                        })}
+                        placeholder={t('password')}
+                        type="password"
+                        name="password"
+                        value={formData.password}
+                        onChange={handleInputChange}
+                        autoComplete={"current-password"}
+                    />
+                    {errors.password?.type === 'required' &&
+                        <span className={styles.errorMsg}>{t('passwordRequired')}</span>}
+
                 </label>
                 <label className={styles.loginLabel}>
                     <p>{t("repeatPassword")}</p>
-                    <input className={styles.loginInput} onChange={(e) => setConfirmPassword(e.target.value)}
-                           type="text"/>
+                    <input
+                        className={styles.loginInput}
+                        {...register("confirmPassword", {
+                            required: true,
+                            validate: value => value === formData.password
+                        })}
+                        placeholder={t('repeatPassword')}
+                        type="password"
+                        name="confirmPassword"
+                        value={formData.confirmPassword}
+                        onChange={handleInputChange}
+                        autoComplete={"current-password"}
+                    />
+                    {errors.confirmPassword?.type === 'required' &&
+                        <span className={styles.errorMsg}>{t('passwordRequired')}</span>}
+                    {errors.confirmPassword?.type === 'validate' &&
+                        <span className={styles.errorMsg}>{t('passwordsDoNotMatch')}</span>}
                 </label>
+
                 <div>
-                    <button disabled={isLoading || !isValid } onClick={handleChangePassword}
-                            className={styles.loginSubmit}>{t("changePassword")}</button>
+                    <button
+                        className={styles.loginSubmit}>{t("changePassword")}</button>
                 </div>
-            </div>
+            </form>
         </div>
 
 

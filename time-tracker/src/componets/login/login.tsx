@@ -27,8 +27,6 @@ export const Login = () => {
         }
     }, [token]);
 
-
-
     const onSubmit = async () => {
         setIsLoading(true);
 
@@ -55,6 +53,7 @@ export const Login = () => {
 
     return (
         <div className={styles.loginContainer}>
+            <h3>{t('logIn')}</h3>
             <form className={styles.loginForm} onSubmit={handleSubmit(onSubmit)}>
                 <label className={styles.loginLabel}>
                     <p>{t("email")}</p>
