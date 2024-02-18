@@ -5,6 +5,10 @@
   "clockIn": "Clock In",
   "clockOut": "Clock Out",
   "weekControl": "Week Control",
+  "enterMinutes": "Enter minutes",
+  "enterDescription": "Enter description",
+  "selectClient": "Select client",
+  "selectProject": "Select project",
   "changePassword": "Change Password",
   "repeatPassword": "Repeat Password",
   "invalidToken": "Invalid token",
@@ -17,7 +21,7 @@
   "passwordRequirement": "Min 8 characters, UpperCase, LowerCase, Number/SpecialChar",
   "forgotPassword": "Forgot Password",
   "dataLoaded": "Data loaded",
-
+  "save": "Save",
 
   "smallDateFormat": "MMMM dd"
 }

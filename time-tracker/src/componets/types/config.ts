@@ -121,7 +121,9 @@ export const apiInsertProjectHours = (data: ApiInsertProjectHoursData) => {
 };
 export type ApiInsertProjectHoursData = {
     projectId: number,
+    clientId: number,
     minutes: number,
+    description: string,
     date: Date
 };
 

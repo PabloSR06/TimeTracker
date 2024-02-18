@@ -1,15 +1,17 @@
-import {BaseSyntheticEvent, useEffect, useState} from "react";
-import {apiInsertProjectHours, ApiInsertProjectHoursData} from "../types/config";
-import "react-datepicker/dist/react-datepicker.css";
+import {useEffect, useState} from "react";
+import {ApiInsertProjectHoursData} from "../types/config";
 import {useSelector} from "react-redux";
 import {RootState} from "../slice/store";
 import DatePicker from "react-datepicker";
-import axios from "axios";
 import styles from './projectInput.module.css';
 import {useLocation} from "react-router-dom";
+import {useForm} from "react-hook-form";
+import {useTranslation} from "react-i18next";
+
 
 
 export const ProjectInput = () => {
+    const {t} = useTranslation();
 
     const clients = useSelector((state: RootState) => state.clients);
     const projects = useSelector((state: RootState) => state.projects);
@@ -18,111 +20,137 @@ export const ProjectInput = () => {
     const stateDate: Date = location.state.date ? location.state.date : undefined;
 
 
-    const [selectedDate, setSelectedDate] = useState(stateDate);
-    const [selectedClient, setSelectedClient] = useState(-1);
-    const [selectedProject, setSelectedProject] = useState(-1);
-    const [formMinutes, setFormMinutes] = useState(0);
-    const [formDescription, setFormDescription] = useState<string>("");
 
     const [filteredProjects, setFilteredProjects] = useState<ProjectModel[]>([]);
 
 
+    const {register, handleSubmit, formState: {errors}} = useForm();
+    const [formData, setFormData] = useState<ApiInsertProjectHoursData>({date: stateDate, clientId: -1, projectId: -1, minutes: 0, description: ""});
+
+
 
     useEffect(() => {
-        if (selectedClient !== -1) {
-            const filteredProjects = projects.filter(project => project.clientId === selectedClient);
+        if (formData?.clientId != -1) {
+            const filteredProjects = projects.filter(project => project.clientId == formData?.clientId);
             setFilteredProjects(filteredProjects);
         } else {
             setFilteredProjects([]);
         }
-    }, [selectedClient]);
+    }, [formData]);
 
 
-    const handleClientChange = (e: BaseSyntheticEvent) => {
-        setSelectedClient(parseInt(e.target.value));
-    };
-    const handleProjectChange = (e: BaseSyntheticEvent) => {
-        setSelectedProject(parseInt(e.target.value));
-    };
 
-    const handleMinutesChange = (e: BaseSyntheticEvent) => {
-        setFormMinutes(parseInt(e.target.value));
-    };
-    const handleDescriptionChange = (e: BaseSyntheticEvent) => {
-        setFormDescription(e.target.value);
-    };
-    // const handleDateChange = (date: Date) => {
-    //     setSelectedDate(date);
+    // const sendData = async () => {
+    //     const data: ApiInsertProjectHoursData = {
+    //         userId: 1,
+    //         projectId: selectedProject,
+    //         minutes: formMinutes,
+    //         date: selectedDate
+    //     };
+    //     try {
+    //         await axios.request(apiInsertProjectHours(data));
+    //     } catch (error) {
+    //         if (axios.isAxiosError(error)) {
+    //             console.log(error);
+    //         }
+    //     }
     // };
-
-    const sendData = async () => {
-        const data: ApiInsertProjectHoursData = {
-            userId: 1,
-            projectId: selectedProject,
-            minutes: formMinutes,
-            date: selectedDate
-        };
-        try {
-            await axios.request(apiInsertProjectHours(data));
-        } catch (error) {
-            if (axios.isAxiosError(error)) {
-                console.log(error);
-            }
-        }
-    };
 
 
         const handleSend = () => {
             // Here you can perform any action you want with the form data
-            console.log("Client:", selectedClient);
-            console.log("Project:", selectedProject);
-            console.log("Minutes:", formMinutes);
-            console.log("Description:", formDescription);
-            console.log("Date:", selectedDate);
+            console.log("Client:", formData?.clientId);
+            console.log("Project:", formData?.projectId);
+            console.log("Minutes:", formData?.minutes);
+            console.log("Description:", formData?.description);
+            console.log("Date:", formData?.date);
 
-            sendData().then(() => {
-                setSelectedClient(-1);
-                setSelectedProject(-1);
-                setFormMinutes(0);
-                setFormDescription("");
-                setSelectedDate(new Date());
-            });
+            // sendData().then(() => {
+            //     setSelectedClient(-1);
+            //     setSelectedProject(-1);
+            //     setFormMinutes(0);
+            //     setFormDescription("");
+            //     setSelectedDate(new Date());
+            // });
 
 
         }
 
+    const handleInputChange = (e: { target: { name: string; value: string; }; }) => {
+        const {name, value} = e.target;
+        setFormData((prevData) => ({
+            ...prevData,
+            [name]: value,
+        }));
+    };
+
 
     return (
-        <div className={styles.formContainer}>
+        <form className={styles.formContainer} onSubmit={handleSubmit(handleSend)}>
             <div>
-                <select className={styles.formInput} onChange={handleClientChange}>
-                    <option value="-1">Select a Client</option>
+                <select
+                    {...register("clientId", {required: true, min: 1})}
+                    className={styles.formInput} onChange={handleInputChange}>
+                    <option value="-1">{t('selectClient')}</option>
                     {clients.map(client => <option key={client.id} value={client.id}>{client.name}</option>)}
                 </select>
+                {errors.clientId?.type === 'required' && <span className={styles.errorMsg}>{t('clientRequired')}</span>}
             </div>
             <div>
-                <select className={styles.formInput} onChange={handleProjectChange}>
-                    <option value="-1">Select a Project</option>
-                    {filteredProjects.map(project => <option key={project.id} value={project.id}>{project.name}</option>)}
-                </select>
-            </div>
-            <div>
-                <input className={`${styles.formInput} ${styles.formNumber}`}  type="number" placeholder="Enter a Number" onChange={handleMinutesChange}/>
-            </div>
-            <div>
-                <textarea className={`${styles.formInput} ${styles.formArea}`}  placeholder="Enter your message" onClick={handleDescriptionChange}></textarea>
-            </div>
-            <div>
-                <DatePicker
+                <select
+                    {...register("projectId", {required: true, min: 1})}
                     className={styles.formInput}
-                    showIcon
-                    selected={selectedDate}
-                    onChange={(date: Date) => {
-                        setSelectedDate(date);
-                    }}
-                />
+                    onChange={handleInputChange}>
+                    <option value="-1">{t('selectProject')}</option>
+                    {filteredProjects.map(project => <option key={project.id}
+                                                             value={project.id}>{project.name}</option>)}
+                </select>
+                {errors.projectId?.type === 'required' &&
+                    <span className={styles.errorMsg}>{t('projectRequired')}</span>}
+
             </div>
-            <button className={styles.formButton} onClick={handleSend}>Send</button>
-        </div>
+            <div className={styles.sideBySideContainer}>
+
+                    <DatePicker
+                        className={styles.formInput}
+                        showIcon
+                        {...register("date")}
+                        selected={stateDate}
+                        onChange={(date: Date) => {
+                            setFormData((prevData) => ({
+                                ...prevData,
+                                date: date,
+                            }));
+                        }}
+                    />
+                    {errors.date?.type === 'required' &&
+                        <span className={styles.errorMsg}>{t('dateRequired')}</span>}
+
+
+                    <input
+                        className={`${styles.formInput} ${styles.formNumber}`}
+                        type="number"
+                        {...register("minutes", {required: true, max: 1000, min: 1})}
+                        placeholder={t('enterMinutes')}
+                        onChange={handleInputChange}/>
+                    {errors.minutes?.type === 'required' &&
+                        <span className={styles.errorMsg}>{t('minutesRequired')}</span>}
+
+
+            </div>
+
+            <div>
+                <textarea
+                    className={`${styles.formInput} ${styles.formArea}`}
+                    {...register("description", {required: true})}
+                    placeholder={t('enterDescription')}
+                    onChange={handleInputChange}></textarea>
+                {errors.description?.type === 'required' &&
+                    <span className={styles.errorMsg}>{t('descriptionRequired')}</span>}
+
+            </div>
+
+            <button className={styles.formButton}>{t('save')}</button>
+        </form>
     );
 };

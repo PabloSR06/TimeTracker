@@ -16,6 +16,7 @@
 
 .formNumber {
     box-sizing: border-box;
+    margin-left: 10px;
 }
 
 .formNumber::-webkit-outer-spin-button,
@@ -35,6 +36,7 @@
     box-sizing: border-box;
     resize: none;
 }
+
 .formButton {
     width: 100%;
     padding: 10px;
@@ -45,9 +47,16 @@
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
+
 .formButton:hover {
     background-color: #0056b3;
 }
+
+.sideBySideContainer {
+    display: flex;
+    justify-content: space-between;
+}
+
 @media only screen and (max-width: 600px) {
     .formContainer {
         width: 90%;
@@ -59,3 +68,4 @@
         font-size: 14px;
     }
 }
+
