@@ -1,0 +1,19 @@
+.colorBar{
+    margin-left: 5px;
+    margin-right: 5px;
+    border-radius: 20px;
+    min-width: 3px;
+}
+.colorBarLabel{
+    margin-top: 15px;
+    margin-bottom: 15px ;
+}
+.colorRed{
+    background-color: red;
+}
+.colorGreen{
+    background-color: #00d500;
+}
+.colorOrange{
+    background-color: orange;
+}

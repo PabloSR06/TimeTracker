@@ -67,11 +67,9 @@ export const WeekBlock: React.FC<WeekBlockProps> = ({date}) => {
                 <ArrowLeft className={styles.weekButton} onClick={goToPreviousWeek} size={20}/>
                 <div className={styles.weekContainer}>
                     {weekToShow.map((day, index) => (
-
                         <div key={index} className={styles.dayContainer} onClick={() => goToDay(day.id)}>
                             {new Date(day.date).getUTCDate()}
                         </div>
-
 
                     ))}
                 </div>

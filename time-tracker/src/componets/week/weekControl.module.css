@@ -1,0 +1,8 @@
+.weekControlContainer{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.controlButton{
+    margin: 5px 10px;
+}

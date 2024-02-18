@@ -3,3 +3,13 @@
         width: 50%;
     }
 }
+.blockContainer {
+    display: flex;
+    border: solid;
+    border-radius: 10px;
+    margin: 10px;
+    min-height: 30px;
+}
+p{
+    margin: 0;
+}

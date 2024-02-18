@@ -6,6 +6,8 @@ import {ApiInsertDayHoursData} from "../types/config";
 import {CalendarCheck, CalendarX} from "react-bootstrap-icons";
 import {useDispatch} from "react-redux";
 import {useNavigate} from "react-router-dom";
+import {getTime} from "../tools.ts";
+import {ColorBar} from "./colorBar.tsx";
 
 interface DayBlockProps {
     day: CustomDay;
@@ -14,7 +16,6 @@ interface DayBlockProps {
 }
 
 export const DayBlock: React.FC<DayBlockProps> = ({day}) => {
-
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -27,6 +28,8 @@ export const DayBlock: React.FC<DayBlockProps> = ({day}) => {
 
     const [fromDate, setFromDate] = useState<Date>();
     const [toDate, setToDate] = useState<Date>();
+
+    const [state, setState] = useState<number>(0);
 
 
     function ProjectCount() {
@@ -52,16 +55,17 @@ export const DayBlock: React.FC<DayBlockProps> = ({day}) => {
                 toDate = combineDate(date)
                 setDayStarted(true);
                 setFromDate(date);
+                setState(1);
             } else {
                 toDate = date;
                 setDayFinished(true);
                 setToDate(date);
+                setState(2);
             }
 
         });
         setDayCount(differenceInHours(toDate, fromDate));
     }
-
 
 
     const startDay = async () => {
@@ -90,17 +94,22 @@ export const DayBlock: React.FC<DayBlockProps> = ({day}) => {
     }
 
     return (
-        <div className={styles.dayContainer}  onClick={test}>
-            <div className={styles.dateContainer}>
-                <div className={styles.monthContainer}>
-                    <p>{format(day.date, 'd')}</p>
-                    <p>/</p>
-                    <p>{format(day.date, 'MM')}</p>
-                </div>
-                <div className={styles.yearContainer}>
-                    <p>{format(day.date, 'yyyy')}</p>
+        <div className={`${styles.blockContainer} ${styles.dayContainer}`} onClick={test}>
+            <div className={styles.leftContainer}>
+                <ColorBar state={state}/>
+                <div className={styles.dateContainer}>
+                    <div className={styles.monthContainer}>
+                        <p>{format(day.date, 'd')}</p>
+                        <p>/</p>
+                        <p>{format(day.date, 'MM')}</p>
+                    </div>
+                    <div className={styles.yearContainer}>
+                        <p>{format(day.date, 'yyyy')}</p>
+                    </div>
+
                 </div>
             </div>
+
             <div className={styles.countContainer}>
                 <div className={styles.dayCountContainer}>
                     <p>Work day</p>
@@ -116,9 +125,13 @@ export const DayBlock: React.FC<DayBlockProps> = ({day}) => {
 
 
                     {!dayStarted ? (<button className={styles.startButton} onClick={startDay}>Open</button>) :
-                        <p><span><CalendarCheck className={styles.calendarIcon}/></span>{fromDate?.getHours()}:{fromDate?.getMinutes()}</p>}
-                    {dayStarted && !dayFinished ? (<button className={styles.startButton} onClick={endDay}>Close</button>) :
-                        dayFinished ? <p><span><CalendarX className={styles.calendarIcon}/></span>{toDate?.getHours()}:{toDate?.getMinutes()}</p> : null}
+                        <p><span><CalendarCheck
+                            className={styles.calendarIcon}/></span>{getTime(fromDate)}</p>}
+                    {dayStarted && !dayFinished ? (
+                            <button className={styles.startButton} onClick={endDay}>Close</button>) :
+                        dayFinished ? <p><span><CalendarX
+                            className={styles.calendarIcon}/></span>{getTime(toDate)}
+                        </p> : null}
                 </div>
             </div>
         </div>

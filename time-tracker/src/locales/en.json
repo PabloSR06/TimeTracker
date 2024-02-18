@@ -4,6 +4,7 @@
   "logIn": "LogIn",
   "clockIn": "Clock In",
   "clockOut": "Clock Out",
+  "weekControl": "Week Control",
   "changePassword": "Change Password",
   "repeatPassword": "Repeat Password",
   "invalidToken": "Invalid token",
