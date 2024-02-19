@@ -1,6 +1,7 @@
 ﻿using MySqlConnector;
 using timeTrakerApi.Models.Project;
 using timeTrakerApi.Data.Interfaces;
+using System.Data;
 
 namespace timeTrakerApi.Data.Repositories
 {
@@ -103,14 +104,14 @@ namespace timeTrakerApi.Data.Repositories
         {
             ClientModel client = new ClientModel();
 
-            if (!reader.IsDBNull(reader.GetOrdinal(nameof(ClientModel.Id))))
-                client.Id = reader.GetInt32(reader.GetOrdinal("id"));
-            if (!reader.IsDBNull(reader.GetOrdinal(nameof(ClientModel.Name))))
-                client.Name = reader.GetString(reader.GetOrdinal("name"));
-            if (!reader.IsDBNull(reader.GetOrdinal(nameof(ClientModel.CreateOnDate))))
-                client.CreateOnDate = reader.GetDateTime(reader.GetOrdinal("createondate"));
-            if (!reader.IsDBNull(reader.GetOrdinal(nameof(ClientModel.LastModifiedOnDate))))
-                client.LastModifiedOnDate = reader.GetDateTime(reader.GetOrdinal("lastmodifiedondate"));
+            if (!reader.IsDBNull(nameof(ClientModel.Id)))
+                client.Id = reader.GetInt32(nameof(ClientModel.Id));
+            if (!reader.IsDBNull(nameof(ClientModel.Name)))
+                client.Name = reader.GetString(nameof(ClientModel.Name));
+            if (!reader.IsDBNull(nameof(ClientModel.CreateOnDate)))
+                client.CreateOnDate = reader.GetDateTime(nameof(ClientModel.CreateOnDate));
+            if (!reader.IsDBNull(nameof(ClientModel.LastModifiedOnDate)))
+                client.LastModifiedOnDate = reader.GetDateTime(nameof(ClientModel.LastModifiedOnDate));
 
 
             return client;

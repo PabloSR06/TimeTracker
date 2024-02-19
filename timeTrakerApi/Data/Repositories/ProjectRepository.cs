@@ -1,6 +1,7 @@
 ﻿using MySqlConnector;
 using timeTrakerApi.Models.Project;
 using timeTrakerApi.Data.Interfaces;
+using System.Data;
 
 namespace timeTrakerApi.Data.Repositories
 {
@@ -39,7 +40,7 @@ namespace timeTrakerApi.Data.Repositories
             return projects;
         }
 
-        public ProjectModel GetById(string id)
+        public ProjectModel GetById(int id)
         {
             ProjectModel project = new ProjectModel();
             using (MySqlConnection connection = _database.CreateConnection())
@@ -104,18 +105,18 @@ namespace timeTrakerApi.Data.Repositories
         {
             ProjectModel project = new ProjectModel();
 
-            if (!reader.IsDBNull(reader.GetOrdinal(nameof(ProjectModel.Id))))
-                project.Id = reader.GetInt32(reader.GetOrdinal("id"));
-            if (!reader.IsDBNull(reader.GetOrdinal(nameof(ProjectModel.ClientId))))
-                project.ClientId = reader.GetInt32(reader.GetOrdinal("ClientID"));
-            if (!reader.IsDBNull(reader.GetOrdinal(nameof(ProjectModel.Name))))
-                project.Name = reader.GetString(reader.GetOrdinal("name"));
-            if (!reader.IsDBNull(reader.GetOrdinal(nameof(ProjectModel.Description))))
-                project.Description = reader.GetString(reader.GetOrdinal("description"));
-            if (!reader.IsDBNull(reader.GetOrdinal(nameof(ProjectModel.CreateOnDate))))
-                project.CreateOnDate = reader.GetDateTime(reader.GetOrdinal("createondate"));
-            if (!reader.IsDBNull(reader.GetOrdinal(nameof(ProjectModel.LastModifiedOnDate))))
-                project.LastModifiedOnDate = reader.GetDateTime(reader.GetOrdinal("lastmodifiedondate"));
+            if (!reader.IsDBNull(nameof(ProjectModel.Id)))
+                project.Id = reader.GetInt32(nameof(ProjectModel.Id));
+            if (!reader.IsDBNull(nameof(ProjectModel.ClientId)))
+                project.ClientId = reader.GetInt32(nameof(ProjectModel.ClientId));
+            if (!reader.IsDBNull(nameof(ProjectModel.Name)))
+                project.Name = reader.GetString(nameof(ProjectModel.Name));
+            if (!reader.IsDBNull(nameof(ProjectModel.Description)))
+                project.Description = reader.GetString(nameof(ProjectModel.Description));
+            if (!reader.IsDBNull(nameof(ProjectModel.CreateOnDate)))
+                project.CreateOnDate = reader.GetDateTime(nameof(ProjectModel.CreateOnDate));
+            if (!reader.IsDBNull(nameof(ProjectModel.LastModifiedOnDate)))
+                project.LastModifiedOnDate = reader.GetDateTime(nameof(ProjectModel.LastModifiedOnDate));
 
             return project;
         }

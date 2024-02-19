@@ -184,12 +184,12 @@ namespace timeTrakerApi.Data.Repositories
         {
             UserModel user = new UserModel();
 
-            if (!reader.IsDBNull(reader.GetOrdinal(nameof(UserModel.Id))))
-                user.Id = reader.GetInt32(reader.GetOrdinal("id"));
-            if (!reader.IsDBNull(reader.GetOrdinal(nameof(UserModel.Name))))
-                user.Name = reader.GetString(reader.GetOrdinal("name"));
-            if (!reader.IsDBNull(reader.GetOrdinal(nameof(UserModel.Email))))
-                user.Email = reader.GetString(reader.GetOrdinal("email"));
+            if (!reader.IsDBNull(nameof(UserModel.Id)))
+                user.Id = reader.GetInt32(nameof(UserModel.Id));
+            if (!reader.IsDBNull(nameof(UserModel.Name)))
+                user.Name = reader.GetString(nameof(UserModel.Name));
+            if (!reader.IsDBNull(nameof(UserModel.Email)))
+                user.Email = reader.GetString(nameof(UserModel.Email));
 
             return user;
 
