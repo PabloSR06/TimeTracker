@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using timeTrakerApi.Data.Interface;
+using timeTrakerApi.Data.Interfaces;
 using timeTrakerApi.Models.Project;
 
 namespace timeTrakerApi.Controllers

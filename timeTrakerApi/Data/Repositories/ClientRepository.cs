@@ -1,8 +1,8 @@
-﻿using timeTrakerApi.Data.Interface;
-using MySqlConnector;
+﻿using MySqlConnector;
 using timeTrakerApi.Models.Project;
+using timeTrakerApi.Data.Interfaces;
 
-namespace timeTrakerApi.Data
+namespace timeTrakerApi.Data.Repositories
 {
     public class ClientRepository : IClientRepository
     {
@@ -29,7 +29,7 @@ namespace timeTrakerApi.Data
                         while (reader.Read())
                         {
                             clients.Add(ReadClientFromReader(reader));
-                           
+
                         }
                         reader.Close();
                     }
@@ -103,18 +103,18 @@ namespace timeTrakerApi.Data
         {
             ClientModel client = new ClientModel();
 
-                if (!reader.IsDBNull(reader.GetOrdinal(nameof(ClientModel.Id))))
-                    client.Id = reader.GetInt32(reader.GetOrdinal("id"));
-                if (!reader.IsDBNull(reader.GetOrdinal(nameof(ClientModel.Name))))
-                    client.Name = reader.GetString(reader.GetOrdinal("name"));
-                if (!reader.IsDBNull(reader.GetOrdinal(nameof(ClientModel.CreateOnDate))))
-                    client.CreateOnDate = reader.GetDateTime(reader.GetOrdinal("createondate"));
-                if (!reader.IsDBNull(reader.GetOrdinal(nameof(ClientModel.LastModifiedOnDate))))
-                    client.LastModifiedOnDate = reader.GetDateTime(reader.GetOrdinal("lastmodifiedondate"));
+            if (!reader.IsDBNull(reader.GetOrdinal(nameof(ClientModel.Id))))
+                client.Id = reader.GetInt32(reader.GetOrdinal("id"));
+            if (!reader.IsDBNull(reader.GetOrdinal(nameof(ClientModel.Name))))
+                client.Name = reader.GetString(reader.GetOrdinal("name"));
+            if (!reader.IsDBNull(reader.GetOrdinal(nameof(ClientModel.CreateOnDate))))
+                client.CreateOnDate = reader.GetDateTime(reader.GetOrdinal("createondate"));
+            if (!reader.IsDBNull(reader.GetOrdinal(nameof(ClientModel.LastModifiedOnDate))))
+                client.LastModifiedOnDate = reader.GetDateTime(reader.GetOrdinal("lastmodifiedondate"));
 
 
-                return client;
-            
+            return client;
+
         }
     }
 }

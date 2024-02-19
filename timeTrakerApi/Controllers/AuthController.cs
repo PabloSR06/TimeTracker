@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using timeTrakerApi.Data.Interface;
+using timeTrakerApi.Data.Interfaces;
 using timeTrakerApi.Models.Project;
 using timeTrakerApi.Models.User;
 using timeTrakerApi.Services.Interfaces;

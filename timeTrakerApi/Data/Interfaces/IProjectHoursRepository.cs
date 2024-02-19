@@ -1,6 +1,6 @@
 ﻿using timeTrakerApi.Models.Project;
 
-namespace timeTrakerApi.Data.Interface
+namespace timeTrakerApi.Data.Interfaces
 {
     public interface IProjectHoursRepository
     {

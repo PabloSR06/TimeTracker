@@ -1,7 +1,7 @@
 ﻿using timeTrakerApi.Models.Project;
 using timeTrakerApi.Models.Time;
 
-namespace timeTrakerApi.Data.Interface
+namespace timeTrakerApi.Data.Interfaces
 {
     public interface ITimeRepository
     {

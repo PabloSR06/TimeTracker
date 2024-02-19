@@ -1,11 +1,11 @@
-﻿using timeTrakerApi.Data.Interface;
-using MySqlConnector;
+﻿using MySqlConnector;
 using timeTrakerApi.Models.Project;
 using System.Data;
 using System;
 using timeTrakerApi.Models.Time;
+using timeTrakerApi.Data.Interfaces;
 
-namespace timeTrakerApi.Data
+namespace timeTrakerApi.Data.Repositories
 {
     public class TimeRepository : ITimeRepository
     {
@@ -16,7 +16,7 @@ namespace timeTrakerApi.Data
             _database = database;
         }
 
-        
+
         public List<DayHoursModel> GetDayHoursByUserId(string userId)
         {
             List<DayHoursModel> dayHours = new List<DayHoursModel>();

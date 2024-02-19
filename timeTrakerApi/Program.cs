@@ -1,6 +1,4 @@
 using MySqlConnector;
-using timeTrakerApi.Data;
-using timeTrakerApi.Data.Interface;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -8,6 +6,8 @@ using System.Text;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using timeTrakerApi.Services;
 using timeTrakerApi.Services.Interfaces;
+using timeTrakerApi.Data.Repositories;
+using timeTrakerApi.Data.Interfaces;
 
 namespace timeTrakerApi
 {

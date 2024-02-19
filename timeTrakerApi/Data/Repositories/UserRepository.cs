@@ -1,12 +1,12 @@
-﻿using timeTrakerApi.Data.Interface;
-using MySqlConnector;
+﻿using MySqlConnector;
 using timeTrakerApi.Models.Project;
 using System.IdentityModel.Tokens.Jwt;
 using timeTrakerApi.Services.Interfaces;
 using System.Data;
 using timeTrakerApi.Models.User;
+using timeTrakerApi.Data.Interfaces;
 
-namespace timeTrakerApi.Data
+namespace timeTrakerApi.Data.Repositories
 {
     public class UserRepository : IUserRepository
     {

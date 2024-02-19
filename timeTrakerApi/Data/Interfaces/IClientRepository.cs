@@ -1,8 +1,6 @@
-﻿
+﻿using timeTrakerApi.Models.Project;
 
-using timeTrakerApi.Models.Project;
-
-namespace timeTrakerApi.Data.Interface
+namespace timeTrakerApi.Data.Interfaces
 {
     public interface IClientRepository
     {
