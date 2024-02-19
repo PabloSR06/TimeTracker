@@ -1,6 +1,10 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using timeTrakerApi.Data.Interfaces;
+using timeTrakerApi.Data.Repositories;
 using timeTrakerApi.Models.Project;
+using timeTrakerApi.Models.User;
 
 namespace timeTrakerApi.Controllers
 {
@@ -18,21 +22,44 @@ namespace timeTrakerApi.Controllers
             _projectRepository = projectRepository;
         }
 
-        [HttpGet("GetAllProjects")]
-        public List<ProjectModel> GetAllProjects()
+        [HttpGet("GetProjects")]
+        [Authorize]
+        public ActionResult<List<ProjectModel>> GetProjects()
         {
-            return _projectRepository.Get();
+            List<ProjectModel> projects = _projectRepository.Get();
+            if (projects == null || projects.Count == 0)
+            {
+                _logger.LogError("GetProjects: No projects found");
+                return NotFound("No projects found");
+            }
+            _logger.LogTrace("GetProjects: {0} projects found", projects.Count);
+            return Ok(projects);
         }
-        [HttpGet("GetProjectById")]
-        public ProjectModel GetProjectById(string id)
+        [HttpGet("{projectId}")]
+        public ActionResult<ProjectModel> GetProjectById(int id)
         {
-            return _projectRepository.GetById(id);
+
+            ProjectModel? project = _projectRepository.GetById(id);
+            if (project == null)
+            {
+                _logger.LogError("GetProjectById: Project Not Found for Id: {projectId}", id);
+                return NotFound("User Not Found");
+            }
+            _logger.LogTrace("GetUserByToken for Id: {id}", id);
+            return project;
         }
 
-        [HttpPost("InsertProject")]
-        public bool InsertProject(ProjectModel project)
+        [HttpPost("CreateProject")]
+        public IActionResult CreateProject([FromBody] ProjectModel project)
         {
-            return _projectRepository.Insert(project);
+            if (project == null)
+            {
+                _logger.LogError("CreateProject: project is empty");
+                return BadRequest("project cannot be null");
+            }
+            bool result = _projectRepository.Insert(project);
+            return Ok(result);
         }
+        
     }
 }

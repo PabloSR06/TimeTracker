@@ -22,7 +22,7 @@ namespace timeTrakerApi.Controllers
         [Authorize]
         public ActionResult<List<ClientModel>> GetClients()
         {
-            var clients = _clientRepository.Get();
+            List<ClientModel> clients = _clientRepository.Get();
             if (clients == null || clients.Count == 0)
             {
                 _logger.LogError("GetClients: No clients found");
