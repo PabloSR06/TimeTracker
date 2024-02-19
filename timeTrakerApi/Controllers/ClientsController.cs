@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using timeTrakerApi.Data.Interfaces;
 using timeTrakerApi.Models.Project;
@@ -17,11 +18,20 @@ namespace timeTrakerApi.Controllers
             _clientRepository = clientRepository;
         }
 
-        [HttpGet("GetAllClients")]
-        public List<ClientModel> GetAllClients()
+        [HttpGet("GetClients")]
+        [Authorize]
+        public ActionResult<List<ClientModel>> GetClients()
         {
-            return _clientRepository.Get();
+            var clients = _clientRepository.Get();
+            if (clients == null || clients.Count == 0)
+            {
+                _logger.LogError("GetClients: No clients found");
+                return NotFound("No clients found");
+            }
+            _logger.LogTrace("GetClients: {0} clients found", clients.Count);
+            return Ok(clients);
         }
+
 
     }
 }
