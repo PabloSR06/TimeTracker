@@ -112,7 +112,8 @@ export const apiInsertProjectHours = (data: ApiInsertProjectHoursData) => {
         data: {
             projectId: data.projectId,
             minutes: data.minutes,
-            date: data.date
+            date: new Date(data.date),
+            description: data.description
         },
         headers: {
             Authorization: `Bearer ${getTokenFromLocalStorage()}`
@@ -122,7 +123,7 @@ export const apiInsertProjectHours = (data: ApiInsertProjectHoursData) => {
 export type ApiInsertProjectHoursData = {
     projectId: number,
     clientId: number,
-    minutes: number,
+    minutes: string,
     description: string,
     date: Date
 };

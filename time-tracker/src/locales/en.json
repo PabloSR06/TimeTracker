@@ -17,11 +17,19 @@
   "error": "Error, please try again",
   "emailRequired": "Email is required",
   "passwordRequired": "Password is required",
+  "projectRequired": "Project is required",
+  "clientRequired": "Client is required",
+  "minutesRequired": "Minutes is required",
   "passwordsDoNotMatch": "Passwords do not match",
   "passwordRequirement": "Min 8 characters, UpperCase, LowerCase, Number/SpecialChar",
   "forgotPassword": "Forgot Password",
   "dataLoaded": "Data loaded",
   "save": "Save",
+  "dataSaved": "Data saved",
+  "logedIn": "Loged in",
+  "loadingLogIn": "LogIn...",
+  "cancel": "Cancel",
+  "descriptionRequired": "Description is required",
 
   "smallDateFormat": "MMMM dd"
 }

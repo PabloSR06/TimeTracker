@@ -18,6 +18,34 @@
     box-sizing: border-box;
     margin-left: 10px;
 }
+.buttonContainer{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.saveButton {
+    width: 80%;
+    background-color: #007bff;
+}
+.cancelButton {
+    width: 20%;
+    margin-right: 10px;
+    background-color: #b2b2b2;
+}
+.saveButton:hover {
+    background-color: #0056b3;
+}
+.cancelButton:hover {
+    background-color: #616161;;
+}
+.errorMsg {
+    float: right;
+    color: red;
+    font-size: 13px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+}
 
 .formNumber::-webkit-outer-spin-button,
 .formNumber::-webkit-inner-spin-button {
@@ -38,9 +66,8 @@
 }
 
 .formButton {
-    width: 100%;
     padding: 10px;
-    background-color: #007bff;
+
     color: #fff;
     border: none;
     border-radius: 5px;
@@ -48,9 +75,7 @@
     transition: background-color 0.3s ease;
 }
 
-.formButton:hover {
-    background-color: #0056b3;
-}
+
 
 .sideBySideContainer {
     display: flex;

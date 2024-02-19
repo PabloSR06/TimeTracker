@@ -7,6 +7,7 @@ import {RootState} from "../slice/store.tsx";
 import styles from './login.module.css';
 import {useTranslation} from "react-i18next";
 import {useForm} from "react-hook-form";
+import toast from "react-hot-toast";
 
 export const Login = () => {
     const {t} = useTranslation();
@@ -30,17 +31,16 @@ export const Login = () => {
     const onSubmit = async () => {
         setIsLoading(true);
 
-        await logIn(dispatch, formData).then(() => {
-            if (token) {
-                formData.email = '';
-                formData.password = '';
-
-                navigate('/', {replace: true, state: {isLoggedIn: true}});
-            } else {
-                console.log('No token');
-            }
+        toast.promise(logIn(dispatch, formData).then(() => {
+            setFormData({email: '', password: ''})
             setIsLoading(false);
-        });
+        }), {
+            loading: t("loadingLogin"),
+            success: t("LogedIn"),
+            error: t("error"),
+        })
+
+
     };
 
     const handleInputChange = (e: { target: { name: string; value: string; }; }) => {

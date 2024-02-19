@@ -1,9 +1,12 @@
-﻿namespace timeTrakerApi.Models.Time
+﻿using System.Globalization;
+
+namespace timeTrakerApi.Models.Time
 {
     public class ProjectTimeInputModel
     {
-        public int ProjectId { get; set; }
-        public int Minutes { get; set; }
+        public string ProjectId { get; set; }
+        public string Minutes { get; set; }
+        public string Description { get; set; }
         public DateTime Date { get; set; }
 
     }
