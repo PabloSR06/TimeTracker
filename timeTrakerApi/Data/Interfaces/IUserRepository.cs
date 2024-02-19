@@ -5,7 +5,7 @@ namespace timeTrakerApi.Data.Interfaces
 {
     public interface IUserRepository
     {
-        UserModel GetById(string id);
+        BasicUserModel? GetById(int id);
         bool Insert(UserModel project);
         bool Delete(string id);
         bool ForgotPassword(string email);

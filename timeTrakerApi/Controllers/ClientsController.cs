@@ -6,12 +6,12 @@ namespace timeTrakerApi.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class ClientController : ControllerBase
+    public class ClientsController : ControllerBase
     {
-        private readonly ILogger<ClientController> _logger;
+        private readonly ILogger<ClientsController> _logger;
         private readonly IClientRepository _clientRepository;
 
-        public ClientController(ILogger<ClientController> logger, IClientRepository clientRepository)
+        public ClientsController(ILogger<ClientsController> logger, IClientRepository clientRepository)
         {
             _logger = logger;
             _clientRepository = clientRepository;
@@ -22,6 +22,6 @@ namespace timeTrakerApi.Controllers
         {
             return _clientRepository.Get();
         }
-        
+
     }
 }

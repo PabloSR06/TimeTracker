@@ -22,35 +22,11 @@ namespace timeTrakerApi.Data.Repositories
             _tokenService = tokenService;
         }
 
-        public List<UserModel> Get()
+        
+
+        public BasicUserModel? GetById(int id)
         {
-
-            List<UserModel> users = new List<UserModel>();
-            using (MySqlConnection connection = _database.CreateConnection())
-            {
-                connection.Open();
-
-                string query = "SELECT * FROM " + Constants.Tables.Users;
-                using (MySqlCommand command = new MySqlCommand(query, connection))
-                {
-                    using (MySqlDataReader reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            users.Add(ReadUserFromReader(reader));
-
-                        }
-                        reader.Close();
-                    }
-                    connection.Dispose();
-                }
-            }
-            return users;
-        }
-
-        public UserModel GetById(string id)
-        {
-            UserModel user = new UserModel();
+            BasicUserModel? user = default;
 
             using (MySqlConnection connection = _database.CreateConnection())
             {
@@ -64,7 +40,7 @@ namespace timeTrakerApi.Data.Repositories
                     {
                         if (reader.Read())
                         {
-                            user = ReadUserFromReader(reader);
+                            user = ReadBasicUserFromReader(reader);
                         }
                         reader.Close();
                     }
@@ -141,14 +117,14 @@ namespace timeTrakerApi.Data.Repositories
             }
         }
 
-        public UserModel? GetUserWithEmail(string email)
+        public BasicUserModel? GetUserWithEmail(string email)
         {
-            UserModel? user = default;
+            BasicUserModel? user = default;
 
             using (MySqlConnection connection = _database.CreateConnection())
             {
                 connection.Open();
-                string query = "SELECT * FROM " + Constants.Tables.Users + " WHERE Email = @Email";
+                string query = "SELECT name, email FROM " + Constants.Tables.Users + " WHERE Email = @Email";
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@Email", email);
@@ -157,7 +133,7 @@ namespace timeTrakerApi.Data.Repositories
                     {
                         if (reader.Read())
                         {
-                            user = ReadUserFromReader(reader);
+                            user = ReadBasicUserFromReader(reader);
                         }
                         reader.Close();
                     }
@@ -169,7 +145,7 @@ namespace timeTrakerApi.Data.Repositories
         public bool ForgotPassword(string email)
         {
 
-            UserModel? userProfile = GetUserWithEmail(email);
+            BasicUserModel? userProfile = GetUserWithEmail(email);
 
             if (userProfile == null)
                 return false;
@@ -206,7 +182,6 @@ namespace timeTrakerApi.Data.Repositories
 
         private UserModel ReadUserFromReader(MySqlDataReader reader)
         {
-
             UserModel user = new UserModel();
 
             if (!reader.IsDBNull(reader.GetOrdinal(nameof(UserModel.Id))))
@@ -219,9 +194,21 @@ namespace timeTrakerApi.Data.Repositories
             return user;
 
         }
+
+        private BasicUserModel ReadBasicUserFromReader(MySqlDataReader reader)
+        {
+            BasicUserModel user = new BasicUserModel();
+
+            if (!reader.IsDBNull(nameof(BasicUserModel.Name)))
+                user.Name = reader.GetString(nameof(BasicUserModel.Name));
+            if (!reader.IsDBNull(nameof(BasicUserModel.Email)))
+                user.Email = reader.GetString(nameof(BasicUserModel.Email));
+
+            return user;
+
+        }
         private UserProfileModel ReadProfileFromReader(MySqlDataReader reader)
         {
-
             UserProfileModel profile = new UserProfileModel();
 
             if (!reader.IsDBNull(reader.GetOrdinal(nameof(UserProfileModel.Id))))

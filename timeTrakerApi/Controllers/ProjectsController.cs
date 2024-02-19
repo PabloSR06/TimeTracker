@@ -4,14 +4,15 @@ using timeTrakerApi.Models.Project;
 
 namespace timeTrakerApi.Controllers
 {
+    
     [ApiController]
     [Route("[controller]")]
-    public class ProjectController : ControllerBase
+    public class ProjectsController : ControllerBase
     {
-        private readonly ILogger<ProjectController> _logger;
+        private readonly ILogger<ProjectsController> _logger;
         private readonly IProjectRepository _projectRepository;
 
-        public ProjectController(ILogger<ProjectController> logger, IProjectRepository projectRepository)
+        public ProjectsController(ILogger<ProjectsController> logger, IProjectRepository projectRepository)
         {
             _logger = logger;
             _projectRepository = projectRepository;
