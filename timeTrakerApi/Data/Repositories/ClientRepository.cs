@@ -1,7 +1,9 @@
 ﻿using MySqlConnector;
-using timeTrakerApi.Models.Project;
 using timeTrakerApi.Data.Interfaces;
 using System.Data;
+using timeTrakerApi.Models.Client;
+using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
 
 namespace timeTrakerApi.Data.Repositories
 {
@@ -15,9 +17,9 @@ namespace timeTrakerApi.Data.Repositories
             _database = database;
         }
 
-        public List<ClientModel> Get()
+        public List<BasicClientModel> Get()
         {
-            List<ClientModel> clients = new List<ClientModel>();
+            List<BasicClientModel> clients = new List<BasicClientModel>();
             using (MySqlConnection connection = _database.CreateConnection())
             {
                 connection.Open();
@@ -29,7 +31,7 @@ namespace timeTrakerApi.Data.Repositories
                     {
                         while (reader.Read())
                         {
-                            clients.Add(ReadClientFromReader(reader));
+                            clients.Add(ReadBasicClientFromReader(reader));
 
                         }
                         reader.Close();
@@ -40,9 +42,9 @@ namespace timeTrakerApi.Data.Repositories
             return clients;
         }
 
-        public ClientModel GetById(string id)
+        public BasicClientModel? GetById(int id)
         {
-            ClientModel client = new ClientModel();
+            BasicClientModel? client = default;
             using (MySqlConnection connection = _database.CreateConnection())
             {
                 connection.Open();
@@ -55,7 +57,7 @@ namespace timeTrakerApi.Data.Repositories
                     {
                         if (reader.Read())
                         {
-                            client = ReadClientFromReader(reader);
+                            client = ReadBasicClientFromReader(reader);
                         }
                         reader.Close();
                     }
@@ -64,7 +66,7 @@ namespace timeTrakerApi.Data.Repositories
             }
             return client;
         }
-        public bool Insert(ClientModel client)
+        public bool Insert(BasicClientModel client)
         {
             using (MySqlConnection connection = _database.CreateConnection())
             {
@@ -82,17 +84,36 @@ namespace timeTrakerApi.Data.Repositories
                 }
             }
         }
-        public bool Delete(string id)
+        public bool Delete(int id)
         {
             using (MySqlConnection connection = _database.CreateConnection())
             {
                 connection.Open();
 
-                string query = "DELETE FROM " + Constants.Tables.Users + " WHERE Id = @Id";
+                string query = "DELETE FROM " + Constants.Tables.Clients + " WHERE Id = @Id";
 
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@Id", id);
+
+                    int rowsAffected = command.ExecuteNonQuery();
+
+                    return rowsAffected > 0;
+                }
+            }
+        }
+        public bool Update(BasicClientModel input)
+        {
+            using (MySqlConnection connection = _database.CreateConnection())
+            {
+                connection.Open();
+
+                string query = "UPDATE FROM " + Constants.Tables.Clients + "SET Name = @Name WHERE Id = @Id";
+
+                using (MySqlCommand command = new MySqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Id", input.Id);
+                    command.Parameters.AddWithValue("@Name", input.Name);
 
                     int rowsAffected = command.ExecuteNonQuery();
 
@@ -113,6 +134,17 @@ namespace timeTrakerApi.Data.Repositories
             if (!reader.IsDBNull(nameof(ClientModel.LastModifiedOnDate)))
                 client.LastModifiedOnDate = reader.GetDateTime(nameof(ClientModel.LastModifiedOnDate));
 
+
+            return client;
+        }
+        private BasicClientModel ReadBasicClientFromReader(MySqlDataReader reader)
+        {
+            BasicClientModel client = new BasicClientModel();
+
+            if (!reader.IsDBNull(nameof(BasicClientModel.Id)))
+                client.Id = reader.GetInt32(nameof(BasicClientModel.Id));
+            if (!reader.IsDBNull(nameof(BasicClientModel.Name)))
+                client.Name = reader.GetString(nameof(BasicClientModel.Name));
 
             return client;
 

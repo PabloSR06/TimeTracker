@@ -2,6 +2,7 @@
 using timeTrakerApi.Models.Project;
 using timeTrakerApi.Data.Interfaces;
 using System.Data;
+using timeTrakerApi.Models.Client;
 
 namespace timeTrakerApi.Data.Repositories
 {
@@ -15,9 +16,9 @@ namespace timeTrakerApi.Data.Repositories
             _database = database;
         }
 
-        public List<ProjectModel> Get()
+        public List<BasicProjectModel> Get()
         {
-            List<ProjectModel> projects = new List<ProjectModel>();
+            List<BasicProjectModel> projects = new List<BasicProjectModel>();
             using (MySqlConnection connection = _database.CreateConnection())
             {
                 connection.Open();
@@ -29,7 +30,7 @@ namespace timeTrakerApi.Data.Repositories
                     {
                         while (reader.Read())
                         {
-                            projects.Add(ReadProjectFromReader(reader));
+                            projects.Add(ReadBasicProjectFromReader(reader));
 
                         }
                         reader.Close();
@@ -40,9 +41,9 @@ namespace timeTrakerApi.Data.Repositories
             return projects;
         }
 
-        public ProjectModel GetById(int id)
+        public BasicProjectModel? GetById(int id)
         {
-            ProjectModel project = new ProjectModel();
+            BasicProjectModel? project = default;
             using (MySqlConnection connection = _database.CreateConnection())
             {
                 connection.Open();
@@ -55,7 +56,7 @@ namespace timeTrakerApi.Data.Repositories
                     {
                         if (reader.Read())
                         {
-                            project = ReadProjectFromReader(reader);
+                            project = ReadBasicProjectFromReader(reader);
                         }
                         reader.Close();
                     }
@@ -64,7 +65,7 @@ namespace timeTrakerApi.Data.Repositories
             }
             return project;
         }
-        public bool Insert(ProjectModel project)
+        public bool Insert(BasicProjectModel project)
         {
             using (MySqlConnection connection = _database.CreateConnection())
             {
@@ -83,7 +84,7 @@ namespace timeTrakerApi.Data.Repositories
                 }
             }
         }
-        public bool Delete(string id)
+        public bool Delete(int id)
         {
             using (MySqlConnection connection = _database.CreateConnection())
             {
@@ -94,6 +95,25 @@ namespace timeTrakerApi.Data.Repositories
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@Id", id);
+
+                    int rowsAffected = command.ExecuteNonQuery();
+
+                    return rowsAffected > 0;
+                }
+            }
+        }
+        public bool Update(BasicProjectModel input)
+        {
+            using (MySqlConnection connection = _database.CreateConnection())
+            {
+                connection.Open();
+
+                string query = "UPDATE FROM " + Constants.Tables.Projects + "SET Name = @Name WHERE Id = @Id";
+
+                using (MySqlCommand command = new MySqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Id", input.Id);
+                    command.Parameters.AddWithValue("@Name", input.Name);
 
                     int rowsAffected = command.ExecuteNonQuery();
 
@@ -117,6 +137,23 @@ namespace timeTrakerApi.Data.Repositories
                 project.CreateOnDate = reader.GetDateTime(nameof(ProjectModel.CreateOnDate));
             if (!reader.IsDBNull(nameof(ProjectModel.LastModifiedOnDate)))
                 project.LastModifiedOnDate = reader.GetDateTime(nameof(ProjectModel.LastModifiedOnDate));
+
+            return project;
+        }
+
+        private BasicProjectModel ReadBasicProjectFromReader(MySqlDataReader reader)
+        {
+            BasicProjectModel project = new BasicProjectModel();
+
+            if (!reader.IsDBNull(nameof(BasicProjectModel.Id)))
+                project.Id = reader.GetInt32(nameof(BasicProjectModel.Id));
+            if (!reader.IsDBNull(nameof(BasicProjectModel.ClientId)))
+                project.ClientId = reader.GetInt32(nameof(BasicProjectModel.ClientId));
+            if (!reader.IsDBNull(nameof(BasicProjectModel.Name)))
+                project.Name = reader.GetString(nameof(BasicProjectModel.Name));
+            if (!reader.IsDBNull(nameof(BasicProjectModel.Description)))
+                project.Name = reader.GetString(nameof(BasicProjectModel.Description));
+
 
             return project;
         }

@@ -4,9 +4,10 @@ namespace timeTrakerApi.Data.Interfaces
 {
     public interface IProjectRepository
     {
-        List<ProjectModel> Get();
-        ProjectModel GetById(int id);
-        bool Insert(ProjectModel project);
-        bool Delete(string id);
+        List<BasicProjectModel> Get();
+        BasicProjectModel GetById(int id);
+        bool Insert(BasicProjectModel project);
+        bool Delete(int id);
+        bool Update(BasicProjectModel input);
     }
 }

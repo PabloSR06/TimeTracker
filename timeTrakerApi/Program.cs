@@ -8,6 +8,7 @@ using timeTrakerApi.Services;
 using timeTrakerApi.Services.Interfaces;
 using timeTrakerApi.Data.Repositories;
 using timeTrakerApi.Data.Interfaces;
+using Microsoft.AspNetCore.Hosting;
 
 namespace timeTrakerApi
 {
@@ -53,6 +54,11 @@ namespace timeTrakerApi
                     Title = "Time Tracker API",
                     Version = "v1"
                 });
+                var xmlfilePath = GetXmlCommentsPath();
+                if (File.Exists(xmlfilePath))
+                {
+                    c.IncludeXmlComments(xmlfilePath);
+                }
 
                 var securityDefinition = new OpenApiSecurityScheme()
                 {
@@ -119,6 +125,11 @@ namespace timeTrakerApi
             });
             app.UseAuthorization();
             app.Run();
+        }
+        private static string GetXmlCommentsPath()
+        {
+            var assembly = typeof(Program).Assembly;
+            return assembly.Location.Substring(0, assembly.Location.Length - 3) + "xml";
         }
     }
 }

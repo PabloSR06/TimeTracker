@@ -1,12 +1,13 @@
-﻿using timeTrakerApi.Models.Project;
+﻿using timeTrakerApi.Models.Client;
 
 namespace timeTrakerApi.Data.Interfaces
 {
     public interface IClientRepository
     {
-        List<ClientModel> Get();
-        ClientModel GetById(string id);
-        bool Insert(ClientModel project);
-        bool Delete(string id);
+        List<BasicClientModel> Get();
+        BasicClientModel? GetById(int id);
+        bool Insert(BasicClientModel project);
+        bool Update(BasicClientModel input);
+        bool Delete(int id);
     }
 }

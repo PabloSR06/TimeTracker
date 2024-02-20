@@ -50,9 +50,9 @@ namespace timeTrakerApi.Data.Repositories
             return user;
         }
 
-        public UserProfileModel GetUserLogIn(UserCredentialsModel input)
+        public UserProfileModel? GetUserLogIn(UserCredentialsModel input)
         {
-            UserProfileModel profile = new UserProfileModel();
+            UserProfileModel profile = default;
 
             using (MySqlConnection connection = _database.CreateConnection())
             {
@@ -98,7 +98,7 @@ namespace timeTrakerApi.Data.Repositories
                 }
             }
         }
-        public bool Delete(string id)
+        public bool Delete(int id)
         {
             using (MySqlConnection connection = _database.CreateConnection())
             {
@@ -159,7 +159,7 @@ namespace timeTrakerApi.Data.Repositories
             return true;
         }
 
-        public bool ResetPassword(UserCredentialsModel userCredential, string userId)
+        public bool UpdatePassword(ResetPasswordModel userCredential, int userId)
         {
             int affectedRows = 0;
 

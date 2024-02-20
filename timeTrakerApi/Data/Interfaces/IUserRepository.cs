@@ -7,9 +7,9 @@ namespace timeTrakerApi.Data.Interfaces
     {
         BasicUserModel? GetById(int id);
         bool Insert(UserModel project);
-        bool Delete(string id);
+        bool Delete(int id);
         bool ForgotPassword(string email);
-        bool ResetPassword(UserCredentialsModel userCredential, string userId);
+        bool UpdatePassword(ResetPasswordModel userCredential, int userId);
         UserProfileModel GetUserLogIn(UserCredentialsModel input);
     }
 }
