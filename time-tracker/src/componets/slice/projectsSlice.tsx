@@ -1,7 +1,7 @@
 import {createSlice} from '@reduxjs/toolkit';
-import {apiGetAllProjects} from "../types/config";
 import axios from "axios";
 import {Dispatch} from "redux";
+import {apiGetAllProjects} from "../types/api/projects.ts";
 
 const initialState: ProjectModel[] = [];
 

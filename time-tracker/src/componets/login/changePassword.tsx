@@ -2,14 +2,11 @@ import {useEffect, useState} from "react";
 import styles from './login.module.css';
 import {useTranslation} from "react-i18next";
 import {useParams} from "react-router-dom";
-import {
-    apiResetPassword,
-    isTokenValid,
-    ResetPasswordData
-} from "../types/config.ts";
 import axios from "axios";
 import toast from "react-hot-toast";
 import {useForm} from "react-hook-form";
+import {isTokenValid} from "../types/api/auth.ts";
+import {apiResetPassword, ResetPasswordData} from "../types/api/users.ts";
 
 export const ChangePassword = () => {
     const {t} = useTranslation();

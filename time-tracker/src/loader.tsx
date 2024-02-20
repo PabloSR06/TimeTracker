@@ -5,9 +5,9 @@ import {RootState} from "./componets/slice/store.tsx";
 import {fetchHours} from "./componets/slice/hoursSlice.tsx";
 import {fetchProjects} from "./componets/slice/projectsSlice.tsx";
 import {fetchClients} from "./componets/slice/clientsSlice.tsx";
-import {checkTokenValidity} from "./componets/types/config.ts";
 import toast from "react-hot-toast";
 import {useTranslation} from "react-i18next";
+import {checkTokenValidity} from "./componets/types/api/auth.ts";
 
 interface LoaderProps {
     handleToken: (token: string) => void;

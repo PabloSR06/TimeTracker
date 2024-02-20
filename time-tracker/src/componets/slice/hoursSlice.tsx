@@ -5,7 +5,7 @@ import {
     apiGetProjectHours,
     ApiInsertDayHoursData,
     apiInsertDayHours
-} from "../types/config";
+} from "../types/api/config.ts";
 import axios from "axios";
 import {Dispatch} from "redux";
 import {addWeeks, eachDayOfInterval, endOfWeek, startOfDay, startOfWeek, subWeeks} from "date-fns";

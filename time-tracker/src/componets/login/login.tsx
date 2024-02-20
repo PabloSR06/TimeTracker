@@ -1,5 +1,4 @@
 import {useEffect, useState} from "react";
-import {ApiLogInUserData, checkTokenValidity} from "../types/config.ts";
 import {useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {logIn} from "../slice/userSlice.tsx";
@@ -8,6 +7,7 @@ import styles from './login.module.css';
 import {useTranslation} from "react-i18next";
 import {useForm} from "react-hook-form";
 import toast from "react-hot-toast";
+import {ApiLogInUserData, checkTokenValidity} from "../types/api/auth.ts";
 
 export const Login = () => {
     const {t} = useTranslation();

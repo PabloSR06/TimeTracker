@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {apiInsertProjectHours, ApiInsertProjectHoursData} from "../types/config";
+import {apiInsertProjectHours, ApiInsertProjectHoursData} from "../types/api/config.ts";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../slice/store";
 import DatePicker from "react-datepicker";

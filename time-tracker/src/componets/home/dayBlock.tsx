@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import styles from "./dayBlock.module.css";
 import {differenceInHours, format, minutesToHours} from "date-fns";
 import {fetchHours, InsertDayHours} from "../slice/hoursSlice";
-import {ApiInsertDayHoursData} from "../types/config";
+import {ApiInsertDayHoursData} from "../types/api/config.ts";
 import {CalendarCheck, CalendarX} from "react-bootstrap-icons";
 import {useDispatch} from "react-redux";
 import {useNavigate} from "react-router-dom";
