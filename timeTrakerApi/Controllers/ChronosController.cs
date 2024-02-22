@@ -12,6 +12,9 @@ using timeTrakerApi.Models.User;
 
 namespace timeTrakerApi.Controllers
 {
+    /// <summary>
+    /// API Controller for managing times.
+    /// </summary>
     [ApiController]
     [Route("[controller]")]
     public class ChronosController : ControllerBase
@@ -19,13 +22,24 @@ namespace timeTrakerApi.Controllers
         private readonly ILogger<ChronosController> _logger;
         private readonly IChronoRepository _chronoRepository;
 
+        /// <summary>
+        /// Controller Initialization
+        /// </summary>
+        /// <param name="chronoRepository">The chrono repository</param>
+        /// <param name="logger">The logger</param>
         public ChronosController(ILogger<ChronosController> logger, IChronoRepository chronoRepository)
         {
             _logger = logger;
             _chronoRepository = chronoRepository;
         }
 
-        [HttpPost("/day/time")]
+        /// <summary>
+        /// Obtains a list of hours for a range of days.
+        /// </summary>
+        /// <param name="input">A object with the date from and to</param>
+        /// <returns>Return a List of DayHoursModel</returns>
+
+        [HttpPost("day")]
         [Authorize]
         public ActionResult<List<DayHoursModel>> GetDayHours(HourInputModel input)
         {
@@ -50,8 +64,13 @@ namespace timeTrakerApi.Controllers
                 return StatusCode(500, "An error occurred while processing your request.");
             }
         }
+        /// <summary>
+        /// Insert a day time.
+        /// </summary>
+        /// <param name="input">A object with the type 1 is clockIn 0 clockOut</param>
+        /// <returns>An IActionResult indicating the result of the insert operation.</returns>
 
-        [HttpPost("/day/time/track")]
+        [HttpPost("day/track")]
         [Authorize]
         public IActionResult TrackDayTime(DayInputModel input)
         {
@@ -80,7 +99,13 @@ namespace timeTrakerApi.Controllers
             }
         }
 
-        [HttpPost("/project/time")]
+        /// <summary>
+        /// Obtains a list of project hours for a range of days.
+        /// </summary>
+        /// <param name="input">A object with the date from and to</param>
+        /// <returns>Return a List of HoursProjectModel</returns>
+
+        [HttpPost("project")]
         [Authorize]
         public ActionResult<List<HoursProjectModel>> GetProjectHours(HourInputModel input)
         {
@@ -108,8 +133,13 @@ namespace timeTrakerApi.Controllers
             }
 
         }
+        /// <summary>
+        /// Insert a project time.
+        /// </summary>
+        /// <param name="input">A object with minutes, projectId, date and description</param>
+        /// <returns>An IActionResult indicating the result of the insert operation.</returns>
 
-        [HttpPost("/project/time/track")]
+        [HttpPost("project/track")]
         [Authorize]
         public IActionResult TrackProjectTime(ProjectTimeInputModel input)
         {

@@ -1,12 +1,12 @@
 import {jwtDecode} from "jwt-decode";
-import {apiUrl} from "./config.ts";
+import {apiUrl, deleteTokenFromLocalStorage, getTokenFromLocalStorage} from "./config.ts";
 
 export const checkTokenValidity = (): boolean => {
 
-    const token = localStorage.getItem('token');
+    const token = getTokenFromLocalStorage();
     if (token) {
         if(!checkToken(token)){
-            localStorage.removeItem('token');
+            deleteTokenFromLocalStorage();
             return false;
         }else {
             return true;

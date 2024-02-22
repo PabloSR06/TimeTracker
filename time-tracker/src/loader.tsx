@@ -1,4 +1,3 @@
-
 import {useDispatch, useSelector} from "react-redux";
 import {useEffect} from "react";
 import {RootState} from "./componets/slice/store.tsx";
@@ -12,6 +11,7 @@ import {checkTokenValidity} from "./componets/types/api/auth.ts";
 interface LoaderProps {
     handleToken: (token: string) => void;
 }
+
 export const Loader: React.FC<LoaderProps> = ({handleToken}) => {
     const {t} = useTranslation();
 
@@ -20,13 +20,13 @@ export const Loader: React.FC<LoaderProps> = ({handleToken}) => {
     const token = useSelector((state: RootState) => state.user.userToken);
 
     const loadAllData = async () => {
-        await Promise.all([fetchHours(dispatch), fetchProjects(dispatch),fetchClients(dispatch)]).then(() => {
+        await Promise.all([fetchHours(dispatch), fetchProjects(dispatch), fetchClients(dispatch)]).then(() => {
             console.log('All data fetched');
         });
     }
 
     useEffect(() => {
-        if(checkTokenValidity()){
+        if (checkTokenValidity()) {
 
             toast.promise(loadAllData(), {
                 loading: t("loading"),
@@ -38,12 +38,11 @@ export const Loader: React.FC<LoaderProps> = ({handleToken}) => {
     }, [token]);
 
 
+    return (
+        <>
 
-  return (
-    <>
-
-    </>
-  )
+        </>
+    )
 }
 
 export default Loader

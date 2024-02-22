@@ -1,5 +1,4 @@
 import {useEffect, useState} from "react";
-import {apiInsertProjectHours, ApiInsertProjectHoursData} from "../types/api/config.ts";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../slice/store";
 import DatePicker from "react-datepicker";
@@ -10,6 +9,7 @@ import {useTranslation} from "react-i18next";
 import axios from "axios";
 import toast from "react-hot-toast";
 import {fetchHours} from "../slice/hoursSlice.tsx";
+import {apiInsertProjectHours, ApiInsertProjectHoursData} from "../types/api/chronos.ts";
 
 
 export const ProjectInput = () => {
