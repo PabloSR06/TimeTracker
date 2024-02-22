@@ -4,8 +4,10 @@ using System.Collections.Generic;
 using timeTrakerApi.Data.Interfaces;
 using timeTrakerApi.Data.Repositories;
 using timeTrakerApi.Models.Client;
+using timeTrakerApi.Models.Day;
+using timeTrakerApi.Models.Day.Input;
 using timeTrakerApi.Models.Project;
-using timeTrakerApi.Models.Time;
+using timeTrakerApi.Models.Project.Input;
 using timeTrakerApi.Models.User;
 
 namespace timeTrakerApi.Controllers

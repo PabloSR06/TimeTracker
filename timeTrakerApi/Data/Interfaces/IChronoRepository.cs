@@ -1,5 +1,7 @@
-﻿using timeTrakerApi.Models.Project;
-using timeTrakerApi.Models.Time;
+﻿using timeTrakerApi.Models.Day;
+using timeTrakerApi.Models.Day.Input;
+using timeTrakerApi.Models.Project;
+using timeTrakerApi.Models.Project.Input;
 
 namespace timeTrakerApi.Data.Interfaces
 {

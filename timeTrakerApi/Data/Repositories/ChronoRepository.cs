@@ -2,8 +2,10 @@
 using timeTrakerApi.Models.Project;
 using System.Data;
 using System;
-using timeTrakerApi.Models.Time;
 using timeTrakerApi.Data.Interfaces;
+using timeTrakerApi.Models.Project.Input;
+using timeTrakerApi.Models.Day.Input;
+using timeTrakerApi.Models.Day;
 
 namespace timeTrakerApi.Data.Repositories
 {
