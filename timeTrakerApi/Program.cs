@@ -95,7 +95,7 @@ namespace timeTrakerApi
             // Add MySQL data source
             builder.Services.AddMySqlDataSource(builder.Configuration.GetConnectionString("Default")!);
             builder.Services.AddTransient<IProjectRepository, ProjectRepository>();
-            builder.Services.AddTransient<ITimeRepository, TimeRepository>();
+            builder.Services.AddTransient<IChronoRepository, ChronoRepository>();
             builder.Services.AddTransient<IClientRepository, ClientRepository>();
             builder.Services.AddTransient<IProjectHoursRepository, ProjectHoursRepository>();
             builder.Services.AddTransient<IUserRepository, UserRepository>();

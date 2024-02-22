@@ -7,43 +7,17 @@ using timeTrakerApi.Data.Interfaces;
 
 namespace timeTrakerApi.Data.Repositories
 {
-    public class TimeRepository : ITimeRepository
+    public class ChronoRepository : IChronoRepository
     {
         private readonly MySqlDataSource _database;
 
-        public TimeRepository(MySqlDataSource database)
+        public ChronoRepository(MySqlDataSource database)
         {
             _database = database;
         }
 
 
-        public List<DayHoursModel> GetDayHoursByUserId(string userId)
-        {
-            List<DayHoursModel> dayHours = new List<DayHoursModel>();
-            using (MySqlConnection connection = _database.CreateConnection())
-            {
-                connection.Open();
-
-                string query = "SELECT * FROM " + Constants.Tables.DayHours + " WHERE UserId = @UserId";
-                using (MySqlCommand command = new MySqlCommand(query, connection))
-                {
-                    command.Parameters.AddWithValue("@UserId", userId);
-                    using (MySqlDataReader reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            dayHours.Add(ReadDayHoursFromReader(reader));
-
-                        }
-                        reader.Close();
-                    }
-                    connection.Dispose();
-                }
-            }
-            return dayHours;
-        }
-
-        public List<DayHoursModel> GetDayHours(HourInputModel input, string userId)
+        public List<DayHoursModel> GetDayHours(HourInputModel input, int userId)
         {
             List<DayHoursModel>? dayHours = new List<DayHoursModel>();
 
@@ -70,7 +44,7 @@ namespace timeTrakerApi.Data.Repositories
             return dayHours;
         }
 
-        public List<HoursProjectModel> GetProjectHours(HourInputModel input, string userId)
+        public List<HoursProjectModel> GetProjectHours(HourInputModel input, int userId)
         {
             List<HoursProjectModel>? projectHours = new List<HoursProjectModel>();
 
@@ -97,7 +71,7 @@ namespace timeTrakerApi.Data.Repositories
             return projectHours;
         }
 
-        public bool InsertDayHours(DayInputModel input, string userId)
+        public bool InsertDayHours(DayInputModel input, int userId)
         {
             int rowsAffected = 0;
             using (MySqlConnection connection = _database.CreateConnection())
@@ -118,7 +92,7 @@ namespace timeTrakerApi.Data.Repositories
             return rowsAffected > 0;
         }
 
-        public bool InsertProjectHours(ProjectTimeInputModel input, string userId)
+        public bool InsertProjectHours(ProjectTimeInputModel input, int userId)
         {
             int rowsAffected = 0;
             using (MySqlConnection connection = _database.CreateConnection())
@@ -166,7 +140,7 @@ namespace timeTrakerApi.Data.Repositories
             if (!reader.IsDBNull(nameof(HoursProjectModel.Id)))
                 hoursProjectModel.Id = reader.GetInt32(nameof(HoursProjectModel.Id));
             if (!reader.IsDBNull(nameof(HoursProjectModel.UserId)))
-                hoursProjectModel.UserId = reader.GetInt32(reader.GetOrdinal(nameof(HoursProjectModel.UserId)));
+                hoursProjectModel.UserId = reader.GetInt32(nameof(HoursProjectModel.UserId));
             if (!reader.IsDBNull(nameof(HoursProjectModel.ProjectId)))
                 hoursProjectModel.ProjectId = reader.GetInt32(nameof(HoursProjectModel.ProjectId));
             if (!reader.IsDBNull(nameof(HoursProjectModel.Date)))

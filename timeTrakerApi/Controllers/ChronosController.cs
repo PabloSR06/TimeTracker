@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using timeTrakerApi.Data.Interfaces;
 using timeTrakerApi.Data.Repositories;
 using timeTrakerApi.Models.Client;
 using timeTrakerApi.Models.Project;
 using timeTrakerApi.Models.Time;
+using timeTrakerApi.Models.User;
 
 namespace timeTrakerApi.Controllers
 {
@@ -13,12 +15,12 @@ namespace timeTrakerApi.Controllers
     public class ChronosController : ControllerBase
     {
         private readonly ILogger<ChronosController> _logger;
-        private readonly ITimeRepository _timeRepository;
+        private readonly IChronoRepository _chronoRepository;
 
-        public ChronosController(ILogger<ChronosController> logger, ITimeRepository timeRepository)
+        public ChronosController(ILogger<ChronosController> logger, IChronoRepository chronoRepository)
         {
             _logger = logger;
-            _timeRepository = timeRepository;
+            _chronoRepository = chronoRepository;
         }
 
         [HttpPost("/day/time")]
@@ -29,11 +31,16 @@ namespace timeTrakerApi.Controllers
             {
                 _logger.LogInformation("GetDayHours");
                 string? userId = User.FindFirst("userid")?.Value;
-                if (userId != null)
+                if (!int.TryParse(userId, out int userInt))
                 {
-                    return _timeRepository.GetDayHours(input, userId);
+                    _logger.LogError("TrackDayTime: UserId is empty");
+                    return BadRequest("User Id cannot be empty");
                 }
-                return new List<DayHoursModel>();
+
+
+                List<DayHoursModel> result = _chronoRepository.GetDayHours(input, userInt);
+
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -44,43 +51,89 @@ namespace timeTrakerApi.Controllers
 
         [HttpPost("/day/time/track")]
         [Authorize]
-        public bool InsertDayHours(DayInputModel input)
+        public IActionResult TrackDayTime(DayInputModel input)
         {
-            _logger.LogInformation("InsertDayHours");
-
-            string? userId = User.FindFirst("userid")?.Value;
-            if (userId != null)
+            try
             {
-                return _timeRepository.InsertDayHours(input, userId);
+                _logger.LogInformation("TrackDayTime");
+
+                string? userId = User.FindFirst("userid")?.Value;
+
+                if (!int.TryParse(userId, out int userInt))
+                {
+                    _logger.LogError("TrackDayTime: UserId is empty");
+                    return BadRequest("User Id cannot be empty");
+                }
+
+                bool result = _chronoRepository.InsertDayHours(input, userInt);
+
+                return Ok(result);
+
+
             }
-            return false;
+            catch (Exception ex)
+            {
+                _logger.LogError($"TrackDayTime: An error occurred: {ex.Message}");
+                return StatusCode(500, "An error occurred while processing your request.");
+            }
         }
 
         [HttpPost("/project/time")]
         [Authorize]
-        public List<HoursProjectModel> GetProjectHours(HourInputModel input)
+        public ActionResult<List<HoursProjectModel>> GetProjectHours(HourInputModel input)
         {
-            _logger.LogInformation("GetProjectHours");
-            string? userId = User.FindFirst("userid")?.Value;
-            if (userId != null)
+            try
             {
-                return _timeRepository.GetProjectHours(input, userId);
+                _logger.LogInformation("GetProjectHours");
+
+                string? userId = User.FindFirst("userid")?.Value;
+
+                if (!int.TryParse(userId, out int userInt))
+                {
+                    _logger.LogError("GetUserByToken: UserId is empty");
+                    return BadRequest("User Id cannot be empty");
+                }
+
+                List<HoursProjectModel> result = _chronoRepository.GetProjectHours(input, userInt);
+
+
+                return Ok(result);
             }
-            return new List<HoursProjectModel>();
-            
+            catch (Exception ex)
+            {
+                _logger.LogError($"GetProjectHours: An error occurred: {ex.Message}");
+                return StatusCode(500, "An error occurred while processing your request.");
+            }
+
         }
-        
+
         [HttpPost("/project/time/track")]
         [Authorize]
-        public bool InsertProjectHours(ProjectTimeInputModel input)
+        public IActionResult TrackProjectTime(ProjectTimeInputModel input)
         {
-            _logger.LogInformation("InsertDayHours");
-            string? userId = User.FindFirst("userid")?.Value;
-            if (userId != null)
+            try
             {
-                return _timeRepository.InsertProjectHours(input, userId);
+                _logger.LogInformation("TrackProjectTime");
+
+                string? userId = User.FindFirst("userid")?.Value;
+
+                if (!int.TryParse(userId, out int userInt))
+                {
+                    _logger.LogError("TrackProjectTime: UserId is empty");
+                    return BadRequest("User Id cannot be empty");
+                }
+
+                bool result = _chronoRepository.InsertProjectHours(input, userInt);
+
+                return Ok(result);
+
+
             }
-            return false;
+            catch (Exception ex)
+            {
+                _logger.LogError($"TrackProjectTime: An error occurred: {ex.Message}");
+                return StatusCode(500, "An error occurred while processing your request.");
+            }
         }
     }
 }
