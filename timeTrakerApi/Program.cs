@@ -1,6 +1,4 @@
 using MySqlConnector;
-using timeTrakerApi.Data;
-using timeTrakerApi.Data.Interface;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -8,6 +6,9 @@ using System.Text;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using timeTrakerApi.Services;
 using timeTrakerApi.Services.Interfaces;
+using timeTrakerApi.Data.Repositories;
+using timeTrakerApi.Data.Interfaces;
+using Microsoft.AspNetCore.Hosting;
 
 namespace timeTrakerApi
 {
@@ -53,6 +54,11 @@ namespace timeTrakerApi
                     Title = "Time Tracker API",
                     Version = "v1"
                 });
+                var xmlfilePath = GetXmlCommentsPath();
+                if (File.Exists(xmlfilePath))
+                {
+                    c.IncludeXmlComments(xmlfilePath);
+                }
 
                 var securityDefinition = new OpenApiSecurityScheme()
                 {
@@ -89,7 +95,7 @@ namespace timeTrakerApi
             // Add MySQL data source
             builder.Services.AddMySqlDataSource(builder.Configuration.GetConnectionString("Default")!);
             builder.Services.AddTransient<IProjectRepository, ProjectRepository>();
-            builder.Services.AddTransient<ITimeRepository, TimeRepository>();
+            builder.Services.AddTransient<IChronoRepository, ChronoRepository>();
             builder.Services.AddTransient<IClientRepository, ClientRepository>();
             builder.Services.AddTransient<IProjectHoursRepository, ProjectHoursRepository>();
             builder.Services.AddTransient<IUserRepository, UserRepository>();
@@ -119,6 +125,11 @@ namespace timeTrakerApi
             });
             app.UseAuthorization();
             app.Run();
+        }
+        private static string GetXmlCommentsPath()
+        {
+            var assembly = typeof(Program).Assembly;
+            return assembly.Location.Substring(0, assembly.Location.Length - 3) + "xml";
         }
     }
 }

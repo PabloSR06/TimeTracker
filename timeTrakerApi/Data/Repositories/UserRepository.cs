@@ -1,12 +1,12 @@
-﻿using timeTrakerApi.Data.Interface;
-using MySqlConnector;
+﻿using MySqlConnector;
 using timeTrakerApi.Models.Project;
 using System.IdentityModel.Tokens.Jwt;
 using timeTrakerApi.Services.Interfaces;
 using System.Data;
 using timeTrakerApi.Models.User;
+using timeTrakerApi.Data.Interfaces;
 
-namespace timeTrakerApi.Data
+namespace timeTrakerApi.Data.Repositories
 {
     public class UserRepository : IUserRepository
     {
@@ -22,35 +22,11 @@ namespace timeTrakerApi.Data
             _tokenService = tokenService;
         }
 
-        public List<UserModel> Get()
+        
+
+        public BasicUserModel? GetById(int id)
         {
-
-            List<UserModel> users = new List<UserModel>();
-            using (MySqlConnection connection = _database.CreateConnection())
-            {
-                connection.Open();
-
-                string query = "SELECT * FROM " + Constants.Tables.Users;
-                using (MySqlCommand command = new MySqlCommand(query, connection))
-                {
-                    using (MySqlDataReader reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            users.Add(ReadUserFromReader(reader));
-
-                        }
-                        reader.Close();
-                    }
-                    connection.Dispose();
-                }
-            }
-            return users;
-        }
-
-        public UserModel GetById(string id)
-        {
-            UserModel user = new UserModel();
+            BasicUserModel? user = default;
 
             using (MySqlConnection connection = _database.CreateConnection())
             {
@@ -64,7 +40,7 @@ namespace timeTrakerApi.Data
                     {
                         if (reader.Read())
                         {
-                            user = ReadUserFromReader(reader);
+                            user = ReadBasicUserFromReader(reader);
                         }
                         reader.Close();
                     }
@@ -74,9 +50,9 @@ namespace timeTrakerApi.Data
             return user;
         }
 
-        public UserProfileModel GetUserLogIn(UserCredentialsModel input)
+        public UserProfileModel? GetUserLogIn(UserCredentialsModel input)
         {
-            UserProfileModel profile = new UserProfileModel();
+            UserProfileModel profile = default;
 
             using (MySqlConnection connection = _database.CreateConnection())
             {
@@ -122,7 +98,7 @@ namespace timeTrakerApi.Data
                 }
             }
         }
-        public bool Delete(string id)
+        public bool Delete(int id)
         {
             using (MySqlConnection connection = _database.CreateConnection())
             {
@@ -141,14 +117,14 @@ namespace timeTrakerApi.Data
             }
         }
 
-        public UserModel? GetUserWithEmail(string email)
+        public BasicUserModel? GetUserWithEmail(string email)
         {
-            UserModel? user = default;
+            BasicUserModel? user = default;
 
             using (MySqlConnection connection = _database.CreateConnection())
             {
                 connection.Open();
-                string query = "SELECT * FROM " + Constants.Tables.Users + " WHERE Email = @Email";
+                string query = "SELECT name, email FROM " + Constants.Tables.Users + " WHERE Email = @Email";
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@Email", email);
@@ -157,7 +133,7 @@ namespace timeTrakerApi.Data
                     {
                         if (reader.Read())
                         {
-                            user = ReadUserFromReader(reader);
+                            user = ReadBasicUserFromReader(reader);
                         }
                         reader.Close();
                     }
@@ -169,7 +145,7 @@ namespace timeTrakerApi.Data
         public bool ForgotPassword(string email)
         {
 
-            UserModel? userProfile = GetUserWithEmail(email);
+            BasicUserModel? userProfile = GetUserWithEmail(email);
 
             if (userProfile == null)
                 return false;
@@ -183,7 +159,7 @@ namespace timeTrakerApi.Data
             return true;
         }
 
-        public bool ResetPassword(UserCredentialsModel userCredential, string userId)
+        public bool UpdatePassword(ResetPasswordModel userCredential, int userId)
         {
             int affectedRows = 0;
 
@@ -206,22 +182,33 @@ namespace timeTrakerApi.Data
 
         private UserModel ReadUserFromReader(MySqlDataReader reader)
         {
-
             UserModel user = new UserModel();
 
-            if (!reader.IsDBNull(reader.GetOrdinal(nameof(UserModel.Id))))
-                user.Id = reader.GetInt32(reader.GetOrdinal("id"));
-            if (!reader.IsDBNull(reader.GetOrdinal(nameof(UserModel.Name))))
-                user.Name = reader.GetString(reader.GetOrdinal("name"));
-            if (!reader.IsDBNull(reader.GetOrdinal(nameof(UserModel.Email))))
-                user.Email = reader.GetString(reader.GetOrdinal("email"));
+            if (!reader.IsDBNull(nameof(UserModel.Id)))
+                user.Id = reader.GetInt32(nameof(UserModel.Id));
+            if (!reader.IsDBNull(nameof(UserModel.Name)))
+                user.Name = reader.GetString(nameof(UserModel.Name));
+            if (!reader.IsDBNull(nameof(UserModel.Email)))
+                user.Email = reader.GetString(nameof(UserModel.Email));
+
+            return user;
+
+        }
+
+        private BasicUserModel ReadBasicUserFromReader(MySqlDataReader reader)
+        {
+            BasicUserModel user = new BasicUserModel();
+
+            if (!reader.IsDBNull(nameof(BasicUserModel.Name)))
+                user.Name = reader.GetString(nameof(BasicUserModel.Name));
+            if (!reader.IsDBNull(nameof(BasicUserModel.Email)))
+                user.Email = reader.GetString(nameof(BasicUserModel.Email));
 
             return user;
 
         }
         private UserProfileModel ReadProfileFromReader(MySqlDataReader reader)
         {
-
             UserProfileModel profile = new UserProfileModel();
 
             if (!reader.IsDBNull(reader.GetOrdinal(nameof(UserProfileModel.Id))))

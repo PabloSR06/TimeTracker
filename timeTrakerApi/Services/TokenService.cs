@@ -33,14 +33,14 @@ namespace timeTrakerApi.Services
                 _configuration["Jwt:Issuer"],
                 _configuration["Jwt:Audience"],
                 claims,
-                expires: DateTime.Now.AddMinutes(5),
+                expires: DateTime.Now.AddDays(5),
                 signingCredentials: creds
             );
 
             return token;
         }
 
-        public JwtSecurityToken GenerateGuestToken(UserModel userProfile)
+        public JwtSecurityToken GenerateGuestToken(BasicUserModel userProfile)
         {
             var claims = new List<Claim> {
                 new Claim(JwtRegisteredClaimNames.Sub, userProfile.Email),

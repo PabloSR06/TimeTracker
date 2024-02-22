@@ -1,6 +1,6 @@
 import {BaseSyntheticEvent, useState} from "react";
-import { apiInsertUser, ApiInsertUserData} from "../types/config.ts";
 import axios from "axios";
+import {apiCreateUser, ApiCreateUserData} from "../types/api/users.ts";
 
 export const SingIn = () => {
 
@@ -14,12 +14,12 @@ export const SingIn = () => {
     };
 
     const sendData = async () => {
-        const data: ApiInsertUserData = {
+        const data: ApiCreateUserData = {
             email: selectedEmail,
             password: selectedPassword
         };
         try {
-            await axios.request(apiInsertUser(data));
+            await axios.request(apiCreateUser(data));
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 console.log(error);

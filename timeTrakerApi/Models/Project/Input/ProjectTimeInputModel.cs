@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 
-namespace timeTrakerApi.Models.Time
+namespace timeTrakerApi.Models.Project.Input
 {
     public class ProjectTimeInputModel
     {

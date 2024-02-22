@@ -1,7 +1,7 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {apiGetAllClients} from "../types/config";
 import axios from "axios";
 import {Dispatch} from "redux";
+import {apiGetAllClients} from "../types/api/clients.ts";
 
 const initialState: ClientModel[] = [];
 

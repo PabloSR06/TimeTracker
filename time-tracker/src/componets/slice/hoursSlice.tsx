@@ -1,14 +1,14 @@
 import {createSlice} from '@reduxjs/toolkit';
+import axios from "axios";
+import {Dispatch} from "redux";
+import {addWeeks, eachDayOfInterval, endOfWeek, startOfDay, startOfWeek, subWeeks} from "date-fns";
 import {
     apiGetDayHours,
     ApiGetDayHoursData,
     apiGetProjectHours,
-    ApiInsertDayHoursData,
-    apiInsertDayHours
-} from "../types/config";
-import axios from "axios";
-import {Dispatch} from "redux";
-import {addWeeks, eachDayOfInterval, endOfWeek, startOfDay, startOfWeek, subWeeks} from "date-fns";
+    apiInsertDayHours,
+    ApiInsertDayHoursData
+} from "../types/api/chronos.ts";
 
 
 const initialState: CustomDay[] = [];
