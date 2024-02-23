@@ -1,4 +1,4 @@
-﻿namespace timeTrakerApi.Models.Time
+﻿namespace timeTrakerApi.Models.Day.Input
 {
     public class DayInputModel
     {

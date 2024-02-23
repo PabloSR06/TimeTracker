@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using timeTrakerApi.Data.Interface;
+using System.Text.RegularExpressions;
+using timeTrakerApi.Data.Interfaces;
 using timeTrakerApi.Models.Project;
 using timeTrakerApi.Models.User;
 using timeTrakerApi.Services.Interfaces;
@@ -28,72 +28,53 @@ namespace timeTrakerApi.Controllers
         [HttpPost("Login")]
         public IActionResult Login([FromBody] UserCredentialsModel credentials)
         {
-            UserProfileModel userProfile = _userRepository.GetUserLogIn(credentials);
-
-            if (userProfile.Id == 0)
+            try
             {
-                return Unauthorized();
-            }
+                UserProfileModel userProfile = _userRepository.GetUserLogIn(credentials);
 
-            return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(_tokenService.GenerateToken(userProfile)) });
-        }
-
-        [HttpPost("Register")]
-        public IActionResult Register([FromBody] UserCredentialsModel credentials)
-        {
-            var userProfile = new UserModel();
-            userProfile.Email = credentials.Email;
-            userProfile.Password = credentials.Password;
-            userProfile.Name = credentials.Email;
-
-            bool register = _userRepository.Insert(userProfile);
-
-            if (register)
-            {
-                return Ok();
-            }
-            else
-            {
-                return BadRequest();
-            }
-
-        }
-
-        [HttpGet("ForgotPassword")]
-
-        public IActionResult ForgotPassword(string Email)
-        {
-
-            _userRepository.ForgotPassword(Email);
-
-            return Ok();
-        }
-
-
-        [HttpPut("ResetPassword")]
-        [Authorize(Roles = "Guest")]
-        public IActionResult ResetPassword([FromBody] ResetPasswordModel input)
-        {
-
-            var claimsIdentity = this.User.Identity as ClaimsIdentity;
-            if (claimsIdentity != null)
-            {
-                var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
-                var claimValue = claim?.Value;
-                var userId = User.FindFirst("userid")?.Value;
-
-                UserCredentialsModel userCredential = new UserCredentialsModel
+                if (userProfile == null)
                 {
-                    Email = claimValue,
-                    Password = input.Password
-                };
+                    return Unauthorized();
+                }
 
-                _userRepository.ResetPassword(userCredential, userId);
+                return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(_tokenService.GenerateToken(userProfile)) });
 
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"UpdatePassword: An error occurred: {ex.Message}");
+                return StatusCode(500, "An error occurred while processing your request.");
+            }
+        }
+
+        
+
+        [HttpGet("password/{email}")]
+
+        public IActionResult ForgotPassword(string email)
+        {
+            try
+            {
+                if (!IsValidEmail(email)) {
+                    _logger.LogError("ForgotPassword: email is not valid");
+                    return BadRequest("Email is not valid");
+                }
+
+                _userRepository.ForgotPassword(email);
                 return Ok();
             }
-
-            return Unauthorized();
+            catch (Exception ex)
+            {
+                _logger.LogError($"UpdatePassword: An error occurred: {ex.Message}");
+                return StatusCode(500, "An error occurred while processing your request.");
+            }
         }
+
+        static bool IsValidEmail(string email)
+        {
+            string pattern = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
+            return Regex.IsMatch(email, pattern);
+        }
+
     }
 }

@@ -1,7 +1,7 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {apiForgotPassword, apiLogInUser, ApiLogInUserData} from "../types/config";
 import axios from "axios";
 import {Dispatch} from "redux";
+import {apiForgotPassword, apiLogInUser, ApiLogInUserData} from "../types/api/auth.ts";
 
 const initialState = {
     userToken: '',
@@ -27,7 +27,7 @@ export const logIn = async (dispatch: Dispatch, data: ApiLogInUserData) => {
 
 };
 
-export const ForgotPasswordEmail = async (dispatch: Dispatch, email: string) => {
+export const ForgotPasswordEmail = async (email: string) => {
 
     await axios.request(apiForgotPassword(email));
 

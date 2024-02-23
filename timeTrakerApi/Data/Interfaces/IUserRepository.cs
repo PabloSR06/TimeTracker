@@ -1,17 +1,15 @@
-﻿
-
-using timeTrakerApi.Models.Project;
+﻿using timeTrakerApi.Models.Project;
 using timeTrakerApi.Models.User;
 
-namespace timeTrakerApi.Data.Interface
+namespace timeTrakerApi.Data.Interfaces
 {
     public interface IUserRepository
     {
-        UserModel GetById(string id);
+        BasicUserModel? GetById(int id);
         bool Insert(UserModel project);
-        bool Delete(string id);
+        bool Delete(int id);
         bool ForgotPassword(string email);
-        bool ResetPassword(UserCredentialsModel userCredential, string userId);
+        bool UpdatePassword(ResetPasswordModel userCredential, int userId);
         UserProfileModel GetUserLogIn(UserCredentialsModel input);
     }
 }

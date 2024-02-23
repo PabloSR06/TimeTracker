@@ -1,8 +1,9 @@
-﻿using timeTrakerApi.Data.Interface;
-using MySqlConnector;
+﻿using MySqlConnector;
 using timeTrakerApi.Models.Project;
+using timeTrakerApi.Data.Interfaces;
+using System.Data;
 
-namespace timeTrakerApi.Data
+namespace timeTrakerApi.Data.Repositories
 {
     public class ProjectHoursRepository : IProjectHoursRepository
     {
@@ -42,18 +43,18 @@ namespace timeTrakerApi.Data
         {
             ProjectHoursModel projectHours = new ProjectHoursModel();
 
-            if (!reader.IsDBNull(reader.GetOrdinal(nameof(ProjectHoursModel.Id))))
-                projectHours.Id = reader.GetInt32(reader.GetOrdinal("id"));
-            if (!reader.IsDBNull(reader.GetOrdinal(nameof(ProjectHoursModel.UserId))))
-                projectHours.UserId = reader.GetInt32(reader.GetOrdinal("userid"));
-            if (!reader.IsDBNull(reader.GetOrdinal(nameof(ProjectHoursModel.ProjectId))))
-                projectHours.ProjectId = reader.GetInt32(reader.GetOrdinal("projectid"));
-            if (!reader.IsDBNull(reader.GetOrdinal(nameof(ProjectHoursModel.Minutes))))
-                projectHours.Minutes = reader.GetInt32(reader.GetOrdinal("minutes"));
-            if (!reader.IsDBNull(reader.GetOrdinal(nameof(ProjectHoursModel.CreateOnDate))))
-                projectHours.CreateOnDate = reader.GetDateTime(reader.GetOrdinal("createondate"));
-            if (!reader.IsDBNull(reader.GetOrdinal(nameof(ProjectHoursModel.LastModifiedOnDate))))
-                projectHours.LastModifiedOnDate = reader.GetDateTime(reader.GetOrdinal("lastmodifiedondate"));
+            if (!reader.IsDBNull(nameof(ProjectHoursModel.Id)))
+                projectHours.Id = reader.GetInt32(nameof(ProjectModel.Name));
+            if (!reader.IsDBNull(nameof(ProjectHoursModel.UserId)))
+                projectHours.UserId = reader.GetInt32(nameof(ProjectModel.Name));
+            if (!reader.IsDBNull(nameof(ProjectHoursModel.ProjectId)))
+                projectHours.ProjectId = reader.GetInt32(nameof(ProjectModel.Name));
+            if (!reader.IsDBNull(nameof(ProjectHoursModel.Minutes)))
+                projectHours.Minutes = reader.GetInt32(nameof(ProjectHoursModel.Minutes));
+            if (!reader.IsDBNull(nameof(ProjectHoursModel.CreateOnDate)))
+                projectHours.CreateOnDate = reader.GetDateTime(nameof(ProjectHoursModel.CreateOnDate));
+            if (!reader.IsDBNull(nameof(ProjectHoursModel.LastModifiedOnDate)))
+                projectHours.LastModifiedOnDate = reader.GetDateTime(nameof(ProjectHoursModel.LastModifiedOnDate));
 
             return projectHours;
         }

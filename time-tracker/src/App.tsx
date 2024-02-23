@@ -7,12 +7,12 @@ import {Login} from "./componets/login/login.tsx";
 import {SingIn} from "./componets/login/singIn.tsx";
 import {useEffect, useState} from "react";
 import DataLoader from "./dataLoader.tsx";
-import {checkTokenValidity} from "./componets/types/config.ts";
 import {WeekList} from "./componets/week/weekList.tsx";
 import {ForgotPassword} from "./componets/login/forgotPassword.tsx";
 import {ChangePassword} from "./componets/login/changePassword.tsx";
 import {Toaster} from "react-hot-toast";
 import Loader from "./componets/loader/loader.tsx";
+import {checkTokenValidity} from "./componets/types/api/auth.ts";
 function App() {
 
     const location = useLocation();
