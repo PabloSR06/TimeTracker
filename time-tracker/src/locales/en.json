@@ -30,6 +30,7 @@
   "loadingLogIn": "LogIn...",
   "cancel": "Cancel",
   "descriptionRequired": "Description is required",
+  "badLogin": "Email or password is incorrect",
 
   "smallDateFormat": "MMMM dd"
 }

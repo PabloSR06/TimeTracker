@@ -20,6 +20,9 @@ export const Login = () => {
     const {register, handleSubmit, formState: {errors}} = useForm();
     const [formData, setFormData] = useState<ApiLogInUserData>({email: '', password: ''});
 
+    const [badLogin, setBadLogin] = useState(false);
+
+
     const goToForgotPassword = () => navigate('/password/forgot', {replace: true});
 
     useEffect(() => {
@@ -31,14 +34,17 @@ export const Login = () => {
     const onSubmit = async () => {
         setIsLoading(true);
 
-        toast.promise(logIn(dispatch, formData).then(() => {
-            setFormData({email: '', password: ''})
-            setIsLoading(false);
-        }), {
-            loading: t("loadingLogin"),
-            success: t("LogedIn"),
-            error: t("error"),
-        })
+        Promise.all([
+            logIn(dispatch, formData)
+                .then(() => {
+                    setFormData({email: '', password: ''})
+                    setIsLoading(false);
+                })
+                .catch(() => {
+                    setBadLogin(true);
+                    setIsLoading(false);
+                })
+        ]);
 
 
     };
@@ -94,6 +100,7 @@ export const Login = () => {
                 </label>
                 <a className={styles.forgotPassword} onClick={goToForgotPassword}>Forgot Password</a>
                 <div>
+                    {badLogin && <span className={styles.errorMsg}>{t('badLogin')}</span>}
                     <button disabled={isLoading} className={styles.loginSubmit} type="submit">
                         {t("logIn")}
                     </button>

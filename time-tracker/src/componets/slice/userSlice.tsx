@@ -3,7 +3,7 @@ import {apiForgotPassword, apiLogInUser, ApiLogInUserData} from "../types/config
 import axios from "axios";
 import {Dispatch} from "redux";
 
-const initialState= {
+const initialState = {
     userToken: '',
     isTokenValid: false
 }
@@ -21,14 +21,10 @@ const userSlice = createSlice({
 });
 
 export const logIn = async (dispatch: Dispatch, data: ApiLogInUserData) => {
-    try {
-        const response = await axios.request(apiLogInUser(data));
-        dispatch(loadToken(response.data.token));
-    } catch (error) {
-        if (axios.isAxiosError(error)) {
-            console.log(error);
-        }
-    }
+
+    const response = await axios.request(apiLogInUser(data));
+    dispatch(loadToken(response.data.token));
+
 };
 
 export const ForgotPasswordEmail = async (dispatch: Dispatch, email: string) => {

@@ -6,12 +6,13 @@ import {ProjectInput} from "./componets/home/projectInput.tsx";
 import {Login} from "./componets/login/login.tsx";
 import {SingIn} from "./componets/login/singIn.tsx";
 import {useEffect, useState} from "react";
-import Loader from "./loader.tsx";
+import DataLoader from "./dataLoader.tsx";
 import {checkTokenValidity} from "./componets/types/config.ts";
 import {WeekList} from "./componets/week/weekList.tsx";
 import {ForgotPassword} from "./componets/login/forgotPassword.tsx";
 import {ChangePassword} from "./componets/login/changePassword.tsx";
 import {Toaster} from "react-hot-toast";
+import Loader from "./componets/loader/loader.tsx";
 function App() {
 
     const location = useLocation();
@@ -32,7 +33,7 @@ function App() {
 
 
     if (isLoading) {
-        return <div>Cargando...</div>;
+        return <Loader />;
     }
 
     const handleToken = (token: string) => {
@@ -44,7 +45,7 @@ function App() {
             <Provider store={store}>
                 <Toaster position="top-left"/>
                 <div>
-                    <Loader handleToken={handleToken}/>
+                    <DataLoader handleToken={handleToken}/>
                 </div>
                 <Routes>
                     <Route path="/" element={isLoggedIn ? <WeekList/> : <Navigate to="/login"/>}/>
