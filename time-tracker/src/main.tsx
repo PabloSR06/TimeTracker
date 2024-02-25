@@ -12,7 +12,16 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <React.StrictMode>
         <I18nextProvider i18n={i18n}>
             <BrowserRouter>
-                <App/>
+
+                <div className="main">
+                    <div className="appMain">
+                        <App />
+                    </div>
+                    <div className="nameMain">
+                        <p>TimeTracker</p>
+                        <p>By Pablo Suárez</p>
+                    </div>
+                </div>
             </BrowserRouter>
         </I18nextProvider>
     </React.StrictMode>

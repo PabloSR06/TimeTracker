@@ -1,8 +1,8 @@
-@media only screen and (min-width: 768px) {
-    body {
-        width: 50%;
-    }
-}
+/*@media only screen and (min-width: 768px) {*/
+/*    body {*/
+/*        width: 50%;*/
+/*    }*/
+/*}*/
 .blockContainer {
     display: flex;
     border: solid;
@@ -13,3 +13,30 @@
 p{
     margin: 0;
 }
+
+
+.main{
+    display: flex;
+}
+.appMain{
+    width: 100%;
+}
+
+.nameMain{
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+@media only screen and (min-width: 768px) {
+    .appMain{
+        width: 60%;
+    }
+    .nameMain{
+        display: flex;
+        width: 40%;
+    }
+}
+
+
