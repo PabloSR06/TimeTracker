@@ -3,6 +3,13 @@
     flex-direction: column;
     width: 300px;
     margin: 0 auto;
+
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 0;
+    left: 0;
+    text-align: center;
 }
 .formInput {
     margin-bottom: 10px;
