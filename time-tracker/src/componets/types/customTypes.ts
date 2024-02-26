@@ -8,6 +8,7 @@ type DayHours = {
 };
 type CustomDay = {
     id: number,
+    selected: boolean,
     date: Date,
     data: DayHours[],
     projects: ProjectHoursName[]

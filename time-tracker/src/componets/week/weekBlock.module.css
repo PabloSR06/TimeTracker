@@ -15,3 +15,6 @@
 .dayContainer{
     margin: 0px 7px 0px 7px;
 }
+.selected{
+    border-bottom: 1px solid;
+}

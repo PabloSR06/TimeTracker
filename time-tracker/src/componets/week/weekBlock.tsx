@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import styles from "./weekBlock.module.css";
-import {addWeeks, subWeeks, startOfWeek, endOfWeek} from 'date-fns';
+import {addWeeks, subWeeks, startOfWeek, endOfWeek, isSameDay} from 'date-fns';
 import {useSelector} from "react-redux";
 import {RootState} from "../slice/store.tsx";
 import {ArrowLeft, ArrowRight} from "react-bootstrap-icons";
@@ -34,7 +34,10 @@ export const WeekBlock: React.FC<WeekBlockProps> = ({date}) => {
 
             const selectedWeek = allData.filter((day) => {
                 return startOfCurrentWeek <= new Date(day.date) && new Date(day.date) <= endOfCurrentWeek;
-            });
+            }).map((day) => ({
+                ...day,
+                selected: isSameDay(new Date(day.date), currentDate) // Check if the day is the same as currentDate
+            }));
 
             setWeekToShow(selectedWeek);
         }
@@ -57,20 +60,25 @@ export const WeekBlock: React.FC<WeekBlockProps> = ({date}) => {
 
     const goToDay = async (id:number) => {
         navigate(`../day`, {state: {id: id}, replace: true});
+
+        setWeekToShow(prevWeek => (
+            prevWeek.map(day => ({
+                ...day,
+                selected: day.id === id
+            }))
+        ));
     }
 
 
     return (
         <div>
-
             <div className={styles.weekBlockContainer}>
                 <ArrowLeft className={styles.weekButton} onClick={goToPreviousWeek} size={20}/>
                 <div className={styles.weekContainer}>
                     {weekToShow.map((day, index) => (
-                        <div key={index} className={styles.dayContainer} onClick={() => goToDay(day.id)}>
+                        <div key={index} className={`${styles.dayContainer} ${day.selected ? styles.selected : ''}`} onClick={() => goToDay(day.id)}>
                             {new Date(day.date).getUTCDate()}
                         </div>
-
                     ))}
                 </div>
                 <ArrowRight className={styles.weekButton} onClick={goToNextWeek} size={20}/>
