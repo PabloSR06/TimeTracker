@@ -16,5 +16,5 @@
     margin: 0px 7px 0px 7px;
 }
 .selected{
-    background-color: red;
+    border-bottom: 1px solid;
 }
