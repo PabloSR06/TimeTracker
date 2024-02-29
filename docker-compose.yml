@@ -1,0 +1,35 @@
+version: '3.4'
+
+services:
+    timetrackerapi:
+        image: ${DOCKER_REGISTRY-}timetrackerapi
+        build:
+          context: timeTrackerApi
+          dockerfile: Dockerfile
+        ports:
+            - "5000:5000"
+            - "5001:5001"
+        depends_on:
+            - trackerdb
+
+
+    trackerdb:
+        image: mysql:latest
+        restart: always
+        environment:
+            MYSQL_ROOT_PASSWORD: root_password
+            MYSQL_DATABASE: db_timeTracker
+            MYSQL_USER: tb_user
+            MYSQL_PASSWORD: V*XFcFX_NU*CgXF9F2LD
+        ports:
+            - "3307:3306"
+    trackerdbadmin:
+        image: phpmyadmin/phpmyadmin
+        restart: always
+        depends_on:
+            - trackerdb 
+        ports:
+            - 8000:80
+        environment:
+            PMA_HOST: mysql
+            MYSQL_ROOT_PASSWORD: root_password
