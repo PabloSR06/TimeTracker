@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+    trackerdb:
+      image: mysql:latest
+      restart: always
+      environment:
+        MYSQL_ROOT_PASSWORD: root_password
+        MYSQL_DATABASE: db_timeTracker
+        MYSQL_USER: db_user
+        MYSQL_PASSWORD: db_password
+      ports:
+        - "3307:3306"
+   
+    trackerapi:
+      build:
+        context: .
+        dockerfile: Dockerfile
+      ports:
+        - "5000:80"
+      depends_on:
+        - trackerdb
+      environment:
+        ConnectionStrings__DefaultConnection: "Host=db;Port=5432;Database=mydatabase;Username=myuser;Password=mypassword"
+      networks:
+        - backend
+
+    trackerdbadmin:
+          image: phpmyadmin/phpmyadmin
+          restart: always
+          depends_on:
+            - trackerdb 
+          ports:
+              - 8000:80
+          environment:
+              PMA_HOST: mysql
+              MYSQL_ROOT_PASSWORD: root_password
+      
+networks:
+  backend:
+
+volumes:
+  pgdata:
