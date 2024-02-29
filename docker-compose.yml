@@ -1,6 +1,17 @@
 version: '3.4'
 
 services:
+    time-tracker:
+        image: ${DOCKER_REGISTRY-}time-tracker
+        build:
+          context: time-tracker
+          dockerfile: Dockerfile
+        depends_on:
+            - timetrackerapi
+        ports:
+            - 3000:80
+        
+
     timetrackerapi:
         image: ${DOCKER_REGISTRY-}timetrackerapi
         build:
