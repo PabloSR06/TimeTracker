@@ -1,5 +1,4 @@
 import {useState} from "react";
-import {useDispatch,} from "react-redux";
 import {ForgotPasswordEmail} from "../slice/userSlice.tsx";
 import styles from './login.module.css';
 import {useTranslation} from "react-i18next";
@@ -9,7 +8,6 @@ import {useForm} from "react-hook-form";
 
 export const ForgotPassword = () => {
     const {t} = useTranslation();
-    const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const {register, handleSubmit, formState: {errors}} = useForm();
@@ -19,7 +17,7 @@ export const ForgotPassword = () => {
     const onSubmit = async () => {
         setIsLoading(true);
 
-        await toast.promise(ForgotPasswordEmail(dispatch, formData.email).then(() => {
+        await toast.promise(ForgotPasswordEmail(formData.email).then(() => {
             setTimeout(() => {
                 navigate('/', {replace: true});
             }, 1000);

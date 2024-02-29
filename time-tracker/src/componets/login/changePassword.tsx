@@ -30,7 +30,7 @@ export const ChangePassword = () => {
         if(isValid){
             const data: ResetPasswordData = {
                 password: formData.password,
-                token: token
+                token: token || ''
             }
 
             await toast.promise(axios.request(apiResetPassword(data)), {
