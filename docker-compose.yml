@@ -35,8 +35,11 @@ services:
         ports:
             - "3307:3306"
         volumes:
-            - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql
-            # - mysql_data:/var/lib/mysql
+            - mysql_data:/var/lib/mysql
+            # - ./sql/init.sql:/docker-entrypoint-initdb.d/1.sql
+            # - ./sql/insert.sql:/docker-entrypoint-initdb.d/2.sql
+            # - ./sql/procedure.sql:/docker-entrypoint-initdb.d/3.sql
+       
 
 
     trackerdbadmin:
@@ -50,6 +53,6 @@ services:
             PMA_HOST: trackerdb
             MYSQL_ROOT_PASSWORD: root_password
 
-# volumes:
-#     mysql_data:
-#         driver: local
+volumes:
+    mysql_data:
+        driver: local

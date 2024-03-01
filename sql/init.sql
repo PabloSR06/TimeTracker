@@ -59,16 +59,16 @@ CREATE TABLE ProjectHours (
     FOREIGN KEY (ProjectID) REFERENCES Projects(Id)
 );
 
-CREATE TABLE user_roles (
+CREATE TABLE UserRoles (
     user_id INT,
     role_id INT,
     PRIMARY KEY (user_id, role_id),
-    FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (role_id) REFERENCES roles(id)
+    FOREIGN KEY (user_id) REFERENCES Users(id),
+    FOREIGN KEY (role_id) REFERENCES Roles(id)
 );
-USE timeTracker;
 
-INSERT INTO roles (name) VALUES ('Admin'), ('User');
+
+INSERT INTO Roles (name) VALUES ('Admin'), ('User');
 
 INSERT INTO Users (Name, Email, Password) 
 VALUES ('John Doe', 'john@example.com', 'password123'),
@@ -76,11 +76,11 @@ VALUES ('John Doe', 'john@example.com', 'password123'),
        ('Jane Smith2', 'bob@example.com', 'securepwd');
 
 
-INSERT INTO user_roles (user_id, role_id)
+INSERT INTO UserRoles (user_id, role_id)
 VALUES 
-    ((SELECT id FROM users WHERE email='john@example.com'), (SELECT id FROM roles WHERE name='Admin')),
-    ((SELECT id FROM users WHERE email='bob@example.com'), (SELECT id FROM roles WHERE name='User')),
-    ((SELECT id FROM users WHERE email='john@example.com'), (SELECT id FROM roles WHERE name='User'));
+    ((SELECT id FROM Users WHERE email='john@example.com'), (SELECT id FROM Roles WHERE name='Admin')),
+    ((SELECT id FROM Users WHERE email='bob@example.com'), (SELECT id FROM Roles WHERE name='User')),
+    ((SELECT id FROM Users WHERE email='john@example.com'), (SELECT id FROM Roles WHERE name='User'));
 
 
 INSERT INTO Clients (Name) 
@@ -171,4 +171,3 @@ BEGIN
 END //
 
 DELIMITER ;
-
