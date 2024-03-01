@@ -1,11 +1,11 @@
 import React from "react";
 import styles from "./blockData.module.css";
-import {ApiInsertDayHoursData} from "../types/api/config.ts";
 import {fetchHours, InsertDayHours} from "../slice/hoursSlice.tsx";
 import {useDispatch} from "react-redux";
 import {Clock} from "react-bootstrap-icons";
 import {useTranslation} from "react-i18next";
 import {combineDate} from "../tools.ts";
+import {ApiInsertDayHoursData} from "../types/api/chronos.ts";
 
 interface NewDayHourBlockProps {
     isStart: boolean;

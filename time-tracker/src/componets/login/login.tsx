@@ -6,7 +6,6 @@ import {RootState} from "../slice/store.tsx";
 import styles from './login.module.css';
 import {useTranslation} from "react-i18next";
 import {useForm} from "react-hook-form";
-import toast from "react-hot-toast";
 import {ApiLogInUserData, checkTokenValidity} from "../types/api/auth.ts";
 
 export const Login = () => {

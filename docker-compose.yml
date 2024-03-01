@@ -1,0 +1,58 @@
+version: '3.4'
+
+services:
+    time-tracker:
+        image: ${DOCKER_REGISTRY-}time-tracker
+        build:
+          context: time-tracker
+          dockerfile: Dockerfile
+        depends_on:
+            - timetrackerapi
+        ports:
+            - 3000:80
+        
+
+    timetrackerapi:
+        image: ${DOCKER_REGISTRY-}timetrackerapi
+        build:
+          context: timeTrackerApi
+          dockerfile: Dockerfile
+        ports:
+            - "5000:5000"
+            - "5001:5001"
+        depends_on:
+            - trackerdb
+
+
+    trackerdb:
+        image: mysql:latest
+        restart: always
+        environment:
+            MYSQL_ROOT_PASSWORD: root_password
+            MYSQL_DATABASE: db_timeTracker
+            MYSQL_USER: tb_user
+            MYSQL_PASSWORD: V*XFcFX_NU*CgXF9F2LD
+        ports:
+            - "3307:3306"
+        volumes:
+            - mysql_data:/var/lib/mysql
+            # - ./sql/init.sql:/docker-entrypoint-initdb.d/1.sql
+            # - ./sql/insert.sql:/docker-entrypoint-initdb.d/2.sql
+            # - ./sql/procedure.sql:/docker-entrypoint-initdb.d/3.sql
+       
+
+
+    trackerdbadmin:
+        image: phpmyadmin/phpmyadmin
+        restart: always
+        depends_on:
+            - trackerdb 
+        ports:
+            - 8000:80
+        environment:
+            PMA_HOST: trackerdb
+            MYSQL_ROOT_PASSWORD: root_password
+
+volumes:
+    mysql_data:
+        driver: local
