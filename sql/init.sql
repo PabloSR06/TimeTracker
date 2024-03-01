@@ -14,7 +14,7 @@ CREATE TABLE Users (
     CreateOnDate DATETIME NOT NULL default NOW(),
     LastModifiedOnDate DATETIME NOT NULL default NOW()
 );
-CREATE TABLE roles (
+CREATE TABLE Roles (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(50) NOT NULL
 );
