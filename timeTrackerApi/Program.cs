@@ -26,7 +26,7 @@ namespace timeTrackerApi
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowOrigin", builder =>
-                    builder.WithOrigins("http://localhost:5173")
+                    builder.WithOrigins("http://localhost:3000")
                            .AllowAnyMethod()
                            .AllowAnyHeader());
             });

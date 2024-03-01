@@ -1,4 +1,4 @@
-export const apiUrl = 'https://localhost:7225';
+export const apiUrl = 'https://localhost:5001';
 
 // @ts-ignore
 export const getTokenFromLocalStorage = (): string => localStorage.getItem('token');
