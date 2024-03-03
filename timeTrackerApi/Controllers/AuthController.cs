@@ -42,7 +42,7 @@ namespace timeTrackerApi.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError($"UpdatePassword: An error occurred: {ex.Message}");
+                _logger.LogError($"Login: An error occurred: {ex.Message}");
                 return StatusCode(500, "An error occurred while processing your request.");
             }
         }
@@ -75,6 +75,9 @@ namespace timeTrackerApi.Controllers
             string pattern = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
             return Regex.IsMatch(email, pattern);
         }
+
+        
+
 
     }
 }

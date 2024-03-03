@@ -23,6 +23,8 @@
   "passwordsDoNotMatch": "Passwords do not match",
   "passwordRequirement": "Min 8 characters, UpperCase, LowerCase, Number/SpecialChar",
   "forgotPassword": "Forgot Password",
+  "register": "Register",
+  "name": "Name",
   "dataLoaded": "Data loaded",
   "save": "Save",
   "dataSaved": "Data saved",

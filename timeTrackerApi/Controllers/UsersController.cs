@@ -84,7 +84,6 @@ namespace timeTrackerApi.Controllers
         /// <returns>An IActionResult indicating the result of the created operation.</returns>
 
         [HttpPost]
-        [Authorize]
         public IActionResult CreateUser([FromBody] UserModel user)
         {
             try

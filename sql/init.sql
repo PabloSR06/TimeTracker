@@ -1,7 +1,3 @@
-DROP DATABASE IF EXISTS db_timeTracker;
-
-CREATE DATABASE db_timeTracker;
-
 USE db_timeTracker;
 
 SET GLOBAL time_zone = '+00:00';
@@ -9,7 +5,7 @@ SET GLOBAL time_zone = '+00:00';
 CREATE TABLE Users (
     Id INT AUTO_INCREMENT PRIMARY KEY,
     Name NVARCHAR(50) NOT NULL,
-    Email NVARCHAR(256) NOT NULL,
+    Email NVARCHAR(256) NOT NULL UNIQUE,
     Password NVARCHAR(256) NOT NULL,
     CreateOnDate DATETIME NOT NULL default NOW(),
     LastModifiedOnDate DATETIME NOT NULL default NOW()
@@ -71,9 +67,9 @@ CREATE TABLE UserRoles (
 INSERT INTO Roles (name) VALUES ('Admin'), ('User');
 
 INSERT INTO Users (Name, Email, Password) 
-VALUES ('John Doe', 'john@example.com', 'password123'),
-       ('Jane Smith', 'jane@example.com', 'securepwd'),
-       ('Jane Smith2', 'bob@example.com', 'securepwd');
+VALUES ('John Doe', 'john@example.com', 'ZDQ5ZThlOGZiNDZmYjc3YzllNWZmYjFmZGRkOTc0OWM1Y2M2ZTI5OTU0NjYyMzIxNWExZGRhMTRhYTdmYzVlMQ=='),
+       ('Jane Smith', 'jane@example.com', 'ZDQ5ZThlOGZiNDZmYjc3YzllNWZmYjFmZGRkOTc0OWM1Y2M2ZTI5OTU0NjYyMzIxNWExZGRhMTRhYTdmYzVlMQ=='),
+       ('Jane Smith2', 'bob@example.com', 'ZDQ5ZThlOGZiNDZmYjc3YzllNWZmYjFmZGRkOTc0OWM1Y2M2ZTI5OTU0NjYyMzIxNWExZGRhMTRhYTdmYzVlMQ==');
 
 
 INSERT INTO UserRoles (user_id, role_id)
@@ -123,8 +119,8 @@ CREATE PROCEDURE GetProjectHours(IN `userIdInput` INT, IN `from` DATETIME, IN `t
 BEGIN
     SELECT ph.id, ph.userid, ph.projectid, ph.minutes, ph.date, p.name 'ProjectName', p.description, c.Name AS 'ClientName'
 	FROM ProjectHours AS ph
-	INNER JOIN Projects AS p ON ph.ProjectID = p.id
-	INNER JOIN Clients AS c ON p.ClientID = c.Id
+	INNER JOIN `Projects` AS p ON ph.ProjectID = p.id
+	INNER JOIN `Clients` AS c ON p.ClientID = c.Id
 	WHERE ph.UserID = `userIdInput` 
 	AND ph.Date BETWEEN  `from` AND  `to`;
 
@@ -151,7 +147,7 @@ DELIMITER //
 
 CREATE PROCEDURE ResetPassword(IN `id` INT, IN `password` LONGTEXT)
 BEGIN
-	UPDATE Users SET Password = `password` WHERE id = `id`;
+	UPDATE `Users` SET Password = `password` WHERE id = `id`;
 END //
 
 DELIMITER ;
@@ -161,13 +157,13 @@ DELIMITER ;
 DELIMITER //
 CREATE PROCEDURE UserLogIn(IN `inputEmail` NVARCHAR(250), IN `inputPassword` NVARCHAR(500))
 BEGIN
-    SELECT users.id, users.name, users.`Email`, 
-           GROUP_CONCAT(roles.name) AS Roles
-    FROM users
-    LEFT JOIN user_roles ON users.id = user_roles.user_id
-    LEFT JOIN roles ON user_roles.role_id = roles.id
-    WHERE users.email = `inputEmail` AND users.password = `inputPassword`
-    GROUP BY users.Id;
+    SELECT Users.id, Users.name, Users.`Email`, 
+           GROUP_CONCAT(Roles.name) AS Roles
+    FROM Users
+    LEFT JOIN UserRoles ON Users.id = UserRoles.user_id
+    LEFT JOIN Roles ON UserRoles.role_id = Roles.id
+    WHERE Users.email = `inputEmail` AND Users.password = `inputPassword`
+    GROUP BY Users.Id;
 END //
 
 DELIMITER ;
