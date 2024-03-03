@@ -12,7 +12,7 @@ The client side has been developed using technologies such as React, TypeScript 
 
 On the server side, an API has been developed using ASP.NET Core Web API. An authentication system based on JWT tokens (JSON Web Token) has been implemented to ensure the security of communications between the client and the server. In addition, MySQL has been used as a database to store and manage the application data.
 
-## How to edit
+## How to use
 
 This project uses Docker The easiest way to run it is to open the terminal in the project folder and type `docker-compose up` or open the visual studio solution and execute with docker.
 
@@ -23,3 +23,13 @@ This should create 4 containers
 - Front Project
 
 To improve the development flow and take advantage of fast-reload's fluidity, I usually disable the frontend containerizer to use it directly with `npm run dev`.
+
+### Keys you need
+To generate the JWT (JSON Web Token) that will be used for authentication 
+- Issuer
+- Audience
+- Key: The key needs to be 32 characters
+
+For send emails to generate the password in case you forget it, you need to configure a [SendGrid](https://sendgrid.com/en-us) account and get the API keys.
+- APIkey
+- FromEmail: Email that will send the mails, it should be configured in your sendgrid account.
