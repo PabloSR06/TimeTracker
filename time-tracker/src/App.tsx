@@ -52,7 +52,7 @@ function App() {
                     <Route path="/day" element={isLoggedIn ? <DayInfo/> : <Navigate to="/login"/>}/>
                     <Route path="/day/input" element={isLoggedIn ? <ProjectInput/> : <Navigate to="/login"/>}/>
                     <Route path="/login" element={<Login/>}/>
-                    <Route path="/SingIn" element={<SingIn/>}/>
+                    <Route path="/register" element={<SingIn/>}/>
                     <Route path="*" element={<Navigate to="/"/>}/>
                     <Route path="/password/forgot" element={<ForgotPassword />}/>
                     <Route path="/password/change/:token" element={<ChangePassword />}/>

@@ -54,6 +54,8 @@ namespace timeTrackerApi.Data.Repositories
         {
             UserProfileModel profile = default;
 
+            string base64Password = EncodePasswordToBase64(input.Password);
+
             using (MySqlConnection connection = _database.CreateConnection())
             {
                 connection.Open();
@@ -61,7 +63,7 @@ namespace timeTrackerApi.Data.Repositories
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.AddWithValue("@inputEmail", input.Email);
-                    command.Parameters.AddWithValue("@inputPassword", input.Password);
+                    command.Parameters.AddWithValue("@inputPassword", base64Password);
 
 
                     using (MySqlDataReader reader = command.ExecuteReader())
@@ -80,6 +82,8 @@ namespace timeTrackerApi.Data.Repositories
 
         public bool Insert(UserModel user)
         {
+            string base64Password = EncodePasswordToBase64(user.Password);
+
             using (MySqlConnection connection = _database.CreateConnection())
             {
                 connection.Open();
@@ -90,7 +94,7 @@ namespace timeTrackerApi.Data.Repositories
                 {
                     command.Parameters.AddWithValue("@Name", user.Name);
                     command.Parameters.AddWithValue("@Email", user.Email);
-                    command.Parameters.AddWithValue("@Password", user.Password);
+                    command.Parameters.AddWithValue("@Password", base64Password);
 
                     int rowsAffected = command.ExecuteNonQuery();
 
@@ -163,6 +167,8 @@ namespace timeTrackerApi.Data.Repositories
         {
             int affectedRows = 0;
 
+            string base64Password = EncodePasswordToBase64(userCredential.Password);
+
             using (MySqlConnection connection = _database.CreateConnection())
             {
                 connection.Open();
@@ -170,7 +176,7 @@ namespace timeTrackerApi.Data.Repositories
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.AddWithValue("@id", userId);
-                    command.Parameters.AddWithValue("@password", userCredential.Password);
+                    command.Parameters.AddWithValue("@password", base64Password);
 
                     affectedRows = command.ExecuteNonQuery();
                 }
@@ -180,6 +186,37 @@ namespace timeTrackerApi.Data.Repositories
             return affectedRows > 0;
         }
 
+        static string EncodePasswordToBase64(string password)
+        {
+            try
+            {
+                byte[] encData_byte = new byte[password.Length];
+                encData_byte = System.Text.Encoding.UTF8.GetBytes(password);
+                string encodedData = Convert.ToBase64String(encData_byte);
+                return encodedData;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error in base64Encode" + ex.Message);
+            }
+        }
+        string DecodeFrom64(string encodedData)
+        {
+            try
+            {
+                System.Text.UTF8Encoding encoder = new System.Text.UTF8Encoding();
+                System.Text.Decoder utf8Decode = encoder.GetDecoder();
+                byte[] todecode_byte = Convert.FromBase64String(encodedData);
+                int charCount = utf8Decode.GetCharCount(todecode_byte, 0, todecode_byte.Length);
+                char[] decoded_char = new char[charCount];
+                utf8Decode.GetChars(todecode_byte, 0, todecode_byte.Length, decoded_char, 0);
+                return new String(decoded_char);
+            }
+            catch (FormatException ex)
+            {
+                throw new Exception("Input is not a valid Base64 string: " + ex.Message);
+            }
+        }
         private UserModel ReadUserFromReader(MySqlDataReader reader)
         {
             UserModel user = new UserModel();

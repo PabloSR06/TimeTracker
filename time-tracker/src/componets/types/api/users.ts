@@ -1,6 +1,7 @@
 import {apiUrl} from "./config.ts";
 
 export type ApiCreateUserData = {
+    name: string,
     email: string,
     password: string
 };
@@ -13,6 +14,7 @@ export const apiCreateUser = (data: ApiCreateUserData) => {
         method: 'POST',
         url: apiUrl + '/Users',
         data: {
+            name: data.name,
             email: data.email,
             password: data.password
         }

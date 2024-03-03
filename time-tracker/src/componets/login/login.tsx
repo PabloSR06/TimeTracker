@@ -7,6 +7,7 @@ import styles from './login.module.css';
 import {useTranslation} from "react-i18next";
 import {useForm} from "react-hook-form";
 import {ApiLogInUserData, checkTokenValidity} from "../types/api/auth.ts";
+import CryptoJS from "crypto-js";
 
 export const Login = () => {
     const {t} = useTranslation();
@@ -32,9 +33,14 @@ export const Login = () => {
 
     const onSubmit = async () => {
         setIsLoading(true);
+        
+        const data: ApiLogInUserData = {
+            email: formData.email,
+            password: CryptoJS.SHA256(formData.password).toString()
+        };
 
         Promise.all([
-            logIn(dispatch, formData)
+            logIn(dispatch, data)
                 .then(() => {
                     setFormData({email: '', password: ''})
                     setIsLoading(false);
