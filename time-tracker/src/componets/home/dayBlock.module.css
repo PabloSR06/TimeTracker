@@ -13,7 +13,6 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
 }
 .dateContainer {
     display: flex;
@@ -43,18 +42,17 @@
 .countContainer {
     margin: 0;
     padding: 0;
-    width: 55px;
 }
 .dayCountContainer, .projectCountContainer {
     font-size: 10px;
     display: flex;
     justify-content: space-between;
 }
-.dayCountContainer {
+.dayCountContainer, .projectCountContainer  {
     margin-bottom: 3px;
 }
-.projectCountContainer {
-    margin-top: 3px;
+.dayCountContainer p, .projectCountContainer {
+    margin-right: 10px;
 }
 .hourContainer {
     display: flex;

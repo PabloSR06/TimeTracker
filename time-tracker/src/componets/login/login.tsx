@@ -33,7 +33,7 @@ export const Login = () => {
 
     const onSubmit = async () => {
         setIsLoading(true);
-        
+
         const data: ApiLogInUserData = {
             email: formData.email,
             password: CryptoJS.SHA256(formData.password).toString()

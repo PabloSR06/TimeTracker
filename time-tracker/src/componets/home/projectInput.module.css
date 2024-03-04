@@ -12,7 +12,7 @@
     text-align: center;
 }
 .formInput {
-    margin-bottom: 10px;
+
     width: 100%;
     border: 1px solid #ccc;
     padding: 8px;
@@ -20,10 +20,27 @@
     outline: none;
     background-color: #f8f8f8;
 }
-
+.inputContainer{
+    margin-bottom: 10px;
+}
+.minutesContainer {
+    display: flex;
+    align-items: center;
+}
+.datePickerCustom{
+    width: 120px!important;
+}
+.toggleView{
+    width: auto !important;
+    margin-left: 10px;
+}
 .formNumber {
     box-sizing: border-box;
     margin-left: 10px;
+}
+.formRange{
+    margin-left: 5px;
+    margin-right: 5px;
 }
 .buttonContainer{
     display: flex;

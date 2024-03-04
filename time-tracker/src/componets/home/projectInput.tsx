@@ -10,13 +10,14 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import {fetchHours} from "../slice/hoursSlice.tsx";
 import {apiInsertProjectHours, ApiInsertProjectHoursData} from "../types/api/chronos.ts";
+import {differenceInMinutes} from "date-fns";
+import {ThreeDots, ThreeDotsVertical} from "react-bootstrap-icons";
 
 
 export const ProjectInput = () => {
     const {t} = useTranslation();
     const navigate = useNavigate();
     const dispatch = useDispatch();
-
 
 
     const clients = useSelector((state: RootState) => state.clients);
@@ -37,6 +38,16 @@ export const ProjectInput = () => {
         minutes: "",
         description: ""
     });
+    const createNewTime = () => {
+        const date = new Date(stateDate);
+        date.setSeconds(0);
+        date.setMilliseconds(0);
+        return date;
+    };
+
+    const [showRange, setShowRange] = useState<boolean>(false);
+    const [startDate, setStartDate] = useState<Date>(createNewTime());
+    const [endDate, setEndDate] = useState<Date>(createNewTime());
 
 
     useEffect(() => {
@@ -64,15 +75,37 @@ export const ProjectInput = () => {
     const handleSend = () => {
         toast.promise(sendData().then(() => {
             fetchHours(dispatch);
-            setFormData({date: formData.date, clientId: formData.clientId, projectId: formData.projectId, minutes: "", description: ""})
+            setFormData({
+                date: formData.date,
+                clientId: formData.clientId,
+                projectId: formData.projectId,
+                minutes: "",
+                description: ""
+            })
+            setEndDate(createNewTime());
+            setStartDate(createNewTime());
         }), {
             loading: t("loading"),
             success: t("dataSaved"),
             error: t("error"),
         })
 
+    };
+    const toggleRange = () => setShowRange(!showRange);
 
-    }
+    useEffect(() => {
+        const diff = differenceInMinutes(endDate, startDate);
+        console.log(diff);
+        if (diff >= 0) setFormData((prevData) => ({
+            ...prevData,
+            minutes: diff.toString(),
+        }));
+        if(diff === 0) setFormData((prevData) => ({
+            ...prevData,
+            minutes: "",
+        }));
+    }, [endDate, startDate]);
+
 
     const goBack = () => navigate(-1);
 
@@ -86,7 +119,7 @@ export const ProjectInput = () => {
 
     return (
         <form className={styles.formContainer} onSubmit={handleSubmit(handleSend)}>
-            <div>
+            <div className={styles.inputContainer}>
                 <select
                     {...register("clientId", {required: true, min: 1})}
                     className={styles.formInput} onChange={handleInputChange}
@@ -96,7 +129,7 @@ export const ProjectInput = () => {
                 </select>
                 {errors.clientId?.type === 'min' && <span className={styles.errorMsg}>{t('clientRequired')}</span>}
             </div>
-            <div>
+            <div className={styles.inputContainer}>
                 <select
                     {...register("projectId", {required: true, min: 1})}
                     className={styles.formInput}
@@ -110,10 +143,11 @@ export const ProjectInput = () => {
                     <span className={styles.errorMsg}>{t('projectRequired')}</span>}
 
             </div>
-            <div className={styles.sideBySideContainer}>
+            <div className={`${styles.sideBySideContainer} ${styles.inputContainer}`}>
 
                 <DatePicker
-                    className={styles.formInput}
+
+                    className={`${styles.formInput}  ${styles.datePickerCustom}`}
                     showIcon
                     {...register("date")}
                     selected={stateDate}
@@ -125,14 +159,17 @@ export const ProjectInput = () => {
                     }}
                 />
 
+                <div className={styles.minutesContainer}>
+                    <input
+                        className={`${styles.formInput} ${styles.formNumber}`}
+                        type="number"
+                        value={formData.minutes}
+                        {...register("minutes", {required: true, max: 1000, min: 1})}
+                        placeholder={t('enterMinutes')}
+                        onChange={handleInputChange}/>
+                    <ThreeDotsVertical size={15} className={`${styles.formInput} ${styles.toggleView}`} onClick={() => toggleRange()}/>
+                </div>
 
-                <input
-                    className={`${styles.formInput} ${styles.formNumber}`}
-                    type="number"
-                    value={formData.minutes}
-                    {...register("minutes", {required: true, max: 1000, min: 1})}
-                    placeholder={t('enterMinutes')}
-                    onChange={handleInputChange}/>
             </div>
             <div>
                 {(errors.minutes?.type === 'required' || errors.minutes?.type === 'min')
@@ -140,13 +177,42 @@ export const ProjectInput = () => {
                     <span className={styles.errorMsg}>{t('minutesRequired')}</span>}
 
             </div>
+
+            {showRange && (
+                <div className={`${styles.sideBySideContainer} ${styles.inputContainer}`}>
+                    <DatePicker
+                        className={`${styles.formInput} ${styles.formRange}`}
+                        selected={startDate}
+                        onChange={(date) =>
+                            setStartDate(date)
+                        }
+                        showTimeSelect
+                        showTimeSelectOnly
+                        timeIntervals={15}
+                        timeCaption="Time"
+                        dateFormat="h:mm aa"
+                    />
+                    <DatePicker
+                        className={`${styles.formInput} ${styles.formRange}`}
+                        selected={endDate}
+                        onChange={(date) =>
+                            setEndDate(date)}
+                        showTimeSelect
+                        showTimeSelectOnly
+                        timeIntervals={15}
+                        timeCaption="Time"
+                        dateFormat="h:mm aa"
+                    />
+                </div>
+            )}
+
             <div>
-                <textarea
-                    value={formData.description}
-                    className={`${styles.formInput} ${styles.formArea}`}
-                    {...register("description", {required: true})}
-                    placeholder={t('enterDescription')}
-                    onChange={handleInputChange}></textarea>
+                        <textarea
+                            value={formData.description}
+                            className={`${styles.formInput} ${styles.formArea}`}
+                            {...register("description", {required: true})}
+                            placeholder={t('enterDescription')}
+                            onChange={handleInputChange}></textarea>
                 {errors.description?.type === 'required' &&
                     <span className={styles.errorMsg}>{t('descriptionRequired')}</span>}
 
